@@ -74,12 +74,18 @@ _GENERIC_SHARED_CLASSES = frozenset(
         "header-button",
         "kb-button",
         "wp-block-button",
+        "wp-block-kadence-advancedheading",
         "wp-element-button",
         "link",
         "nav-item",
         "menu-item",
         "cta",
     }
+)
+
+# Tags whose visible text can serve as the Cinema mark id (HTTP import headings, etc.).
+_TEXT_LABEL_TAGS = frozenset(
+    {"button", "a", "span", "div", "h1", "h2", "h3", "p"}
 )
 
 _MARKED_COLOR_DECL: dict[str, str] = {
@@ -185,11 +191,53 @@ def resolve_marked_selectors(
 
 
 def marked_scope_colors_css(selectors: list[str], variant: str) -> str:
-    """Per-variant button recolor declarations for DELETE marks in #colors scope."""
+    """Per-variant recolor declarations for DELETE marks in #colors scope."""
     decl = _MARKED_COLOR_DECL.get(variant if variant in ("a", "b", "c") else "b", "")
-    if not selectors or not decl:
+    clean = [str(sel).strip() for sel in (selectors or []) if str(sel).strip()]
+    if not clean or not decl:
         return ""
-    return f"{', '.join(selectors)} {{{decl}}}"
+    base_rule = f"{', '.join(clean)} {{{decl}}}"
+    color_decl = ""
+    for part in decl.split(";"):
+        piece = part.strip()
+        if piece.startswith("color:"):
+            color_decl = piece if piece.endswith("!important") else f"{piece}!important"
+            break
+    if not color_decl:
+        return base_rule
+    inline_beat = ", ".join(
+        f"{sel} *, {sel} [style*='color'], {sel} [style*='Color']"
+        for sel in clean[:8]
+    )
+    return f"{base_rule}\n{inline_beat} {{{color_decl};}}"
+
+
+def marked_scope_display_css(selectors: list[str], variant: str) -> str:
+    """Extra typography on DELETE-marked nodes in #display scope."""
+    clean = [str(sel).strip() for sel in (selectors or []) if str(sel).strip()]
+    if not clean:
+        return ""
+    v = variant if variant in ("a", "b", "c") else "b"
+    decl = {
+        "a": "font-size:1.1rem!important;line-height:1.35!important;",
+        "b": "font-size:1.2rem!important;line-height:1.4!important;",
+        "c": "font-size:1.35rem!important;font-weight:600!important;line-height:1.45!important;",
+    }[v]
+    return f"{', '.join(clean[:8])} {{{decl}}}"
+
+
+def marked_scope_shapes_css(selectors: list[str], variant: str) -> str:
+    """Corner radii on DELETE-marked nodes in #shapes scope."""
+    clean = [str(sel).strip() for sel in (selectors or []) if str(sel).strip()]
+    if not clean:
+        return ""
+    v = variant if variant in ("a", "b", "c") else "b"
+    decl = {
+        "a": "border-radius:4px!important;",
+        "b": "border-radius:12px!important;",
+        "c": "border-radius:999px!important;",
+    }[v]
+    return f"{', '.join(clean[:8])} {{{decl}}}"
 
 
 def marked_scope_orientation_css(selectors: list[str], variant: str) -> str:
@@ -206,7 +254,7 @@ def marked_scope_orientation_css(selectors: list[str], variant: str) -> str:
     layouts = {
         "a": "grid-template-columns:minmax(0,1fr)!important;max-width:980px!important;",
         "b": (
-            "grid-template-columns:repeat(2,minmax(0,1fr))!important;"
+            "grid-template-columns:1fr 1fr!important;"
             "max-width:1180px!important;"
         ),
         "c": (
@@ -321,7 +369,7 @@ def _logical_id(tag: str, attrs: dict[str, str], *, text: str = "") -> str | Non
     target = str(attrs.get("data-nexu-target") or "").strip()
     if target:
         return target
-    if tag.lower() in ("button", "a", "span", "div"):
+    if tag.lower() in _TEXT_LABEL_TAGS:
         label = re.sub(r"\s+", " ", text).strip()
         if label:
             return label
@@ -375,7 +423,8 @@ def _collect_match_candidates(tag: str, attrs: dict[str, str]) -> set[str]:
 def _collect_button_candidates(tag: str, attrs: dict[str, str], match, raw_html: str) -> set[str]:
     inner_start = match.end()
     inner_end = raw_html.lower().find(f"</{tag}>", inner_start)
-    label = re.sub(r"\s+", " ", raw_html[inner_start:inner_end if inner_end >= 0 else inner_start]).strip()
+    inner = raw_html[inner_start:inner_end if inner_end >= 0 else inner_start]
+    label = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", inner)).strip()
     logical = _logical_id(tag, attrs, text=label)
     if logical:
         return _id_candidates(logical)

@@ -13,6 +13,9 @@ from .marked_context import (
     effective_delete_ids,
     has_ui_marks,
     marked_scope_colors_css,
+    marked_scope_display_css,
+    marked_scope_orientation_css,
+    marked_scope_shapes_css,
     resolve_marked_selectors,
     restrict_scope_css_to_marks,
 )
@@ -302,6 +305,69 @@ def _calc_scope_css(scope: str, variant: str) -> str:
     return ""
 
 
+def _uses_web_scope_css(inferred: str, html: str) -> bool:
+    """True when inject_scope_style should use imported-web page-level CSS."""
+    if inferred in IMPORTED_KINDS:
+        return True
+    lowered = (html or "").lower()
+    if inferred == "calculator" or "calc-body" in lowered:
+        return False
+    if inferred in DASHBOARD_KINDS or "kpi-grid" in lowered:
+        return False
+    return True
+
+
+def _web_display_scope_css(variant: str) -> str:
+    """Typography on content regions for imported web HTML (not mark-narrowed)."""
+    v = variant if variant in ("a", "b", "c") else "b"
+    heads = ", ".join([*(f"{base} h1" for base in _CONTENT_LAYOUT_SELECTORS), "main h1", "h1"])
+    h2s = ", ".join([*(f"{base} h2" for base in _CONTENT_LAYOUT_SELECTORS), "main h2", "h2"])
+    ps = ", ".join([*(f"{base} p" for base in _CONTENT_LAYOUT_SELECTORS), "main p", "p"])
+    scales = {
+        "a": (
+            f"{heads}{{font-size:1.35rem!important;}}"
+            f"{h2s}{{font-size:1rem!important;}}"
+            f"{ps}{{font-size:0.9rem!important;}}"
+        ),
+        "b": (
+            f"{heads}{{font-size:1.65rem!important;}}"
+            f"{h2s}{{font-size:1.15rem!important;}}"
+            f"{ps}{{font-size:1rem!important;}}"
+        ),
+        "c": (
+            f"{heads}{{font-size:1.9rem!important;font-weight:700!important;}}"
+            f"{h2s}{{font-size:1.25rem!important;}}"
+        ),
+    }
+    return scales[v]
+
+
+def _web_shapes_scope_css(variant: str) -> str:
+    """Corner radii on content wrappers and controls for imported web HTML."""
+    v = variant if variant in ("a", "b", "c") else "b"
+    wrapped_parts: list[str] = []
+    for base in _CONTENT_LAYOUT_SELECTORS:
+        wrapped_parts.extend(
+            (
+                f"{base} button",
+                f"{base} [role='button']",
+                f"{base} input",
+                f"{base} section",
+                f"{base} article",
+            )
+        )
+    wrapped = ", ".join(wrapped_parts)
+    global_targets = (
+        "button,[role='button'],input,select,textarea,section,article,nav,header,footer"
+    )
+    radii = {
+        "a": f"{wrapped},{global_targets}{{border-radius:4px!important;}}",
+        "b": f"{wrapped},{global_targets}{{border-radius:10px!important;}}",
+        "c": f"{wrapped},{global_targets}{{border-radius:999px!important;}}",
+    }
+    return radii[v]
+
+
 def _web_orientation_scope_css(variant: str, *, user_goal: str = "") -> str:
     """WordPress/Kadence-aware layout patches for imported web HTML."""
     v = variant if variant in ("a", "b", "c") else "b"
@@ -362,22 +428,9 @@ def _web_scope_css(scope: str, variant: str, *, user_goal: str = "") -> str:
         }
         return palettes[v]
     if scope == "shapes":
-        radii = {
-            "a": "button,[role='button'],input,select,textarea,section,article,nav,header,footer"
-            "{border-radius:4px!important;}",
-            "b": "button,[role='button'],input,select,textarea,section,article,nav,header,footer"
-            "{border-radius:10px!important;}",
-            "c": "button,[role='button'],input,select,textarea,section,article,nav,header,footer"
-            "{border-radius:999px!important;}",
-        }
-        return radii[v]
+        return _web_shapes_scope_css(v)
     if scope == "display":
-        scales = {
-            "a": "h1{font-size:1.35rem!important;}h2{font-size:1rem!important;}p{font-size:0.9rem!important;}",
-            "b": "h1{font-size:1.65rem!important;}h2{font-size:1.15rem!important;}p{font-size:1rem!important;}",
-            "c": "h1{font-size:1.9rem!important;font-weight:700!important;}h2{font-size:1.25rem!important;}",
-        }
-        return scales[v]
+        return _web_display_scope_css(v)
     if scope == "orientation":
         return _web_orientation_scope_css(v, user_goal=user_goal)
     return ""
@@ -546,10 +599,24 @@ def inject_scope_style(
         )
         if scope == "colors" and selectors:
             css = marked_scope_colors_css(selectors, variant)
-        elif scope == "orientation":
-            if selectors:
-                prefix = ", ".join(selectors)
-                css += f"\n{prefix}{{display:flex!important;flex-direction:column!important;}}"
+        elif scope == "orientation" and selectors:
+            css = marked_scope_orientation_css(selectors, variant)
+            if _uses_web_scope_css(inferred, cleaned) and goal_requests_column_layout(
+                user_goal
+            ):
+                page_css = _web_orientation_scope_css(variant, user_goal=user_goal)
+                if page_css:
+                    css = f"{page_css}\n{css}"
+        elif scope == "display" and selectors and _uses_web_scope_css(inferred, cleaned):
+            css = _web_display_scope_css(variant)
+            extra = marked_scope_display_css(selectors, variant)
+            if extra:
+                css = f"{css}\n{extra}"
+        elif scope == "shapes" and selectors and _uses_web_scope_css(inferred, cleaned):
+            css = _web_shapes_scope_css(variant)
+            extra = marked_scope_shapes_css(selectors, variant)
+            if extra:
+                css = f"{css}\n{extra}"
         else:
             css = restrict_scope_css_to_marks(
                 css,
@@ -578,4 +645,3 @@ def scoped_html_fragment(html: str, focus_scope: str, project_kind: str) -> str 
                 + match.group(1)
             )
     return None
-

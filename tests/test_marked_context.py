@@ -238,6 +238,45 @@ def test_marked_scope_colors_css_differs_by_variant() -> None:
     assert "background-color:#38bdf8" in a
     assert "background-color:#facc15" in b
     assert a != b
+    assert ".kb-btn2_237106-a1 *" in a
+    assert "color:#0f172a!important" in a
+
+
+def test_resolve_marked_selectors_heading_text_id() -> None:
+    mark = "Pracownia Malort Gdynia – przestrzeń dla kreatywności Twojego dziecka"
+    html = (
+        '<h2 class="kt-adv-heading2_289857-94 wp-block-kadence-advancedheading">'
+        '<strong style="color: #007D13;">Pracownia Malort Gdynia – </strong>'
+        "przestrzeń dla kreatywności Twojego dziecka"
+        "</h2>"
+    )
+    selectors = resolve_marked_selectors(html, [mark], narrow=True)
+    assert ".kt-adv-heading2_289857-94" in selectors
+    assert ".wp-block-kadence-advancedheading" not in selectors
+    assert f'[data-nexu-target="{mark}"]' in selectors
+
+
+def test_inject_scope_style_colors_overrides_inline_heading_color() -> None:
+    mark = "Pracownia Malort Gdynia – przestrzeń dla kreatywności Twojego dziecka"
+    html = (
+        "<html><head></head><body>"
+        '<h2 class="kt-adv-heading2_289857-94 wp-block-kadence-advancedheading">'
+        '<strong style="color: #007D13;">Pracownia Malort Gdynia – </strong>'
+        "przestrzeń dla kreatywności Twojego dziecka"
+        "</h2></body></html>"
+    )
+    patched = inject_scope_style(
+        html,
+        "colors",
+        "a",
+        project_kind="imported",
+        delete_ids=[mark],
+    )
+    assert "nexu-scope-variant" in patched
+    assert ".kt-adv-heading2_289857-94" in patched
+    assert ".kt-adv-heading2_289857-94 *" in patched
+    assert "color:#0f172a!important" in patched
+    assert "background-color:#38bdf8" in patched
 
 
 def test_should_block_full_html_for_imported_marks() -> None:
@@ -261,6 +300,60 @@ def test_goal_requests_column_layout_detects_polish_and_english() -> None:
     assert goal_requests_column_layout("column layout refresh")
     assert not goal_requests_column_layout("nowoczesny design strony")
     assert not goal_requests_column_layout("")
+
+
+def test_inject_scope_style_display_keeps_entry_content_typography() -> None:
+    import re
+
+    html = """<!DOCTYPE html><html><head></head><body>
+<main class="site-content"><div class="entry-content">
+<h1>Title</h1><p>Body</p>
+</div></main>
+<button class="kb-btn2_237106-a1">Change me</button>
+</body></html>"""
+    patched = inject_scope_style(
+        html,
+        "display",
+        "b",
+        project_kind="imported",
+        delete_ids=["Change me"],
+    )
+    style_match = re.search(
+        r'<style id="nexu-scope-variant">\s*(.*?)\s*</style>',
+        patched,
+        flags=re.I | re.S,
+    )
+    assert style_match is not None
+    scope_css = style_match.group(1)
+    assert ".entry-content h1" in scope_css
+    assert "font-size:1.65rem" in scope_css
+    assert '[data-nexu-target="Change me"]' in scope_css
+
+
+def test_inject_scope_style_shapes_keeps_content_wrapper_radii() -> None:
+    import re
+
+    html = """<!DOCTYPE html><html><head></head><body>
+<div class="entry-content">
+<button class="kb-btn2_237106-a1">Round me</button>
+</div></body></html>"""
+    patched = inject_scope_style(
+        html,
+        "shapes",
+        "c",
+        project_kind="imported",
+        delete_ids=["Round me"],
+    )
+    style_match = re.search(
+        r'<style id="nexu-scope-variant">\s*(.*?)\s*</style>',
+        patched,
+        flags=re.I | re.S,
+    )
+    assert style_match is not None
+    scope_css = style_match.group(1)
+    assert ".entry-content button" in scope_css
+    assert "border-radius:999px" in scope_css
+    assert '[data-nexu-target="Round me"]' in scope_css
 
 
 def test_inject_scope_style_orientation_column_goal_keeps_layout_css() -> None:
@@ -290,5 +383,6 @@ def test_inject_scope_style_orientation_column_goal_keeps_layout_css() -> None:
     scope_css = style_match.group(1)
     assert "grid-template-columns" in scope_css
     assert "1fr 1fr" in scope_css
-    assert "body{" in scope_css or ".entry-content{" in scope_css
-    assert ".site-content{" in scope_css or "main," in scope_css
+    assert ":has(" in scope_css
+    assert ".entry-content:has(" in scope_css or "main:has(" in scope_css
+    assert '[data-nexu-target="Move me"]' in scope_css
