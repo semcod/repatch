@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Callable, Iterable, List
 
 SUPPORTED_SCOPES = {"functions", "display", "colors", "shapes", "orientation"}
+NUM_SUGGESTIONS = 3
 
 
 @dataclass(frozen=True)
@@ -31,7 +32,7 @@ class RepatchService:
         response = completion_fn(
             model=self.model,
             temperature=temperature,
-            n=3,
+            n=NUM_SUGGESTIONS,
             response_format={"type": "json_object"},
             messages=[
                 {
@@ -50,8 +51,8 @@ class RepatchService:
         )
 
         suggestions = [self._parse_choice(choice) for choice in response.choices]
-        if len(suggestions) != 3:
-            raise ValueError("LLM response must contain exactly 3 suggestions.")
+        if len(suggestions) != NUM_SUGGESTIONS:
+            raise ValueError(f"LLM response must contain exactly {NUM_SUGGESTIONS} suggestions.")
         return suggestions
 
     def _normalize_scopes(self, scopes: Iterable[str]) -> List[str]:

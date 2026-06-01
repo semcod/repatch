@@ -1,5 +1,7 @@
 # repatch
 
+First simple Python package for scope-based HTML/CSS/JS patch suggestions via LiteLLM.
+
 Pierwsza, prosta wersja pakietu Python do generowania propozycji patchy fragmentów
 HTML/CSS/JS na podstawie scope i odpowiedzi LLM przez `litellm`.
 
