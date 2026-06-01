@@ -16,7 +16,7 @@ SUMD - Structured Unified Markdown Descriptor for AI-aware project refactorizati
 ## Metadata
 
 - **name**: `repatch`
-- **version**: `0.2.10`
+- **version**: `0.2.12`
 - **python_requires**: `>=3.10`
 - **license**: Apache-2.0
 - **ai_model**: `openrouter/qwen/qwen3-coder-next`
@@ -36,7 +36,7 @@ SUMD (description) → DOQL/source (code) → taskfile (automation) → testql (
 
 app {
   name: repatch;
-  version: 0.2.10;
+  version: 0.2.12;
 }
 
 dependencies {
@@ -270,10 +270,10 @@ HUBS[20]:
     CC=14  in:2  out:17  total:19
   repatch.marked_context._extract_balanced_html
     CC=10  in:1  out:18  total:19
-  sdks.js.repatch-sdk.RepatchSDK.apply
-    CC=12  in:3  out:14  total:17
   repatch.options.sync_option_previews_from_workspace
     CC=10  in:0  out:17  total:17
+  sdks.js.repatch-sdk.RepatchSDK.apply
+    CC=12  in:3  out:14  total:17
   repatch.dom_patch.build_function_option_patches
     CC=12  in:0  out:16  total:16
   repatch.marked_context._format_context_body
@@ -374,33 +374,6 @@ EDGES:
   repatch.project_ir._ProjectIRParser._classify_node → repatch.project_ir._clean_text
   repatch.project_ir._ProjectIRParser.handle_endtag → repatch.project_ir._clean_text
   repatch.project_ir._ProjectIRParser.handle_data → repatch.project_ir._clean_text
-  repatch.ui_patch.supports_llm_patch_scope → repatch.scope.normalize_focus_scope
-  repatch.ui_patch.build_ui_patch_prompt → repatch.scope.normalize_focus_scope
-  repatch.ui_patch.build_ui_patch_prompt → repatch.ui_patch._patch_scope_rules
-  repatch.ui_patch.build_ui_patch_prompt → repatch.scope.scoped_html_fragment
-  repatch.ui_patch.build_ui_patch_prompt → repatch.ui_patch._compact_html
-  repatch.ui_patch.parse_ui_patch_response → repatch.ui_patch._strip_json_fence
-  repatch.ui_patch._safe_css → repatch.css.validate_css_safety
-  repatch.ui_patch._css_for → repatch.ui_patch._safe_css
-  repatch.ui_patch.apply_ui_patch_options → repatch.scope.strip_scope_style
-  repatch.ui_patch.apply_ui_patch_options → repatch.scope.normalize_focus_scope
-  repatch.ui_patch.apply_ui_patch_options → repatch.ui_patch._css_for
-  repatch.options.html_files_distinct → repatch.options.normalize_html_body
-  repatch.options.sync_option_previews_from_workspace → repatch.spatial.apply_spatial_deletes_to_html
-  repatch.options.enforce_deletes_on_option_previews → repatch.spatial.apply_spatial_deletes_to_html
-  repatch.css.validate_css_safety → repatch.css._strip_css_comments
-  repatch.css.validate_css_safety → repatch.css._selector_is_runtime_only
-  repatch.spatial._element_delete_candidates → repatch.spatial._delete_match_keys
-  repatch.spatial.apply_spatial_deletes_to_html → repatch.spatial._delete_match_keys
-  repatch.spatial.apply_spatial_deletes_to_html → repatch.spatial._element_delete_candidates
-  sdks.js.repatch-sdk.RepatchSDK.connect → sdks.js.repatch-sdk.RepatchSDK._connectSSE
-  sdks.js.repatch-sdk.RepatchSDK.connect → sdks.js.repatch-sdk.RepatchSDK._connectWS
-  sdks.js.repatch-sdk.RepatchSDK._connectWS → sdks.js.repatch-sdk.RepatchSDK.apply
-  sdks.js.repatch-sdk.RepatchSDK._connectWS → sdks.js.repatch-sdk.RepatchSDK.setTimeout
-  sdks.js.repatch-sdk.RepatchSDK.payload → sdks.js.repatch-sdk.RepatchSDK.apply
-  sdks.js.repatch-sdk.RepatchSDK.setTimeout → sdks.js.repatch-sdk.RepatchSDK._connectSSE
-  sdks.js.repatch-sdk.RepatchSDK._connectSSE → sdks.js.repatch-sdk.RepatchSDK.apply
-  sdks.python.repatch_sdk.RepatchClient._trigger_listeners → sdks.js.repatch-sdk.RepatchSDK.cb
   repatch.scope.default_scope_for_kind → repatch.scope.allowed_scope_ids
   repatch.scope.normalize_focus_scope → repatch.scope.default_scope_for_kind
   repatch.scope.normalize_focus_scope → repatch.scope.allowed_scope_ids
@@ -421,6 +394,33 @@ EDGES:
   repatch.scope.inject_scope_style → repatch.scope._get_scope_css
   repatch.scope.inject_scope_style → repatch.scope.strip_scope_style
   repatch.scope.inject_scope_style → repatch.scope._inject_css_block
+  repatch.scope.scoped_html_fragment → repatch.scope.normalize_focus_scope
+  repatch.scope.scoped_html_fragment → repatch.scope.scope_supports_offline_fast_path
+  repatch.dom_patch.build_function_patch_context → repatch.project_ir.build_project_ir
+  repatch.dom_patch.build_function_patch_context → repatch.project_ir.summarize_project_ir
+  repatch.dom_patch._variant_section → repatch.dom_patch._goal_label
+  repatch.dom_patch._matches_target → repatch.dom_patch._attrs_from_open_tag
+  repatch.dom_patch._matches_target → repatch.dom_patch._strip_tags
+  repatch.dom_patch._matches_target → repatch.dom_patch._target_candidates
+  repatch.dom_patch._variant_target_label → repatch.dom_patch._goal_label
+  repatch.dom_patch._patch_function_targets → repatch.dom_patch._target_candidates
+  repatch.dom_patch._patch_function_targets → repatch.dom_patch._variant_target_label
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._strip_existing_patch
+  repatch.dom_patch.build_function_option_patches → repatch.project_ir.build_project_ir
+  repatch.dom_patch.build_function_option_patches → repatch.marked_context.effective_delete_ids
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch.supports_function_patch
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._patch_function_targets
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_head
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_body
+  repatch.marked_context.marked_css_selectors → repatch.marked_context._id_candidates
+  repatch.marked_context.marked_css_selectors → repatch.marked_context._css_id_selector
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._fragment_class_names
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context.marked_css_selectors
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._find_marked_subtrees
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._find_marked_subtrees
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._collect_keep_selectors
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context.marked_css_selectors
+  repatch.marked_context.restrict_scope_css_to_marks → repatch.css.split_css_rules
 ```
 
 ## Test Contracts
@@ -476,10 +476,10 @@ HUBS[20]:
     CC=14  in:2  out:17  total:19
   repatch.marked_context._extract_balanced_html
     CC=10  in:1  out:18  total:19
-  sdks.js.repatch-sdk.RepatchSDK.apply
-    CC=12  in:3  out:14  total:17
   repatch.options.sync_option_previews_from_workspace
     CC=10  in:0  out:17  total:17
+  sdks.js.repatch-sdk.RepatchSDK.apply
+    CC=12  in:3  out:14  total:17
   repatch.dom_patch.build_function_option_patches
     CC=12  in:0  out:16  total:16
   repatch.marked_context._format_context_body
@@ -580,33 +580,6 @@ EDGES:
   repatch.project_ir._ProjectIRParser._classify_node → repatch.project_ir._clean_text
   repatch.project_ir._ProjectIRParser.handle_endtag → repatch.project_ir._clean_text
   repatch.project_ir._ProjectIRParser.handle_data → repatch.project_ir._clean_text
-  repatch.ui_patch.supports_llm_patch_scope → repatch.scope.normalize_focus_scope
-  repatch.ui_patch.build_ui_patch_prompt → repatch.scope.normalize_focus_scope
-  repatch.ui_patch.build_ui_patch_prompt → repatch.ui_patch._patch_scope_rules
-  repatch.ui_patch.build_ui_patch_prompt → repatch.scope.scoped_html_fragment
-  repatch.ui_patch.build_ui_patch_prompt → repatch.ui_patch._compact_html
-  repatch.ui_patch.parse_ui_patch_response → repatch.ui_patch._strip_json_fence
-  repatch.ui_patch._safe_css → repatch.css.validate_css_safety
-  repatch.ui_patch._css_for → repatch.ui_patch._safe_css
-  repatch.ui_patch.apply_ui_patch_options → repatch.scope.strip_scope_style
-  repatch.ui_patch.apply_ui_patch_options → repatch.scope.normalize_focus_scope
-  repatch.ui_patch.apply_ui_patch_options → repatch.ui_patch._css_for
-  repatch.options.html_files_distinct → repatch.options.normalize_html_body
-  repatch.options.sync_option_previews_from_workspace → repatch.spatial.apply_spatial_deletes_to_html
-  repatch.options.enforce_deletes_on_option_previews → repatch.spatial.apply_spatial_deletes_to_html
-  repatch.css.validate_css_safety → repatch.css._strip_css_comments
-  repatch.css.validate_css_safety → repatch.css._selector_is_runtime_only
-  repatch.spatial._element_delete_candidates → repatch.spatial._delete_match_keys
-  repatch.spatial.apply_spatial_deletes_to_html → repatch.spatial._delete_match_keys
-  repatch.spatial.apply_spatial_deletes_to_html → repatch.spatial._element_delete_candidates
-  sdks.js.repatch-sdk.RepatchSDK.connect → sdks.js.repatch-sdk.RepatchSDK._connectSSE
-  sdks.js.repatch-sdk.RepatchSDK.connect → sdks.js.repatch-sdk.RepatchSDK._connectWS
-  sdks.js.repatch-sdk.RepatchSDK._connectWS → sdks.js.repatch-sdk.RepatchSDK.apply
-  sdks.js.repatch-sdk.RepatchSDK._connectWS → sdks.js.repatch-sdk.RepatchSDK.setTimeout
-  sdks.js.repatch-sdk.RepatchSDK.payload → sdks.js.repatch-sdk.RepatchSDK.apply
-  sdks.js.repatch-sdk.RepatchSDK.setTimeout → sdks.js.repatch-sdk.RepatchSDK._connectSSE
-  sdks.js.repatch-sdk.RepatchSDK._connectSSE → sdks.js.repatch-sdk.RepatchSDK.apply
-  sdks.python.repatch_sdk.RepatchClient._trigger_listeners → sdks.js.repatch-sdk.RepatchSDK.cb
   repatch.scope.default_scope_for_kind → repatch.scope.allowed_scope_ids
   repatch.scope.normalize_focus_scope → repatch.scope.default_scope_for_kind
   repatch.scope.normalize_focus_scope → repatch.scope.allowed_scope_ids
@@ -627,21 +600,48 @@ EDGES:
   repatch.scope.inject_scope_style → repatch.scope._get_scope_css
   repatch.scope.inject_scope_style → repatch.scope.strip_scope_style
   repatch.scope.inject_scope_style → repatch.scope._inject_css_block
+  repatch.scope.scoped_html_fragment → repatch.scope.normalize_focus_scope
+  repatch.scope.scoped_html_fragment → repatch.scope.scope_supports_offline_fast_path
+  repatch.dom_patch.build_function_patch_context → repatch.project_ir.build_project_ir
+  repatch.dom_patch.build_function_patch_context → repatch.project_ir.summarize_project_ir
+  repatch.dom_patch._variant_section → repatch.dom_patch._goal_label
+  repatch.dom_patch._matches_target → repatch.dom_patch._attrs_from_open_tag
+  repatch.dom_patch._matches_target → repatch.dom_patch._strip_tags
+  repatch.dom_patch._matches_target → repatch.dom_patch._target_candidates
+  repatch.dom_patch._variant_target_label → repatch.dom_patch._goal_label
+  repatch.dom_patch._patch_function_targets → repatch.dom_patch._target_candidates
+  repatch.dom_patch._patch_function_targets → repatch.dom_patch._variant_target_label
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._strip_existing_patch
+  repatch.dom_patch.build_function_option_patches → repatch.project_ir.build_project_ir
+  repatch.dom_patch.build_function_option_patches → repatch.marked_context.effective_delete_ids
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch.supports_function_patch
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._patch_function_targets
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_head
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_body
+  repatch.marked_context.marked_css_selectors → repatch.marked_context._id_candidates
+  repatch.marked_context.marked_css_selectors → repatch.marked_context._css_id_selector
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._fragment_class_names
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context.marked_css_selectors
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._find_marked_subtrees
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._find_marked_subtrees
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._collect_keep_selectors
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context.marked_css_selectors
+  repatch.marked_context.restrict_scope_css_to_marks → repatch.css.split_css_rules
 ```
 
 ### Code Analysis (`project/analysis.toon.yaml`)
 
 ```toon markpact:analysis path=project/analysis.toon.yaml
-# code2llm | 21f 7502L | python:12,yaml:4,json:1,txt:1,shell:1,javascript:1,toml:1 | 2026-06-01
+# code2llm | 21f 7521L | python:12,yaml:4,json:1,txt:1,shell:1,javascript:1,toml:1 | 2026-06-01
 # generated in 0.01s
 # CC̅=5.2 | critical:5/156 | dups:0 | cycles:0
 
 HEALTH[5]:
-  🟡 CC    apply_ui_patch_options CC=25 (limit:15)
   🟡 CC    _bind_annotations_to_html CC=29 (limit:15)
   🟡 CC    inject_scope_style CC=27 (limit:15)
   🟡 CC    resolve_marked_selectors CC=16 (limit:15)
   🟡 CC    _find_marked_subtrees CC=17 (limit:15)
+  🟡 CC    apply_ui_patch_options CC=25 (limit:15)
 
 REFACTOR[1]:
   1. split 5 high-CC methods  (CC>15)
@@ -657,95 +657,95 @@ PIPELINES[54]:
       PURITY: 100% pure
   [5] Src [handle_data]: handle_data → _clean_text
       PURITY: 100% pure
-  [6] Src [supports_llm_patch_scope]: supports_llm_patch_scope → normalize_focus_scope → default_scope_for_kind → allowed_scope_ids
+  [6] Src [ui_type_for_kind]: ui_type_for_kind
       PURITY: 100% pure
-  [7] Src [build_ui_patch_prompt]: build_ui_patch_prompt → normalize_focus_scope → default_scope_for_kind → allowed_scope_ids
+  [7] Src [should_block_full_html_iterate]: should_block_full_html_iterate → has_ui_marks
       PURITY: 100% pure
-  [8] Src [parse_ui_patch_response]: parse_ui_patch_response → _strip_json_fence
+  [8] Src [inject_scope_style]: inject_scope_style → _bind_annotations_to_html → _parse_attrs → _normalize_label_text
       PURITY: 100% pure
-  [9] Src [apply_ui_patch_options]: apply_ui_patch_options → strip_scope_style
+  [9] Src [build_function_patch_context]: build_function_patch_context → build_project_ir
       PURITY: 100% pure
-  [10] Src [html_files_distinct]: html_files_distinct → normalize_html_body
+  [10] Src [_default_prepare_html]: _default_prepare_html
       PURITY: 100% pure
-  [11] Src [sync_option_previews_from_workspace]: sync_option_previews_from_workspace → apply_spatial_deletes_to_html → _delete_match_keys
+  [11] Src [build_function_option_patches]: build_function_option_patches → _strip_existing_patch
       PURITY: 100% pure
-  [12] Src [enforce_deletes_on_option_previews]: enforce_deletes_on_option_previews → apply_spatial_deletes_to_html → _delete_match_keys
+  [12] Src [resolve_marked_llm_context]: resolve_marked_llm_context → build_marked_element_context → _assemble_marked_subtrees → _find_marked_subtrees → ...(2 more)
       PURITY: 100% pure
-  [13] Src [generate_patch_suggestions]: generate_patch_suggestions
+  [13] Src [supports_llm_patch_scope]: supports_llm_patch_scope → normalize_focus_scope → default_scope_for_kind → allowed_scope_ids
       PURITY: 100% pure
-  [14] Src [_normalize_scopes]: _normalize_scopes
+  [14] Src [build_ui_patch_prompt]: build_ui_patch_prompt → normalize_focus_scope → default_scope_for_kind → allowed_scope_ids
       PURITY: 100% pure
-  [15] Src [_build_user_prompt]: _build_user_prompt
+  [15] Src [parse_ui_patch_response]: parse_ui_patch_response → _strip_json_fence
       PURITY: 100% pure
-  [16] Src [_parse_choice]: _parse_choice
+  [16] Src [apply_ui_patch_options]: apply_ui_patch_options → strip_scope_style
       PURITY: 100% pure
-  [17] Src [_choice_content]: _choice_content
+  [17] Src [html_files_distinct]: html_files_distinct → normalize_html_body
       PURITY: 100% pure
-  [18] Src [_default_completion]: _default_completion
+  [18] Src [sync_option_previews_from_workspace]: sync_option_previews_from_workspace → apply_spatial_deletes_to_html → _delete_match_keys
       PURITY: 100% pure
-  [19] Src [connect]: connect → _connectSSE → apply → cb
+  [19] Src [enforce_deletes_on_option_previews]: enforce_deletes_on_option_previews → apply_spatial_deletes_to_html → _delete_match_keys
       PURITY: 100% pure
-  [20] Src [payload]: payload → apply → cb
+  [20] Src [extract_visual_css]: extract_visual_css → extract_inline_css
       PURITY: 100% pure
-  [21] Src [onPatch]: onPatch
+  [21] Src [__init__]: __init__
       PURITY: 100% pure
-  [22] Src [dslClean]: dslClean
+  [22] Src [_keep_attr]: _keep_attr
       PURITY: 100% pure
-  [23] Src [addMatch]: addMatch
+  [23] Src [handle_starttag]: handle_starttag
       PURITY: 100% pure
-  [24] Src [replaceMatch]: replaceMatch
+  [24] Src [handle_endtag]: handle_endtag
       PURITY: 100% pure
-  [25] Src [styleMatch]: styleMatch
+  [25] Src [handle_data]: handle_data
       PURITY: 100% pure
-  [26] Src [removeMatch]: removeMatch → cb
+  [26] Src [build_html_outline]: build_html_outline
       PURITY: 100% pure
-  [27] Src [html]: html
+  [27] Src [prepare_http_preview_html]: prepare_http_preview_html → sanitize_http_preview_html → _should_remove_preview_script → _script_src_allowed_for_preview
       PURITY: 100% pure
-  [28] Src [target]: target
+  [28] Src [build_http_llm_context]: build_http_llm_context
       PURITY: 100% pure
-  [29] Src [css]: css
+  [29] Src [http_patch_llm_rules]: http_patch_llm_rules
       PURITY: 100% pure
-  [30] Src [styleEl]: styleEl
+  [30] Src [generate_patch_suggestions]: generate_patch_suggestions
       PURITY: 100% pure
-  [31] Src [sendPatchRequest]: sendPatchRequest
+  [31] Src [_normalize_scopes]: _normalize_scopes
       PURITY: 100% pure
-  [32] Src [on_patch]: on_patch
+  [32] Src [_build_user_prompt]: _build_user_prompt
       PURITY: 100% pure
-  [33] Src [start]: start
+  [33] Src [_parse_choice]: _parse_choice
       PURITY: 100% pure
-  [34] Src [_run_event_loop]: _run_event_loop
+  [34] Src [_choice_content]: _choice_content
       PURITY: 100% pure
-  [35] Src [_connect_and_listen]: _connect_and_listen
+  [35] Src [_default_completion]: _default_completion
       PURITY: 100% pure
-  [36] Src [_trigger_listeners]: _trigger_listeners → cb
+  [36] Src [connect]: connect → _connectSSE → apply → cb
       PURITY: 100% pure
-  [37] Src [send_patch]: send_patch
+  [37] Src [payload]: payload → apply → cb
       PURITY: 100% pure
-  [38] Src [ui_type_for_kind]: ui_type_for_kind
+  [38] Src [onPatch]: onPatch
       PURITY: 100% pure
-  [39] Src [should_block_full_html_iterate]: should_block_full_html_iterate → has_ui_marks
+  [39] Src [dslClean]: dslClean
       PURITY: 100% pure
-  [40] Src [inject_scope_style]: inject_scope_style → _bind_annotations_to_html → _parse_attrs → _normalize_label_text
+  [40] Src [addMatch]: addMatch
       PURITY: 100% pure
-  [41] Src [build_function_patch_context]: build_function_patch_context → build_project_ir
+  [41] Src [replaceMatch]: replaceMatch
       PURITY: 100% pure
-  [42] Src [_default_prepare_html]: _default_prepare_html
+  [42] Src [styleMatch]: styleMatch
       PURITY: 100% pure
-  [43] Src [build_function_option_patches]: build_function_option_patches → _strip_existing_patch
+  [43] Src [removeMatch]: removeMatch → cb
       PURITY: 100% pure
-  [44] Src [resolve_marked_llm_context]: resolve_marked_llm_context → build_marked_element_context → _assemble_marked_subtrees → _find_marked_subtrees → ...(2 more)
+  [44] Src [html]: html
       PURITY: 100% pure
-  [45] Src [extract_visual_css]: extract_visual_css → extract_inline_css
+  [45] Src [target]: target
       PURITY: 100% pure
-  [46] Src [__init__]: __init__
+  [46] Src [css]: css
       PURITY: 100% pure
-  [47] Src [_keep_attr]: _keep_attr
+  [47] Src [styleEl]: styleEl
       PURITY: 100% pure
-  [48] Src [handle_starttag]: handle_starttag
+  [48] Src [sendPatchRequest]: sendPatchRequest
       PURITY: 100% pure
-  [49] Src [handle_endtag]: handle_endtag
+  [49] Src [on_patch]: on_patch
       PURITY: 100% pure
-  [50] Src [handle_data]: handle_data
+  [50] Src [start]: start
       PURITY: 100% pure
 
 LAYERS:
@@ -757,9 +757,9 @@ LAYERS:
   │ !! ui_patch                   267L  0C   10m  CC=25     ←0
   │ options                    140L  0C    5m  CC=10     ←0
   │ project_ir                 132L  1C    8m  CC=12     ←1
+  │ __init__                   123L  0C    0m  CC=0.0    ←0
   │ spatial                    108L  0C    4m  CC=6      ←1
   │ service                    105L  2C    7m  CC=6      ←0
-  │ __init__                   105L  0C    0m  CC=0.0    ←0
   │ css                         70L  0C    4m  CC=14     ←3
   │
   sdks/                           CC̄=2.7    ←in:0  →out:0
@@ -770,7 +770,7 @@ LAYERS:
   │ !! deps.json                 3394L  0C    0m  CC=0.0    ←0
   │ !! goal.yaml                  511L  0C    0m  CC=0.0    ←0
   │ wup.yaml                   134L  0C    0m  CC=0.0    ←0
-  │ tree.txt                    87L  0C    0m  CC=0.0    ←0
+  │ tree.txt                    88L  0C    0m  CC=0.0    ←0
   │ pyproject.toml              55L  0C    0m  CC=0.0    ←0
   │ project.sh                  50L  0C    0m  CC=0.0    ←0
   │
@@ -793,15 +793,15 @@ EXTERNAL:
 ### Duplication (`project/duplication.toon.yaml`)
 
 ```toon markpact:analysis path=project/duplication.toon.yaml
-# redup/duplication | 1 groups | 11f 2982L | 2026-06-01
+# redup/duplication | 1 groups | 11f 3000L | 2026-06-01
 
 SUMMARY:
   files_scanned: 11
-  total_lines:   2982
+  total_lines:   3000
   dup_groups:    1
   dup_fragments: 2
   saved_lines:   12
-  scan_ms:       2512
+  scan_ms:       2379
 
 HOTSPOTS[1] (files with most duplication):
   repatch/marked_context.py  dup=24L  groups=1  frags=2  (0.8%)
@@ -905,7 +905,7 @@ PATTERNS (language parser shared logic):
     - Standardized FunctionInfo/ClassInfo models
 
 HISTORY:
-  prev CC̄=5.4 → now CC̄=5.2
+  prev CC̄=5.2 → now CC̄=5.2
 ```
 
 ## Intent

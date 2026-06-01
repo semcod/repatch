@@ -21,7 +21,7 @@ Scope-based HTML/CSS/DOM patch utilities and LLM patch helpers
 ## Metadata
 
 - **name**: `repatch`
-- **version**: `0.2.10`
+- **version**: `0.2.12`
 - **python_requires**: `>=3.10`
 - **license**: Apache-2.0
 - **ai_model**: `openrouter/qwen/qwen3-coder-next`
@@ -41,7 +41,7 @@ SUMD (description) → DOQL/source (code) → taskfile (automation) → testql (
 
 app {
   name: repatch;
-  version: 0.2.10;
+  version: 0.2.12;
 }
 
 dependencies {
@@ -122,7 +122,7 @@ CONFIG[2]{key, value}:
 ```yaml
 project:
   name: repatch
-  version: 0.2.10
+  version: 0.2.12
   env: local
 ```
 
@@ -181,16 +181,16 @@ pip install -e .[dev]
 ### `project/map.toon.yaml`
 
 ```toon markpact:analysis path=project/map.toon.yaml
-# repatch | 22f 4166L | python:18,shell:2,less:1,javascript:1 | 2026-06-01
-# stats: 156 func | 6 cls | 22 mod | CC̄=5.7 | critical:17 | cycles:0
+# repatch | 23f 4248L | python:19,shell:2,less:1,javascript:1 | 2026-06-01
+# stats: 159 func | 6 cls | 23 mod | CC̄=5.6 | critical:17 | cycles:0
 # alerts[5]: CC _bind_annotations_to_html=29; CC inject_scope_style=27; CC apply_ui_patch_options=25; CC _find_marked_subtrees=17; CC resolve_marked_selectors=16
 # hotspots[5]: inject_scope_style fan=20; _bind_annotations_to_html fan=19; apply_ui_patch_options fan=19; _patch_function_targets fan=18; validate_css_safety fan=15
 # evolution: baseline
 # Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
-M[22]:
+M[23]:
   app.doql.less,22
   project.sh,50
-  repatch/__init__.py,106
+  repatch/__init__.py,124
   repatch/css.py,71
   repatch/dom_patch.py,316
   repatch/marked_context.py,697
@@ -209,6 +209,7 @@ M[22]:
   tests/test_service.py,54
   tests/test_spatial.py,30
   tests/test_ui_patch.py,157
+  tests/test_web_preprocess.py,64
   tree.sh,2
 D:
   repatch/__init__.py:
@@ -408,18 +409,23 @@ D:
     test_apply_ui_patch_rejects_unsafe_css()
     test_apply_ui_patch_rejects_flow_breaking_css()
     test_supports_llm_patch_scope()
+  tests/test_web_preprocess.py:
+    e: test_extract_visual_css_keeps_patch_relevant_rules,test_build_html_outline_strips_scripts_and_text,test_prepare_http_preview_html_blocks_cross_origin_runtime
+    test_extract_visual_css_keeps_patch_relevant_rules(tmp_path)
+    test_build_html_outline_strips_scripts_and_text()
+    test_prepare_http_preview_html_blocks_cross_origin_runtime()
 ```
 
 ### `project/logic.pl`
 
 ```prolog markpact:analysis path=project/logic.pl
 % ── Project Metadata ─────────────────────────────────────
-project_metadata('repatch', '0.2.10', 'python').
+project_metadata('repatch', '0.2.12', 'python').
 
 % ── Project Files ────────────────────────────────────────
 project_file('app.doql.less', 22, 'less').
 project_file('project.sh', 50, 'shell').
-project_file('repatch/__init__.py', 106, 'python').
+project_file('repatch/__init__.py', 124, 'python').
 project_file('repatch/css.py', 71, 'python').
 project_file('repatch/dom_patch.py', 316, 'python').
 project_file('repatch/marked_context.py', 697, 'python').
@@ -438,6 +444,7 @@ project_file('tests/test_options.py', 81, 'python').
 project_file('tests/test_service.py', 54, 'python').
 project_file('tests/test_spatial.py', 30, 'python').
 project_file('tests/test_ui_patch.py', 157, 'python').
+project_file('tests/test_web_preprocess.py', 64, 'python').
 project_file('tree.sh', 2, 'shell').
 
 % ── Python Functions ─────────────────────────────────────
@@ -597,6 +604,9 @@ python_function('tests/test_ui_patch.py', 'test_apply_ui_patch_noops_visual_scop
 python_function('tests/test_ui_patch.py', 'test_apply_ui_patch_rejects_unsafe_css', 0, 1, 2).
 python_function('tests/test_ui_patch.py', 'test_apply_ui_patch_rejects_flow_breaking_css', 0, 1, 2).
 python_function('tests/test_ui_patch.py', 'test_supports_llm_patch_scope', 0, 6, 1).
+python_function('tests/test_web_preprocess.py', 'test_extract_visual_css_keeps_patch_relevant_rules', 1, 5, 3).
+python_function('tests/test_web_preprocess.py', 'test_build_html_outline_strips_scripts_and_text', 0, 5, 2).
+python_function('tests/test_web_preprocess.py', 'test_prepare_http_preview_html_blocks_cross_origin_runtime', 0, 5, 2).
 
 % ── Python Classes ───────────────────────────────────────
 python_class('repatch/project_ir.py', '_ProjectIRParser').
@@ -849,10 +859,10 @@ HUBS[20]:
     CC=14  in:2  out:17  total:19
   repatch.marked_context._extract_balanced_html
     CC=10  in:1  out:18  total:19
-  sdks.js.repatch-sdk.RepatchSDK.apply
-    CC=12  in:3  out:14  total:17
   repatch.options.sync_option_previews_from_workspace
     CC=10  in:0  out:17  total:17
+  sdks.js.repatch-sdk.RepatchSDK.apply
+    CC=12  in:3  out:14  total:17
   repatch.dom_patch.build_function_option_patches
     CC=12  in:0  out:16  total:16
   repatch.marked_context._format_context_body
@@ -953,33 +963,6 @@ EDGES:
   repatch.project_ir._ProjectIRParser._classify_node → repatch.project_ir._clean_text
   repatch.project_ir._ProjectIRParser.handle_endtag → repatch.project_ir._clean_text
   repatch.project_ir._ProjectIRParser.handle_data → repatch.project_ir._clean_text
-  repatch.ui_patch.supports_llm_patch_scope → repatch.scope.normalize_focus_scope
-  repatch.ui_patch.build_ui_patch_prompt → repatch.scope.normalize_focus_scope
-  repatch.ui_patch.build_ui_patch_prompt → repatch.ui_patch._patch_scope_rules
-  repatch.ui_patch.build_ui_patch_prompt → repatch.scope.scoped_html_fragment
-  repatch.ui_patch.build_ui_patch_prompt → repatch.ui_patch._compact_html
-  repatch.ui_patch.parse_ui_patch_response → repatch.ui_patch._strip_json_fence
-  repatch.ui_patch._safe_css → repatch.css.validate_css_safety
-  repatch.ui_patch._css_for → repatch.ui_patch._safe_css
-  repatch.ui_patch.apply_ui_patch_options → repatch.scope.strip_scope_style
-  repatch.ui_patch.apply_ui_patch_options → repatch.scope.normalize_focus_scope
-  repatch.ui_patch.apply_ui_patch_options → repatch.ui_patch._css_for
-  repatch.options.html_files_distinct → repatch.options.normalize_html_body
-  repatch.options.sync_option_previews_from_workspace → repatch.spatial.apply_spatial_deletes_to_html
-  repatch.options.enforce_deletes_on_option_previews → repatch.spatial.apply_spatial_deletes_to_html
-  repatch.css.validate_css_safety → repatch.css._strip_css_comments
-  repatch.css.validate_css_safety → repatch.css._selector_is_runtime_only
-  repatch.spatial._element_delete_candidates → repatch.spatial._delete_match_keys
-  repatch.spatial.apply_spatial_deletes_to_html → repatch.spatial._delete_match_keys
-  repatch.spatial.apply_spatial_deletes_to_html → repatch.spatial._element_delete_candidates
-  sdks.js.repatch-sdk.RepatchSDK.connect → sdks.js.repatch-sdk.RepatchSDK._connectSSE
-  sdks.js.repatch-sdk.RepatchSDK.connect → sdks.js.repatch-sdk.RepatchSDK._connectWS
-  sdks.js.repatch-sdk.RepatchSDK._connectWS → sdks.js.repatch-sdk.RepatchSDK.apply
-  sdks.js.repatch-sdk.RepatchSDK._connectWS → sdks.js.repatch-sdk.RepatchSDK.setTimeout
-  sdks.js.repatch-sdk.RepatchSDK.payload → sdks.js.repatch-sdk.RepatchSDK.apply
-  sdks.js.repatch-sdk.RepatchSDK.setTimeout → sdks.js.repatch-sdk.RepatchSDK._connectSSE
-  sdks.js.repatch-sdk.RepatchSDK._connectSSE → sdks.js.repatch-sdk.RepatchSDK.apply
-  sdks.python.repatch_sdk.RepatchClient._trigger_listeners → sdks.js.repatch-sdk.RepatchSDK.cb
   repatch.scope.default_scope_for_kind → repatch.scope.allowed_scope_ids
   repatch.scope.normalize_focus_scope → repatch.scope.default_scope_for_kind
   repatch.scope.normalize_focus_scope → repatch.scope.allowed_scope_ids
@@ -1000,6 +983,33 @@ EDGES:
   repatch.scope.inject_scope_style → repatch.scope._get_scope_css
   repatch.scope.inject_scope_style → repatch.scope.strip_scope_style
   repatch.scope.inject_scope_style → repatch.scope._inject_css_block
+  repatch.scope.scoped_html_fragment → repatch.scope.normalize_focus_scope
+  repatch.scope.scoped_html_fragment → repatch.scope.scope_supports_offline_fast_path
+  repatch.dom_patch.build_function_patch_context → repatch.project_ir.build_project_ir
+  repatch.dom_patch.build_function_patch_context → repatch.project_ir.summarize_project_ir
+  repatch.dom_patch._variant_section → repatch.dom_patch._goal_label
+  repatch.dom_patch._matches_target → repatch.dom_patch._attrs_from_open_tag
+  repatch.dom_patch._matches_target → repatch.dom_patch._strip_tags
+  repatch.dom_patch._matches_target → repatch.dom_patch._target_candidates
+  repatch.dom_patch._variant_target_label → repatch.dom_patch._goal_label
+  repatch.dom_patch._patch_function_targets → repatch.dom_patch._target_candidates
+  repatch.dom_patch._patch_function_targets → repatch.dom_patch._variant_target_label
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._strip_existing_patch
+  repatch.dom_patch.build_function_option_patches → repatch.project_ir.build_project_ir
+  repatch.dom_patch.build_function_option_patches → repatch.marked_context.effective_delete_ids
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch.supports_function_patch
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._patch_function_targets
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_head
+  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_body
+  repatch.marked_context.marked_css_selectors → repatch.marked_context._id_candidates
+  repatch.marked_context.marked_css_selectors → repatch.marked_context._css_id_selector
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._fragment_class_names
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context.marked_css_selectors
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._find_marked_subtrees
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._find_marked_subtrees
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._collect_keep_selectors
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context.marked_css_selectors
+  repatch.marked_context.restrict_scope_css_to_marks → repatch.css.split_css_rules
 ```
 
 ## Test Contracts

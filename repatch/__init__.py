@@ -19,6 +19,13 @@ from .marked_context import (
     resolve_marked_selectors,
     restrict_scope_css_to_marks,
 )
+from .organize_html import (
+    OrganizeResult,
+    organize_html,
+    organize_html_project,
+    organize_html_project_dir,
+    organize_result_manifest,
+)
 from .options import (
     OPTION_PREVIEW_FILES,
     enforce_deletes_on_option_previews,
@@ -64,8 +71,10 @@ from .web_preprocess import (
     prepare_http_preview_html,
     sanitize_http_preview_html,
 )
+from .web_fetch import WebAsset, WebFetchResult, fetch_complete_web_page
 
 __all__ = [
+    "OrganizeResult",
     "DASHBOARD_KINDS",
     "HTTP_PREVIEW_NETWORK_SHIM",
     "IMPORTED_KINDS",
@@ -76,6 +85,8 @@ __all__ = [
     "SCOPE_STYLE_ID",
     "SUPPORTED_SCOPES",
     "VISUAL_REDESIGN_SCOPES",
+    "WebAsset",
+    "WebFetchResult",
     "allowed_scope_ids",
     "apply_spatial_deletes_to_html",
     "apply_ui_patch_options",
@@ -90,6 +101,7 @@ __all__ = [
     "effective_delete_ids",
     "enforce_deletes_on_option_previews",
     "extract_visual_css",
+    "fetch_complete_web_page",
     "goal_requests_column_layout",
     "has_ui_marks",
     "html_files_distinct",
@@ -100,6 +112,10 @@ __all__ = [
     "marked_scope_colors_css",
     "marked_scope_orientation_css",
     "normalize_html_body",
+    "organize_html",
+    "organize_html_project",
+    "organize_html_project_dir",
+    "organize_result_manifest",
     "normalize_focus_scope",
     "offline_fast_scopes_for_kind",
     "parse_ui_patch_response",

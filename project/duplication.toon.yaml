@@ -1,12 +1,12 @@
-# redup/duplication | 1 groups | 11f 2982L | 2026-06-01
+# redup/duplication | 1 groups | 11f 3000L | 2026-06-01
 
 SUMMARY:
   files_scanned: 11
-  total_lines:   2982
+  total_lines:   3000
   dup_groups:    1
   dup_fragments: 2
   saved_lines:   12
-  scan_ms:       2512
+  scan_ms:       2379
 
 HOTSPOTS[1] (files with most duplication):
   repatch/marked_context.py  dup=24L  groups=1  frags=2  (0.8%)

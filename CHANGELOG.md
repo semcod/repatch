@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.14] - 2026-06-01
+
+### Docs
+- Update README.md
+- Update SUMD.md
+- Update SUMR.md
+
+### Test
+- Update tests/test_organize_html.py
+- Update tests/test_web_fetch.py
+- Update tests/test_web_preprocess.py
+
+### Other
+- Update VERSION
+- Update app.doql.less
+- Update project/calls.png
+- Update project/compact_flow.png
+- Update project/duplication.toon.yaml
+- Update project/flow.png
+- Update project/index.html
+- Update project/logic.pl
+- Update project/map.toon.yaml
+- Update project/project.toon.yaml
+- ... and 6 more files
+
 ## [0.2.12] - 2026-06-01
 
 ### Docs

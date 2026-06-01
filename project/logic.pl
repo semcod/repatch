@@ -1,10 +1,10 @@
 % ── Project Metadata ─────────────────────────────────────
-project_metadata('repatch', '0.2.10', 'python').
+project_metadata('repatch', '0.2.12', 'python').
 
 % ── Project Files ────────────────────────────────────────
 project_file('app.doql.less', 22, 'less').
 project_file('project.sh', 50, 'shell').
-project_file('repatch/__init__.py', 106, 'python').
+project_file('repatch/__init__.py', 124, 'python').
 project_file('repatch/css.py', 71, 'python').
 project_file('repatch/dom_patch.py', 316, 'python').
 project_file('repatch/marked_context.py', 697, 'python').
@@ -23,6 +23,7 @@ project_file('tests/test_options.py', 81, 'python').
 project_file('tests/test_service.py', 54, 'python').
 project_file('tests/test_spatial.py', 30, 'python').
 project_file('tests/test_ui_patch.py', 157, 'python').
+project_file('tests/test_web_preprocess.py', 64, 'python').
 project_file('tree.sh', 2, 'shell').
 
 % ── Python Functions ─────────────────────────────────────
@@ -182,6 +183,9 @@ python_function('tests/test_ui_patch.py', 'test_apply_ui_patch_noops_visual_scop
 python_function('tests/test_ui_patch.py', 'test_apply_ui_patch_rejects_unsafe_css', 0, 1, 2).
 python_function('tests/test_ui_patch.py', 'test_apply_ui_patch_rejects_flow_breaking_css', 0, 1, 2).
 python_function('tests/test_ui_patch.py', 'test_supports_llm_patch_scope', 0, 6, 1).
+python_function('tests/test_web_preprocess.py', 'test_extract_visual_css_keeps_patch_relevant_rules', 1, 5, 3).
+python_function('tests/test_web_preprocess.py', 'test_build_html_outline_strips_scripts_and_text', 0, 5, 2).
+python_function('tests/test_web_preprocess.py', 'test_prepare_http_preview_html_blocks_cross_origin_runtime', 0, 5, 2).
 
 % ── Python Classes ───────────────────────────────────────
 python_class('repatch/project_ir.py', '_ProjectIRParser').

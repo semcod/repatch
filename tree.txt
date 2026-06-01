@@ -13,7 +13,8 @@
 │           ├── scope.py
 │           ├── service.py
 │           ├── spatial.py
-│           └── ui_patch.py
+│           ├── ui_patch.py
+│           └── web_preprocess.py
 ├── CHANGELOG.md
 ├── deps.json
 ├── goal.yaml
@@ -76,7 +77,8 @@
 │   ├── test_options.py
 │   ├── test_service.py
 │   ├── test_spatial.py
-│   └── test_ui_patch.py
+│   ├── test_ui_patch.py
+│   └── test_web_preprocess.py
 ├── TODO
 │   └── 1.md
 ├── tree.sh
@@ -85,4 +87,4 @@
 ├── VERSION
 └── wup.yaml
 
-14 directories, 72 files
+14 directories, 74 files

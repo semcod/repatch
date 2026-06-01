@@ -4,6 +4,7 @@ from pathlib import Path
 
 from repatch import (
     build_html_outline,
+    build_http_llm_context,
     extract_visual_css,
     prepare_http_preview_html,
     sanitize_http_preview_html,
@@ -61,3 +62,24 @@ def test_prepare_http_preview_html_blocks_cross_origin_runtime() -> None:
     prepared, meta = prepare_http_preview_html(SAMPLE_HTML)
     assert meta["preview_shim_injected"] is True
     assert "nexu preview: block cross-origin fetch" in prepared
+
+
+def test_build_http_llm_context_includes_organize_manifest() -> None:
+    ctx = build_http_llm_context(
+        {
+            "visual_css": "body { color: red; }",
+            "html_outline": "<body></body>",
+            "organize": {
+                "extracted_files": ["nexu-extracted.css"],
+                "tagged_targets_count": 2,
+            },
+            "extracted_css": ".hero { padding: 1rem; }",
+            "source_paths": {
+                "index_html": "source/index.html",
+                "nexu-extracted_css": "source/nexu-extracted.css",
+            },
+        }
+    )
+    assert "organize manifest" in ctx.lower()
+    assert "data-nexu-target" in ctx
+    assert ".hero { padding: 1rem; }" in ctx

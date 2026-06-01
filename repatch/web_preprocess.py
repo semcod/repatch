@@ -10,6 +10,7 @@ from typing import Any
 from .css import split_css_rules
 
 MAX_VISUAL_CSS_BYTES = 65_536
+MAX_EXTRACTED_PATCH_BYTES = 16_384
 OUTLINE_TEXT_PLACEHOLDER = "…"
 
 _STYLE_BLOCK_RE = re.compile(r"<style\b[^>]*>([\s\S]*?)</style>", re.IGNORECASE)
@@ -367,16 +368,77 @@ def prepare_http_preview_html(html: str) -> tuple[str, dict[str, Any]]:
     return out, meta
 
 
+def _cap_patch_text(text: str, max_bytes: int, *, label: str) -> str:
+    raw = str(text or "").strip()
+    if not raw:
+        return ""
+    encoded = raw.encode("utf-8")
+    if len(encoded) <= max_bytes:
+        return raw
+    truncated = encoded[:max_bytes].decode("utf-8", errors="ignore").rstrip()
+    return truncated + f"\n/* repatch: {label} truncated */"
+
+
 def build_http_llm_context(artifacts: dict[str, Any]) -> str:
-    """Combine visual CSS + HTML outline for compact LLM patch prompts."""
+    """Combine visual CSS + HTML outline (+ organize manifest) for compact LLM patch prompts."""
     css = str(artifacts.get("visual_css") or "").strip()
     outline = str(artifacts.get("html_outline") or "").strip()
-    if not css and not outline:
+    organize = artifacts.get("organize") if isinstance(artifacts.get("organize"), dict) else {}
+    extracted_css = _cap_patch_text(
+        str(artifacts.get("extracted_css") or ""),
+        MAX_EXTRACTED_PATCH_BYTES,
+        label="extracted CSS",
+    )
+    extracted_js = _cap_patch_text(
+        str(artifacts.get("extracted_js") or ""),
+        MAX_EXTRACTED_PATCH_BYTES,
+        label="extracted JS",
+    )
+    source_paths = (
+        artifacts.get("source_paths") if isinstance(artifacts.get("source_paths"), dict) else {}
+    )
+    if not css and not outline and not organize and not extracted_css and not extracted_js:
         return ""
     parts = [
         "IMPORTED WEB PAGE (patch mode — change CSS property values and minimal HTML attributes only; "
         "do not replace the entire document).",
     ]
+    if organize or source_paths:
+        manifest_lines: list[str] = []
+        extracted_files = organize.get("extracted_files")
+        if isinstance(extracted_files, list) and extracted_files:
+            manifest_lines.append(
+                "Extracted inline assets: " + ", ".join(str(item) for item in extracted_files if item)
+            )
+        tagged = organize.get("tagged_targets_count")
+        if tagged:
+            manifest_lines.append(
+                f"Markable nodes tagged with data-nexu-target: {int(tagged)} "
+                "(use these selectors when referencing unlabelled elements)."
+            )
+        lazy = organize.get("stripped_lazy_img_count")
+        if lazy:
+            manifest_lines.append(f"Lazy placeholder images removed at import: {int(lazy)}")
+        if manifest_lines:
+            parts.append("Import organize manifest:\n" + "\n".join(manifest_lines))
+        if source_paths:
+            paths = "\n".join(
+                f"- {key}: {value}" for key, value in source_paths.items() if str(value).strip()
+            )
+            if paths:
+                parts.append(
+                    "Editable source files (prefer patching these over full stage0.html):\n" + paths
+                )
+    if extracted_css:
+        parts.append(
+            "Extracted inline CSS (from source/index.html):\n```css\n" + extracted_css + "\n```"
+        )
+    if extracted_js:
+        parts.append(
+            "Extracted inline JS (reference only — do not re-add <script> tags):\n```js\n"
+            + extracted_js
+            + "\n```"
+        )
     if css:
         parts.append("Visual CSS (colors, shapes, layout tokens):\n```css\n" + css + "\n```")
     if outline:
