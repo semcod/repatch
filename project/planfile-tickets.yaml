@@ -1,0 +1,558 @@
+source: code2llm
+# generated in 0.02s
+schema: code2llm.planfile_tickets.v1
+project_root: /home/tom/github/semcod/repatch
+tickets:
+- signal: code2llm_cc
+  title: 'Reduce cyclomatic complexity: repatch.scope._bind_annotations_to_html (CC=29)'
+  description: 'code2llm reports `repatch.scope._bind_annotations_to_html` at `repatch/scope.py:348`
+    with cyclomatic complexity 29 (limit 15).
+
+
+    Extract smaller functions, flatten conditionals, or split strategy branches. Re-run
+    code2llm after the change and keep tests green.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - complexity
+  - refactor
+  files:
+  - repatch/scope.py
+  dedupe_key: code2llm:cc:repatch/scope.py:repatch.scope._bind_annotations_to_html
+- signal: code2llm_cc
+  title: 'Reduce cyclomatic complexity: repatch.ui_patch.apply_ui_patch_options (CC=25)'
+  description: 'code2llm reports `repatch.ui_patch.apply_ui_patch_options` at `repatch/ui_patch.py:212`
+    with cyclomatic complexity 25 (limit 15).
+
+
+    Extract smaller functions, flatten conditionals, or split strategy branches. Re-run
+    code2llm after the change and keep tests green.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - complexity
+  - refactor
+  files:
+  - repatch/ui_patch.py
+  dedupe_key: code2llm:cc:repatch/ui_patch.py:repatch.ui_patch.apply_ui_patch_options
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: candidates'
+  description: 'code2llm reports `Shotgun Surgery: candidates` in `repatch/marked_context.py:245`.
+
+
+    Mutation of variable ''candidates'' spans 7 functions. Changing this logic requires
+    work in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:repatch/marked_context.py:245:Shotgun
+    Surgery: candidates'
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: delete'
+  description: 'code2llm reports `Shotgun Surgery: delete` in `repatch/ui_patch.py:58`.
+
+
+    Mutation of variable ''delete'' spans 8 functions. Changing this logic requires
+    work in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - repatch/ui_patch.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:repatch/ui_patch.py:58:Shotgun Surgery:
+    delete'
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: keep'
+  description: 'code2llm reports `Shotgun Surgery: keep` in `repatch/ui_patch.py:58`.
+
+
+    Mutation of variable ''keep'' spans 6 functions. Changing this logic requires
+    work in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - repatch/ui_patch.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:repatch/ui_patch.py:58:Shotgun Surgery:
+    keep'
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: label'
+  description: 'code2llm reports `Shotgun Surgery: label` in `repatch/marked_context.py:199`.
+
+
+    Mutation of variable ''label'' spans 11 functions. Changing this logic requires
+    work in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:repatch/marked_context.py:199:Shotgun
+    Surgery: label'
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: normalized'
+  description: 'code2llm reports `Shotgun Surgery: normalized` in `repatch/dom_patch.py:20`.
+
+
+    Mutation of variable ''normalized'' spans 5 functions. Changing this logic requires
+    work in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - repatch/dom_patch.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:repatch/dom_patch.py:20:Shotgun Surgery:
+    normalized'
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: out'
+  description: 'code2llm reports `Shotgun Surgery: out` in `repatch/dom_patch.py:172`.
+
+
+    Mutation of variable ''out'' spans 7 functions. Changing this logic requires work
+    in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - repatch/dom_patch.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:repatch/dom_patch.py:172:Shotgun Surgery:
+    out'
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: raw'
+  description: 'code2llm reports `Shotgun Surgery: raw` in `repatch/dom_patch.py:172`.
+
+
+    Mutation of variable ''raw'' spans 8 functions. Changing this logic requires work
+    in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - repatch/dom_patch.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:repatch/dom_patch.py:172:Shotgun Surgery:
+    raw'
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: scope'
+  description: 'code2llm reports `Shotgun Surgery: scope` in `repatch/scope.py:449`.
+
+
+    Mutation of variable ''scope'' spans 5 functions. Changing this logic requires
+    work in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - repatch/scope.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:repatch/scope.py:449:Shotgun Surgery:
+    scope'
+- signal: code2llm_smell_shotgun_surgery
+  title: 'Address code smell: Shotgun Surgery: target'
+  description: 'code2llm reports `Shotgun Surgery: target` in `repatch/marked_context.py:199`.
+
+
+    Mutation of variable ''target'' spans 5 functions. Changing this logic requires
+    work in many places.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: high
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - shotgun-surgery
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:shotgun_surgery:repatch/marked_context.py:199:Shotgun
+    Surgery: target'
+- signal: code2llm_cc
+  title: 'Reduce cyclomatic complexity: repatch.marked_context._find_marked_subtrees
+    (CC=17)'
+  description: 'code2llm reports `repatch.marked_context._find_marked_subtrees` at
+    `repatch/marked_context.py:278` with cyclomatic complexity 17 (limit 15).
+
+
+    Extract smaller functions, flatten conditionals, or split strategy branches. Re-run
+    code2llm after the change and keep tests green.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - complexity
+  - refactor
+  files:
+  - repatch/marked_context.py
+  dedupe_key: code2llm:cc:repatch/marked_context.py:repatch.marked_context._find_marked_subtrees
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: _extract_and_format_fragment'
+  description: 'code2llm reports `God Function: _extract_and_format_fragment` in `repatch/marked_context.py:267`.
+
+
+    Function ''_extract_and_format_fragment'' is oversized: CC=3, fan-out=6, mutations=7.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/marked_context.py:267:God Function:
+    _extract_and_format_fragment'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: _extract_balanced_html'
+  description: 'code2llm reports `God Function: _extract_balanced_html` in `repatch/marked_context.py:213`.
+
+
+    Function ''_extract_balanced_html'' is oversized: CC=10, fan-out=15, mutations=14.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/marked_context.py:213:God Function:
+    _extract_balanced_html'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: _format_context_body'
+  description: 'code2llm reports `God Function: _format_context_body` in `repatch/marked_context.py:422`.
+
+
+    Function ''_format_context_body'' is oversized: CC=14, fan-out=8, mutations=12.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/marked_context.py:422:God Function:
+    _format_context_body'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: _id_candidates'
+  description: 'code2llm reports `God Function: _id_candidates` in `repatch/marked_context.py:175`.
+
+
+    Function ''_id_candidates'' is oversized: CC=4, fan-out=8, mutations=7.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/marked_context.py:175:God Function:
+    _id_candidates'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: _patch_function_targets'
+  description: 'code2llm reports `God Function: _patch_function_targets` in `repatch/dom_patch.py:236`.
+
+
+    Function ''_patch_function_targets'' is oversized: CC=6, fan-out=18, mutations=15.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/dom_patch.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/dom_patch.py:236:God Function:
+    _patch_function_targets'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: _patch_scope_rules'
+  description: 'code2llm reports `God Function: _patch_scope_rules` in `repatch/ui_patch.py:58`.
+
+
+    Function ''_patch_scope_rules'' is oversized: CC=7, fan-out=4, mutations=8.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/ui_patch.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/ui_patch.py:58:God Function: _patch_scope_rules'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: _variant_section'
+  description: 'code2llm reports `God Function: _variant_section` in `repatch/dom_patch.py:60`.
+
+
+    Function ''_variant_section'' is oversized: CC=3, fan-out=6, mutations=10.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/dom_patch.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/dom_patch.py:60:God Function: _variant_section'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: apply_spatial_deletes_to_html'
+  description: 'code2llm reports `God Function: apply_spatial_deletes_to_html` in
+    `repatch/spatial.py:63`.
+
+
+    Function ''apply_spatial_deletes_to_html'' is oversized: CC=4, fan-out=15, mutations=3.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/spatial.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/spatial.py:63:God Function: apply_spatial_deletes_to_html'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: build_function_option_patches'
+  description: 'code2llm reports `God Function: build_function_option_patches` in
+    `repatch/dom_patch.py:279`.
+
+
+    Function ''build_function_option_patches'' is oversized: CC=10, fan-out=13, mutations=18.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/dom_patch.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/dom_patch.py:279:God Function:
+    build_function_option_patches'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: build_marked_element_context'
+  description: 'code2llm reports `God Function: build_marked_element_context` in `repatch/marked_context.py:467`.
+
+
+    Function ''build_marked_element_context'' is oversized: CC=11, fan-out=7, mutations=7.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/marked_context.py:467:God Function:
+    build_marked_element_context'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: effective_delete_ids'
+  description: 'code2llm reports `God Function: effective_delete_ids` in `repatch/marked_context.py:51`.
+
+
+    Function ''effective_delete_ids'' is oversized: CC=9, fan-out=7, mutations=7.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/marked_context.py:51:God Function:
+    effective_delete_ids'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: inject_scope_style'
+  description: 'code2llm reports `God Function: inject_scope_style` in `repatch/scope.py:449`.
+
+
+    Function ''inject_scope_style'' is oversized: CC=14, fan-out=11, mutations=10.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/scope.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/scope.py:449:God Function: inject_scope_style'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: resolve_marked_selectors'
+  description: 'code2llm reports `God Function: resolve_marked_selectors` in `repatch/marked_context.py:107`.
+
+
+    Function ''resolve_marked_selectors'' is oversized: CC=14, fan-out=14, mutations=2.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/marked_context.py:107:God Function:
+    resolve_marked_selectors'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: restrict_scope_css_to_marks'
+  description: 'code2llm reports `God Function: restrict_scope_css_to_marks` in `repatch/marked_context.py:145`.
+
+
+    Function ''restrict_scope_css_to_marks'' is oversized: CC=14, fan-out=13, mutations=11.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/marked_context.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/marked_context.py:145:God Function:
+    restrict_scope_css_to_marks'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: split_css_rules'
+  description: 'code2llm reports `God Function: split_css_rules` in `repatch/css.py:20`.
+
+
+    Function ''split_css_rules'' is oversized: CC=9, fan-out=4, mutations=10.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/css.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/css.py:20:God Function: split_css_rules'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: summarize_project_ir'
+  description: 'code2llm reports `God Function: summarize_project_ir` in `repatch/project_ir.py:112`.
+
+
+    Function ''summarize_project_ir'' is oversized: CC=12, fan-out=9, mutations=8.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/project_ir.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/project_ir.py:112:God Function:
+    summarize_project_ir'
+- signal: code2llm_smell_god_function
+  title: 'Address code smell: God Function: validate_css_safety'
+  description: 'code2llm reports `God Function: validate_css_safety` in `repatch/css.py:42`.
+
+
+    Function ''validate_css_safety'' is oversized: CC=14, fan-out=18, mutations=10.
+
+
+    Make the smallest refactor that removes the smell and run local tests.'
+  priority: normal
+  labels:
+  - llm-ready
+  - code2llm
+  - code-smell
+  - god-function
+  files:
+  - repatch/css.py
+  dedupe_key: 'code2llm:smell:god_function:repatch/css.py:42:God Function: validate_css_safety'
+applied: []
+skipped: []

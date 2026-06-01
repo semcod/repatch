@@ -1,0 +1,896 @@
+project: /home/tom/github/semcod/repatch
+generated_from: code2llm call graph analysis
+stats:
+  total_nodes: 76
+  total_edges: 82
+  modules_count: 7
+nodes:
+  repatch.css._selector_is_runtime_only:
+    name: _selector_is_runtime_only
+    module: repatch.css
+    line: 16
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 1
+  repatch.ui_patch._patch_scope_rules:
+    name: _patch_scope_rules
+    module: repatch.ui_patch
+    line: 58
+    cyclomatic_complexity: 7
+    calls_out: 9
+    calls_in: 1
+  repatch.dom_patch._strip_tags:
+    name: _strip_tags
+    module: repatch.dom_patch
+    line: 185
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  repatch.marked_context._css_id_selector:
+    name: _css_id_selector
+    module: repatch.marked_context
+    line: 85
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 2
+  repatch.dom_patch._strip_existing_patch:
+    name: _strip_existing_patch
+    module: repatch.dom_patch
+    line: 39
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  repatch.marked_context._collect_match_candidates:
+    name: _collect_match_candidates
+    module: repatch.marked_context
+    line: 245
+    cyclomatic_complexity: 6
+    calls_out: 11
+    calls_in: 1
+  repatch.marked_context.has_ui_marks:
+    name: has_ui_marks
+    module: repatch.marked_context
+    line: 41
+    cyclomatic_complexity: 8
+    calls_out: 9
+    calls_in: 1
+  repatch.marked_context._cap_text:
+    name: _cap_text
+    module: repatch.marked_context
+    line: 376
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 2
+  repatch.ui_patch.supports_llm_patch_scope:
+    name: supports_llm_patch_scope
+    module: repatch.ui_patch
+    line: 36
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 0
+  repatch.scope.scoped_html_fragment:
+    name: scoped_html_fragment
+    module: repatch.scope
+    line: 476
+    cyclomatic_complexity: 6
+    calls_out: 7
+    calls_in: 1
+  repatch.scope._get_scope_css:
+    name: _get_scope_css
+    module: repatch.scope
+    line: 423
+    cyclomatic_complexity: 7
+    calls_out: 7
+    calls_in: 1
+  repatch.marked_context._assemble_marked_subtrees:
+    name: _assemble_marked_subtrees
+    module: repatch.marked_context
+    line: 399
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 1
+  repatch.spatial._delete_match_keys:
+    name: _delete_match_keys
+    module: repatch.spatial
+    line: 17
+    cyclomatic_complexity: 4
+    calls_out: 11
+    calls_in: 2
+  repatch.scope.offline_fast_scopes_for_kind:
+    name: offline_fast_scopes_for_kind
+    module: repatch.scope
+    line: 114
+    cyclomatic_complexity: 5
+    calls_out: 2
+    calls_in: 1
+  repatch.scope._resolve_scope_kind:
+    name: _resolve_scope_kind
+    module: repatch.scope
+    line: 322
+    cyclomatic_complexity: 10
+    calls_out: 3
+    calls_in: 1
+  repatch.dom_patch._variant_target_label:
+    name: _variant_target_label
+    module: repatch.dom_patch
+    line: 217
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 1
+  repatch.marked_context._collect_css_sources:
+    name: _collect_css_sources
+    module: repatch.marked_context
+    line: 344
+    cyclomatic_complexity: 7
+    calls_out: 10
+    calls_in: 1
+  repatch.dom_patch.build_function_patch_context:
+    name: build_function_patch_context
+    module: repatch.dom_patch
+    line: 33
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 0
+  repatch.ui_patch.build_ui_patch_prompt:
+    name: build_ui_patch_prompt
+    module: repatch.ui_patch
+    line: 105
+    cyclomatic_complexity: 9
+    calls_out: 5
+    calls_in: 0
+  repatch.marked_context._extract_and_format_fragment:
+    name: _extract_and_format_fragment
+    module: repatch.marked_context
+    line: 267
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 1
+  repatch.dom_patch._goal_label:
+    name: _goal_label
+    module: repatch.dom_patch
+    line: 55
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 2
+  repatch.marked_context._client_fragment_html:
+    name: _client_fragment_html
+    module: repatch.marked_context
+    line: 384
+    cyclomatic_complexity: 9
+    calls_out: 10
+    calls_in: 1
+  repatch.dom_patch._matches_target:
+    name: _matches_target
+    module: repatch.dom_patch
+    line: 205
+    cyclomatic_complexity: 4
+    calls_out: 7
+    calls_in: 1
+  repatch.css.split_css_rules:
+    name: split_css_rules
+    module: repatch.css
+    line: 20
+    cyclomatic_complexity: 9
+    calls_out: 6
+    calls_in: 2
+  repatch.dom_patch._variant_section:
+    name: _variant_section
+    module: repatch.dom_patch
+    line: 60
+    cyclomatic_complexity: 3
+    calls_out: 11
+    calls_in: 1
+  repatch.marked_context._id_candidates:
+    name: _id_candidates
+    module: repatch.marked_context
+    line: 175
+    cyclomatic_complexity: 4
+    calls_out: 11
+    calls_in: 10
+  repatch.project_ir._clean_text:
+    name: _clean_text
+    module: repatch.project_ir
+    line: 88
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 3
+  repatch.marked_context._parse_attrs:
+    name: _parse_attrs
+    module: repatch.marked_context
+    line: 190
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 2
+  repatch.marked_context._selector_tokens:
+    name: _selector_tokens
+    module: repatch.marked_context
+    line: 316
+    cyclomatic_complexity: 9
+    calls_out: 14
+    calls_in: 1
+  repatch.marked_context._format_context_body:
+    name: _format_context_body
+    module: repatch.marked_context
+    line: 422
+    cyclomatic_complexity: 14
+    calls_out: 15
+    calls_in: 1
+  repatch.ui_patch._safe_css:
+    name: _safe_css
+    module: repatch.ui_patch
+    line: 180
+    cyclomatic_complexity: 9
+    calls_out: 11
+    calls_in: 2
+  repatch.scope._scope_css:
+    name: _scope_css
+    module: repatch.scope
+    line: 141
+    cyclomatic_complexity: 6
+    calls_out: 0
+    calls_in: 2
+  repatch.scope._calc_scope_css:
+    name: _calc_scope_css
+    module: repatch.scope
+    line: 199
+    cyclomatic_complexity: 7
+    calls_out: 0
+    calls_in: 1
+  repatch.scope._bind_annotations_to_html:
+    name: _bind_annotations_to_html
+    module: repatch.scope
+    line: 348
+    cyclomatic_complexity: 29
+    calls_out: 45
+    calls_in: 1
+  repatch.scope.allowed_scope_ids:
+    name: allowed_scope_ids
+    module: repatch.scope
+    line: 95
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 2
+  repatch.spatial._element_delete_candidates:
+    name: _element_delete_candidates
+    module: repatch.spatial
+    line: 50
+    cyclomatic_complexity: 6
+    calls_out: 8
+    calls_in: 2
+  repatch.css._strip_css_comments:
+    name: _strip_css_comments
+    module: repatch.css
+    line: 12
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 1
+  repatch.marked_context.restrict_scope_css_to_marks:
+    name: restrict_scope_css_to_marks
+    module: repatch.marked_context
+    line: 145
+    cyclomatic_complexity: 14
+    calls_out: 17
+    calls_in: 2
+  repatch.dom_patch.supports_function_patch:
+    name: supports_function_patch
+    module: repatch.dom_patch
+    line: 20
+    cyclomatic_complexity: 4
+    calls_out: 4
+    calls_in: 1
+  repatch.scope._inject_css_block:
+    name: _inject_css_block
+    module: repatch.scope
+    line: 433
+    cyclomatic_complexity: 5
+    calls_out: 4
+    calls_in: 1
+  repatch.project_ir.build_project_ir:
+    name: build_project_ir
+    module: repatch.project_ir
+    line: 92
+    cyclomatic_complexity: 2
+    calls_out: 8
+    calls_in: 2
+  repatch.dom_patch._patch_function_targets:
+    name: _patch_function_targets
+    module: repatch.dom_patch
+    line: 236
+    cyclomatic_complexity: 6
+    calls_out: 24
+    calls_in: 1
+  repatch.ui_patch.parse_ui_patch_response:
+    name: parse_ui_patch_response
+    module: repatch.ui_patch
+    line: 161
+    cyclomatic_complexity: 6
+    calls_out: 11
+    calls_in: 0
+  repatch.marked_context._get_relevant_css:
+    name: _get_relevant_css
+    module: repatch.marked_context
+    line: 414
+    cyclomatic_complexity: 2
+    calls_out: 6
+    calls_in: 1
+  repatch.marked_context.effective_delete_ids:
+    name: effective_delete_ids
+    module: repatch.marked_context
+    line: 51
+    cyclomatic_complexity: 9
+    calls_out: 11
+    calls_in: 1
+  repatch.marked_context._find_marked_subtrees:
+    name: _find_marked_subtrees
+    module: repatch.marked_context
+    line: 278
+    cyclomatic_complexity: 17
+    calls_out: 23
+    calls_in: 2
+  repatch.dom_patch._inject_into_head:
+    name: _inject_into_head
+    module: repatch.dom_patch
+    line: 153
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 1
+  repatch.marked_context._extract_balanced_html:
+    name: _extract_balanced_html
+    module: repatch.marked_context
+    line: 213
+    cyclomatic_complexity: 10
+    calls_out: 18
+    calls_in: 1
+  repatch.spatial.apply_spatial_deletes_to_html:
+    name: apply_spatial_deletes_to_html
+    module: repatch.spatial
+    line: 63
+    cyclomatic_complexity: 4
+    calls_out: 29
+    calls_in: 0
+  repatch.dom_patch._inject_into_body:
+    name: _inject_into_body
+    module: repatch.dom_patch
+    line: 165
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  repatch.marked_context.marked_css_selectors:
+    name: marked_css_selectors
+    module: repatch.marked_context
+    line: 93
+    cyclomatic_complexity: 6
+    calls_out: 5
+    calls_in: 2
+  repatch.scope.strip_scope_style:
+    name: strip_scope_style
+    module: repatch.scope
+    line: 130
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 3
+  repatch.marked_context._filter_css_for_tokens:
+    name: _filter_css_for_tokens
+    module: repatch.marked_context
+    line: 333
+    cyclomatic_complexity: 6
+    calls_out: 7
+    calls_in: 1
+  repatch.dom_patch._attrs_from_open_tag:
+    name: _attrs_from_open_tag
+    module: repatch.dom_patch
+    line: 198
+    cyclomatic_complexity: 2
+    calls_out: 6
+    calls_in: 2
+  repatch.ui_patch._compact_html:
+    name: _compact_html
+    module: repatch.ui_patch
+    line: 49
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 1
+  repatch.marked_context._logical_id:
+    name: _logical_id
+    module: repatch.marked_context
+    line: 199
+    cyclomatic_complexity: 8
+    calls_out: 10
+    calls_in: 4
+  repatch.scope._web_scope_css:
+    name: _web_scope_css
+    module: repatch.scope
+    line: 273
+    cyclomatic_complexity: 6
+    calls_out: 0
+    calls_in: 1
+  repatch.dom_patch._target_candidates:
+    name: _target_candidates
+    module: repatch.dom_patch
+    line: 172
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 3
+  repatch.project_ir._ProjectIRParser._classify_node:
+    name: _classify_node
+    module: repatch.project_ir
+    line: 35
+    cyclomatic_complexity: 12
+    calls_out: 10
+    calls_in: 0
+  repatch.scope.inject_scope_style:
+    name: inject_scope_style
+    module: repatch.scope
+    line: 449
+    cyclomatic_complexity: 14
+    calls_out: 18
+    calls_in: 0
+  repatch.marked_context.resolve_marked_selectors:
+    name: resolve_marked_selectors
+    module: repatch.marked_context
+    line: 107
+    cyclomatic_complexity: 14
+    calls_out: 24
+    calls_in: 3
+  repatch.project_ir._ProjectIRParser.handle_data:
+    name: handle_data
+    module: repatch.project_ir
+    line: 80
+    cyclomatic_complexity: 4
+    calls_out: 2
+    calls_in: 0
+  repatch.scope.normalize_focus_scope:
+    name: normalize_focus_scope
+    module: repatch.scope
+    line: 106
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 7
+  repatch.marked_context._collect_button_candidates:
+    name: _collect_button_candidates
+    module: repatch.marked_context
+    line: 257
+    cyclomatic_complexity: 3
+    calls_out: 8
+    calls_in: 1
+  repatch.scope.scope_supports_offline_fast_path:
+    name: scope_supports_offline_fast_path
+    module: repatch.scope
+    line: 124
+    cyclomatic_complexity: 1
+    calls_out: 2
+    calls_in: 1
+  repatch.marked_context.resolve_marked_llm_context:
+    name: resolve_marked_llm_context
+    module: repatch.marked_context
+    line: 496
+    cyclomatic_complexity: 5
+    calls_out: 3
+    calls_in: 0
+  repatch.ui_patch._strip_json_fence:
+    name: _strip_json_fence
+    module: repatch.ui_patch
+    line: 153
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 1
+  repatch.scope.should_block_full_html_iterate:
+    name: should_block_full_html_iterate
+    module: repatch.scope
+    line: 334
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 0
+  repatch.project_ir.summarize_project_ir:
+    name: summarize_project_ir
+    module: repatch.project_ir
+    line: 112
+    cyclomatic_complexity: 12
+    calls_out: 21
+    calls_in: 1
+  repatch.scope.default_scope_for_kind:
+    name: default_scope_for_kind
+    module: repatch.scope
+    line: 100
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 1
+  repatch.css.validate_css_safety:
+    name: validate_css_safety
+    module: repatch.css
+    line: 42
+    cyclomatic_complexity: 14
+    calls_out: 26
+    calls_in: 1
+  repatch.marked_context.build_marked_element_context:
+    name: build_marked_element_context
+    module: repatch.marked_context
+    line: 467
+    cyclomatic_complexity: 11
+    calls_out: 13
+    calls_in: 1
+  repatch.ui_patch.apply_ui_patch_options:
+    name: apply_ui_patch_options
+    module: repatch.ui_patch
+    line: 212
+    cyclomatic_complexity: 25
+    calls_out: 31
+    calls_in: 0
+  repatch.ui_patch._css_for:
+    name: _css_for
+    module: repatch.ui_patch
+    line: 206
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 1
+  repatch.dom_patch.build_function_option_patches:
+    name: build_function_option_patches
+    module: repatch.dom_patch
+    line: 279
+    cyclomatic_complexity: 10
+    calls_out: 14
+    calls_in: 0
+  repatch.project_ir._ProjectIRParser.handle_endtag:
+    name: handle_endtag
+    module: repatch.project_ir
+    line: 56
+    cyclomatic_complexity: 8
+    calls_out: 11
+    calls_in: 0
+edges:
+- caller: repatch.project_ir._ProjectIRParser._classify_node
+  callee: repatch.project_ir._clean_text
+  call_type: resolved
+- caller: repatch.project_ir._ProjectIRParser.handle_endtag
+  callee: repatch.project_ir._clean_text
+  call_type: resolved
+- caller: repatch.project_ir._ProjectIRParser.handle_data
+  callee: repatch.project_ir._clean_text
+  call_type: resolved
+- caller: repatch.scope.default_scope_for_kind
+  callee: repatch.scope.allowed_scope_ids
+  call_type: resolved
+- caller: repatch.scope.normalize_focus_scope
+  callee: repatch.scope.default_scope_for_kind
+  call_type: resolved
+- caller: repatch.scope.normalize_focus_scope
+  callee: repatch.scope.allowed_scope_ids
+  call_type: resolved
+- caller: repatch.scope.scope_supports_offline_fast_path
+  callee: repatch.scope.normalize_focus_scope
+  call_type: resolved
+- caller: repatch.scope.scope_supports_offline_fast_path
+  callee: repatch.scope.offline_fast_scopes_for_kind
+  call_type: resolved
+- caller: repatch.scope.should_block_full_html_iterate
+  callee: repatch.marked_context.has_ui_marks
+  call_type: resolved
+- caller: repatch.scope._get_scope_css
+  callee: repatch.scope._calc_scope_css
+  call_type: resolved
+- caller: repatch.scope._get_scope_css
+  callee: repatch.scope._scope_css
+  call_type: resolved
+- caller: repatch.scope._get_scope_css
+  callee: repatch.scope._web_scope_css
+  call_type: resolved
+- caller: repatch.scope.inject_scope_style
+  callee: repatch.scope._bind_annotations_to_html
+  call_type: resolved
+- caller: repatch.scope.inject_scope_style
+  callee: repatch.scope._resolve_scope_kind
+  call_type: resolved
+- caller: repatch.scope.inject_scope_style
+  callee: repatch.scope.normalize_focus_scope
+  call_type: resolved
+- caller: repatch.scope.inject_scope_style
+  callee: repatch.scope._get_scope_css
+  call_type: resolved
+- caller: repatch.scope.inject_scope_style
+  callee: repatch.scope.strip_scope_style
+  call_type: resolved
+- caller: repatch.scope.inject_scope_style
+  callee: repatch.scope._inject_css_block
+  call_type: resolved
+- caller: repatch.scope.inject_scope_style
+  callee: repatch.marked_context.resolve_marked_selectors
+  call_type: resolved
+- caller: repatch.scope.scoped_html_fragment
+  callee: repatch.scope.normalize_focus_scope
+  call_type: resolved
+- caller: repatch.scope.scoped_html_fragment
+  callee: repatch.scope.scope_supports_offline_fast_path
+  call_type: resolved
+- caller: repatch.dom_patch.build_function_patch_context
+  callee: repatch.project_ir.build_project_ir
+  call_type: resolved
+- caller: repatch.dom_patch.build_function_patch_context
+  callee: repatch.project_ir.summarize_project_ir
+  call_type: resolved
+- caller: repatch.dom_patch._variant_section
+  callee: repatch.dom_patch._goal_label
+  call_type: resolved
+- caller: repatch.dom_patch._matches_target
+  callee: repatch.dom_patch._attrs_from_open_tag
+  call_type: resolved
+- caller: repatch.dom_patch._matches_target
+  callee: repatch.dom_patch._strip_tags
+  call_type: resolved
+- caller: repatch.dom_patch._matches_target
+  callee: repatch.dom_patch._target_candidates
+  call_type: resolved
+- caller: repatch.dom_patch._variant_target_label
+  callee: repatch.dom_patch._goal_label
+  call_type: resolved
+- caller: repatch.dom_patch._patch_function_targets
+  callee: repatch.dom_patch._target_candidates
+  call_type: resolved
+- caller: repatch.dom_patch._patch_function_targets
+  callee: repatch.dom_patch._variant_target_label
+  call_type: resolved
+- caller: repatch.dom_patch.build_function_option_patches
+  callee: repatch.dom_patch._strip_existing_patch
+  call_type: resolved
+- caller: repatch.dom_patch.build_function_option_patches
+  callee: repatch.project_ir.build_project_ir
+  call_type: resolved
+- caller: repatch.dom_patch.build_function_option_patches
+  callee: repatch.marked_context.effective_delete_ids
+  call_type: resolved
+- caller: repatch.dom_patch.build_function_option_patches
+  callee: repatch.dom_patch.supports_function_patch
+  call_type: resolved
+- caller: repatch.dom_patch.build_function_option_patches
+  callee: repatch.dom_patch._patch_function_targets
+  call_type: resolved
+- caller: repatch.dom_patch.build_function_option_patches
+  callee: repatch.dom_patch._inject_into_head
+  call_type: resolved
+- caller: repatch.dom_patch.build_function_option_patches
+  callee: repatch.dom_patch._inject_into_body
+  call_type: resolved
+- caller: repatch.marked_context.marked_css_selectors
+  callee: repatch.marked_context._id_candidates
+  call_type: resolved
+- caller: repatch.marked_context.marked_css_selectors
+  callee: repatch.marked_context._css_id_selector
+  call_type: resolved
+- caller: repatch.marked_context.resolve_marked_selectors
+  callee: repatch.marked_context._find_marked_subtrees
+  call_type: resolved
+- caller: repatch.marked_context.resolve_marked_selectors
+  callee: repatch.marked_context.marked_css_selectors
+  call_type: resolved
+- caller: repatch.marked_context.restrict_scope_css_to_marks
+  callee: repatch.css.split_css_rules
+  call_type: resolved
+- caller: repatch.marked_context.restrict_scope_css_to_marks
+  callee: repatch.marked_context.resolve_marked_selectors
+  call_type: resolved
+- caller: repatch.marked_context.restrict_scope_css_to_marks
+  callee: repatch.marked_context.marked_css_selectors
+  call_type: resolved
+- caller: repatch.marked_context._collect_match_candidates
+  callee: repatch.marked_context._logical_id
+  call_type: resolved
+- caller: repatch.marked_context._collect_match_candidates
+  callee: repatch.marked_context._id_candidates
+  call_type: resolved
+- caller: repatch.marked_context._collect_button_candidates
+  callee: repatch.marked_context._logical_id
+  call_type: resolved
+- caller: repatch.marked_context._collect_button_candidates
+  callee: repatch.marked_context._id_candidates
+  call_type: resolved
+- caller: repatch.marked_context._extract_and_format_fragment
+  callee: repatch.marked_context._extract_balanced_html
+  call_type: resolved
+- caller: repatch.marked_context._find_marked_subtrees
+  callee: repatch.marked_context._parse_attrs
+  call_type: resolved
+- caller: repatch.marked_context._find_marked_subtrees
+  callee: repatch.marked_context._collect_match_candidates
+  call_type: resolved
+- caller: repatch.marked_context._find_marked_subtrees
+  callee: repatch.marked_context._extract_and_format_fragment
+  call_type: resolved
+- caller: repatch.marked_context._selector_tokens
+  callee: repatch.marked_context._id_candidates
+  call_type: resolved
+- caller: repatch.marked_context._filter_css_for_tokens
+  callee: repatch.css.split_css_rules
+  call_type: resolved
+- caller: repatch.marked_context._assemble_marked_subtrees
+  callee: repatch.marked_context._find_marked_subtrees
+  call_type: resolved
+- caller: repatch.marked_context._assemble_marked_subtrees
+  callee: repatch.marked_context._client_fragment_html
+  call_type: resolved
+- caller: repatch.marked_context._get_relevant_css
+  callee: repatch.marked_context._selector_tokens
+  call_type: resolved
+- caller: repatch.marked_context._get_relevant_css
+  callee: repatch.marked_context._filter_css_for_tokens
+  call_type: resolved
+- caller: repatch.marked_context._get_relevant_css
+  callee: repatch.marked_context._collect_css_sources
+  call_type: resolved
+- caller: repatch.marked_context._get_relevant_css
+  callee: repatch.marked_context._cap_text
+  call_type: resolved
+- caller: repatch.marked_context.build_marked_element_context
+  callee: repatch.marked_context._assemble_marked_subtrees
+  call_type: resolved
+- caller: repatch.marked_context.build_marked_element_context
+  callee: repatch.scope.normalize_focus_scope
+  call_type: resolved
+- caller: repatch.marked_context.build_marked_element_context
+  callee: repatch.marked_context._get_relevant_css
+  call_type: resolved
+- caller: repatch.marked_context.build_marked_element_context
+  callee: repatch.marked_context._format_context_body
+  call_type: resolved
+- caller: repatch.marked_context.build_marked_element_context
+  callee: repatch.marked_context._cap_text
+  call_type: resolved
+- caller: repatch.marked_context.resolve_marked_llm_context
+  callee: repatch.marked_context.build_marked_element_context
+  call_type: resolved
+- caller: repatch.ui_patch.supports_llm_patch_scope
+  callee: repatch.scope.normalize_focus_scope
+  call_type: resolved
+- caller: repatch.ui_patch.build_ui_patch_prompt
+  callee: repatch.scope.normalize_focus_scope
+  call_type: resolved
+- caller: repatch.ui_patch.build_ui_patch_prompt
+  callee: repatch.ui_patch._patch_scope_rules
+  call_type: resolved
+- caller: repatch.ui_patch.build_ui_patch_prompt
+  callee: repatch.scope.scoped_html_fragment
+  call_type: resolved
+- caller: repatch.ui_patch.build_ui_patch_prompt
+  callee: repatch.ui_patch._compact_html
+  call_type: resolved
+- caller: repatch.ui_patch.parse_ui_patch_response
+  callee: repatch.ui_patch._strip_json_fence
+  call_type: resolved
+- caller: repatch.ui_patch._safe_css
+  callee: repatch.css.validate_css_safety
+  call_type: resolved
+- caller: repatch.ui_patch._css_for
+  callee: repatch.ui_patch._safe_css
+  call_type: resolved
+- caller: repatch.ui_patch.apply_ui_patch_options
+  callee: repatch.scope.strip_scope_style
+  call_type: resolved
+- caller: repatch.ui_patch.apply_ui_patch_options
+  callee: repatch.scope.normalize_focus_scope
+  call_type: resolved
+- caller: repatch.ui_patch.apply_ui_patch_options
+  callee: repatch.ui_patch._css_for
+  call_type: resolved
+- caller: repatch.css.validate_css_safety
+  callee: repatch.css._strip_css_comments
+  call_type: resolved
+- caller: repatch.css.validate_css_safety
+  callee: repatch.css._selector_is_runtime_only
+  call_type: resolved
+- caller: repatch.spatial._element_delete_candidates
+  callee: repatch.spatial._delete_match_keys
+  call_type: resolved
+- caller: repatch.spatial.apply_spatial_deletes_to_html
+  callee: repatch.spatial._delete_match_keys
+  call_type: resolved
+- caller: repatch.spatial.apply_spatial_deletes_to_html
+  callee: repatch.spatial._element_delete_candidates
+  call_type: resolved
+modules:
+  repatch.css:
+  - repatch.css._selector_is_runtime_only
+  - repatch.css._strip_css_comments
+  - repatch.css.split_css_rules
+  - repatch.css.validate_css_safety
+  repatch.dom_patch:
+  - repatch.dom_patch._attrs_from_open_tag
+  - repatch.dom_patch._goal_label
+  - repatch.dom_patch._inject_into_body
+  - repatch.dom_patch._inject_into_head
+  - repatch.dom_patch._matches_target
+  - repatch.dom_patch._patch_function_targets
+  - repatch.dom_patch._strip_existing_patch
+  - repatch.dom_patch._strip_tags
+  - repatch.dom_patch._target_candidates
+  - repatch.dom_patch._variant_section
+  - repatch.dom_patch._variant_target_label
+  - repatch.dom_patch.build_function_option_patches
+  - repatch.dom_patch.build_function_patch_context
+  - repatch.dom_patch.supports_function_patch
+  repatch.marked_context:
+  - repatch.marked_context._assemble_marked_subtrees
+  - repatch.marked_context._cap_text
+  - repatch.marked_context._client_fragment_html
+  - repatch.marked_context._collect_button_candidates
+  - repatch.marked_context._collect_css_sources
+  - repatch.marked_context._collect_match_candidates
+  - repatch.marked_context._css_id_selector
+  - repatch.marked_context._extract_and_format_fragment
+  - repatch.marked_context._extract_balanced_html
+  - repatch.marked_context._filter_css_for_tokens
+  - repatch.marked_context._find_marked_subtrees
+  - repatch.marked_context._format_context_body
+  - repatch.marked_context._get_relevant_css
+  - repatch.marked_context._id_candidates
+  - repatch.marked_context._logical_id
+  - repatch.marked_context._parse_attrs
+  - repatch.marked_context._selector_tokens
+  - repatch.marked_context.build_marked_element_context
+  - repatch.marked_context.effective_delete_ids
+  - repatch.marked_context.has_ui_marks
+  - repatch.marked_context.marked_css_selectors
+  - repatch.marked_context.resolve_marked_llm_context
+  - repatch.marked_context.resolve_marked_selectors
+  - repatch.marked_context.restrict_scope_css_to_marks
+  repatch.project_ir:
+  - repatch.project_ir._ProjectIRParser._classify_node
+  - repatch.project_ir._ProjectIRParser.handle_data
+  - repatch.project_ir._ProjectIRParser.handle_endtag
+  - repatch.project_ir._clean_text
+  - repatch.project_ir.build_project_ir
+  - repatch.project_ir.summarize_project_ir
+  repatch.scope:
+  - repatch.scope._bind_annotations_to_html
+  - repatch.scope._calc_scope_css
+  - repatch.scope._get_scope_css
+  - repatch.scope._inject_css_block
+  - repatch.scope._resolve_scope_kind
+  - repatch.scope._scope_css
+  - repatch.scope._web_scope_css
+  - repatch.scope.allowed_scope_ids
+  - repatch.scope.default_scope_for_kind
+  - repatch.scope.inject_scope_style
+  - repatch.scope.normalize_focus_scope
+  - repatch.scope.offline_fast_scopes_for_kind
+  - repatch.scope.scope_supports_offline_fast_path
+  - repatch.scope.scoped_html_fragment
+  - repatch.scope.should_block_full_html_iterate
+  - repatch.scope.strip_scope_style
+  repatch.spatial:
+  - repatch.spatial._delete_match_keys
+  - repatch.spatial._element_delete_candidates
+  - repatch.spatial.apply_spatial_deletes_to_html
+  repatch.ui_patch:
+  - repatch.ui_patch._compact_html
+  - repatch.ui_patch._css_for
+  - repatch.ui_patch._patch_scope_rules
+  - repatch.ui_patch._safe_css
+  - repatch.ui_patch._strip_json_fence
+  - repatch.ui_patch.apply_ui_patch_options
+  - repatch.ui_patch.build_ui_patch_prompt
+  - repatch.ui_patch.parse_ui_patch_response
+  - repatch.ui_patch.supports_llm_patch_scope
+entry_points:
+- repatch.dom_patch._default_finalize_html
+- repatch.dom_patch._default_prepare_html
+- repatch.dom_patch.build_function_option_patches
+- repatch.dom_patch.build_function_patch_context
+- repatch.marked_context.resolve_marked_llm_context
+- repatch.project_ir._ProjectIRParser.__init__
+- repatch.project_ir._ProjectIRParser._classify_node
+- repatch.project_ir._ProjectIRParser.handle_data
+- repatch.project_ir._ProjectIRParser.handle_endtag
+- repatch.project_ir._ProjectIRParser.handle_starttag
+- repatch.scope.inject_scope_style
+- repatch.scope.should_block_full_html_iterate
+- repatch.scope.ui_type_for_kind
+- repatch.service.RepatchService.__init__
+- repatch.service.RepatchService._build_user_prompt
+- repatch.service.RepatchService._choice_content
+- repatch.service.RepatchService._default_completion
+- repatch.service.RepatchService._normalize_scopes
+- repatch.service.RepatchService._parse_choice
+- repatch.service.RepatchService.generate_patch_suggestions
+- repatch.spatial.apply_spatial_deletes_to_html
+- repatch.ui_patch.apply_ui_patch_options
+- repatch.ui_patch.build_ui_patch_prompt
+- repatch.ui_patch.parse_ui_patch_response
+- repatch.ui_patch.supports_llm_patch_scope

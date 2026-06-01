@@ -1,0 +1,33 @@
+# redup/duplication | 1 groups | 9f 2096L | 2026-06-01
+
+SUMMARY:
+  files_scanned: 9
+  total_lines:   2096
+  dup_groups:    1
+  dup_fragments: 2
+  saved_lines:   56
+  scan_ms:       2747
+
+HOTSPOTS[1] (files with most duplication):
+  repatch/scope.py  dup=103L  groups=1  frags=2  (4.9%)
+
+DUPLICATES[1] (ranked by impact):
+  [ee82f654639dd9b7] ! STRU  _scope_css  L=56 N=2 saved=56 sim=1.00
+      repatch/scope.py:141-196  (_scope_css)
+      repatch/scope.py:273-319  (_web_scope_css)
+
+REFACTOR[1] (ranked by priority):
+  [1] ○ extract_module     → repatch/utils/_scope_css.py
+      WHY: 2 occurrences of 56-line block across 1 files — saves 56 lines
+      FILES: repatch/scope.py
+
+QUICK_WINS[1] (low risk, high savings — do first):
+  [1] extract_module     saved=56L  → repatch/utils/_scope_css.py
+      FILES: scope.py
+
+EFFORT_ESTIMATE (total ≈ 2.8h):
+  hard   _scope_css                          saved=56L  ~168min
+
+METRICS-TARGET:
+  dup_groups:  1 → 0
+  saved_lines: 56 lines recoverable

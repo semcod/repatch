@@ -10,6 +10,7 @@ from .marked_context import (
     _id_candidates,
     _logical_id,
     _parse_attrs,
+    effective_delete_ids,
     has_ui_marks,
     marked_scope_colors_css,
     resolve_marked_selectors,
@@ -460,16 +461,27 @@ def inject_scope_style(
     scope = normalize_focus_scope(scope, inferred)
     delete_list = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
     keep_list = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
-    if scope in VISUAL_REDESIGN_SCOPES and keep_list and not delete_list:
+    effective_delete = effective_delete_ids(delete_list, keep_list)
+    if scope in VISUAL_REDESIGN_SCOPES and keep_list and not effective_delete:
         return strip_scope_style(html)
     css = _get_scope_css(inferred, html, scope, variant)
     cleaned = strip_scope_style(html)
-    if scope in VISUAL_REDESIGN_SCOPES and delete_list:
-        selectors = resolve_marked_selectors(cleaned, delete_list)
+    if scope in VISUAL_REDESIGN_SCOPES and effective_delete:
+        selectors = resolve_marked_selectors(
+            cleaned,
+            effective_delete,
+            keep_ids=keep_list,
+            narrow=(scope == "colors"),
+        )
         if scope == "colors" and selectors:
             css = marked_scope_colors_css(selectors, variant)
         else:
-            css = restrict_scope_css_to_marks(css, delete_list, html=cleaned)
+            css = restrict_scope_css_to_marks(
+                css,
+                effective_delete,
+                html=cleaned,
+                keep_ids=keep_list,
+            )
     return _inject_css_block(cleaned, css)
 
 

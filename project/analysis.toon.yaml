@@ -1,0 +1,84 @@
+# code2llm | 13f 2713L | python:9,shell:2,yaml:1,toml:1 | 2026-06-01
+# generated in 0.01s
+# CC̅=5.8 | critical:3/95 | dups:0 | cycles:0
+
+HEALTH[3]:
+  🟡 CC    _bind_annotations_to_html CC=29 (limit:15)
+  🟡 CC    _find_marked_subtrees CC=17 (limit:15)
+  🟡 CC    apply_ui_patch_options CC=25 (limit:15)
+
+REFACTOR[1]:
+  1. split 3 high-CC methods  (CC>15)
+
+PIPELINES[23]:
+  [1] Src [__init__]: __init__
+      PURITY: 100% pure
+  [2] Src [handle_starttag]: handle_starttag
+      PURITY: 100% pure
+  [3] Src [_classify_node]: _classify_node → _clean_text
+      PURITY: 100% pure
+  [4] Src [handle_endtag]: handle_endtag → _clean_text
+      PURITY: 100% pure
+  [5] Src [handle_data]: handle_data → _clean_text
+      PURITY: 100% pure
+  [6] Src [ui_type_for_kind]: ui_type_for_kind
+      PURITY: 100% pure
+  [7] Src [should_block_full_html_iterate]: should_block_full_html_iterate → has_ui_marks
+      PURITY: 100% pure
+  [8] Src [inject_scope_style]: inject_scope_style → _bind_annotations_to_html → _parse_attrs
+      PURITY: 100% pure
+  [9] Src [build_function_patch_context]: build_function_patch_context → build_project_ir
+      PURITY: 100% pure
+  [10] Src [_default_prepare_html]: _default_prepare_html
+      PURITY: 100% pure
+  [11] Src [build_function_option_patches]: build_function_option_patches → _strip_existing_patch
+      PURITY: 100% pure
+  [12] Src [resolve_marked_llm_context]: resolve_marked_llm_context → build_marked_element_context → _assemble_marked_subtrees → _find_marked_subtrees → ...(1 more)
+      PURITY: 100% pure
+  [13] Src [supports_llm_patch_scope]: supports_llm_patch_scope → normalize_focus_scope → default_scope_for_kind → allowed_scope_ids
+      PURITY: 100% pure
+  [14] Src [build_ui_patch_prompt]: build_ui_patch_prompt → normalize_focus_scope → default_scope_for_kind → allowed_scope_ids
+      PURITY: 100% pure
+  [15] Src [parse_ui_patch_response]: parse_ui_patch_response → _strip_json_fence
+      PURITY: 100% pure
+  [16] Src [apply_ui_patch_options]: apply_ui_patch_options → strip_scope_style
+      PURITY: 100% pure
+  [17] Src [apply_spatial_deletes_to_html]: apply_spatial_deletes_to_html → _delete_match_keys
+      PURITY: 100% pure
+  [18] Src [generate_patch_suggestions]: generate_patch_suggestions
+      PURITY: 100% pure
+  [19] Src [_normalize_scopes]: _normalize_scopes
+      PURITY: 100% pure
+  [20] Src [_build_user_prompt]: _build_user_prompt
+      PURITY: 100% pure
+  [21] Src [_parse_choice]: _parse_choice
+      PURITY: 100% pure
+  [22] Src [_choice_content]: _choice_content
+      PURITY: 100% pure
+  [23] Src [_default_completion]: _default_completion
+      PURITY: 100% pure
+
+LAYERS:
+  repatch/                        CC̄=5.8    ←in:0  →out:0
+  │ !! marked_context             519L  0C   26m  CC=17     ←3
+  │ !! scope                      494L  0C   17m  CC=29     ←2
+  │ dom_patch                  314L  0C   19m  CC=10     ←0
+  │ !! ui_patch                   267L  0C   10m  CC=25     ←0
+  │ project_ir                 132L  1C    8m  CC=12     ←1
+  │ spatial                    108L  0C    4m  CC=6      ←0
+  │ service                    105L  2C    7m  CC=6      ←0
+  │ __init__                    87L  0C    0m  CC=0.0    ←0
+  │ css                         70L  0C    4m  CC=14     ←2
+  │
+  ./                              CC̄=0.0    ←in:0  →out:0
+  │ !! goal.yaml                  511L  0C    0m  CC=0.0    ←0
+  │ pyproject.toml              55L  0C    0m  CC=0.0    ←0
+  │ project.sh                  50L  0C    0m  CC=0.0    ←0
+  │ tree.sh                      1L  0C    0m  CC=0.0    ←0
+  │
+
+COUPLING: no cross-package imports detected
+
+EXTERNAL:
+  validation: run `vallm batch .` → validation.toon
+  duplication: run `redup scan .` → duplication.toon
