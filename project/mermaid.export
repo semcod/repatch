@@ -68,6 +68,20 @@ flowchart TD
         repatch__options__sync_option_previews_from_workspace("sync_option_previews_from_workspace CC=10")
         repatch__options__enforce_deletes_on_option_previews("enforce_deletes_on_option_previews CC=9")
     end
+    subgraph repatch__organize_html
+        repatch__organize_html___attr_map["_attr_map"]
+        repatch__organize_html__is_lazy_placeholder_img_tag("is_lazy_placeholder_img_tag CC=11")
+        repatch__organize_html___strip_lazy_placeholder_imgs["_strip_lazy_placeholder_imgs"]
+        repatch__organize_html___extract_inline_styles["_extract_inline_styles"]
+        repatch__organize_html___inject_head_link["_inject_head_link"]
+        repatch__organize_html___inject_head_script["_inject_head_script"]
+        repatch__organize_html___slug_piece["_slug_piece"]
+        repatch__organize_html___add_markable_targets["_add_markable_targets"]
+        repatch__organize_html__organize_html{{organize_html CC=24}}
+        repatch__organize_html__organize_html_project_dir("organize_html_project_dir CC=8")
+        repatch__organize_html__organize_html_project["organize_html_project"]
+        repatch__organize_html__organize_result_manifest["organize_result_manifest"]
+    end
     subgraph repatch__project_ir
         repatch__project_ir___ProjectIRParser____init__["__init__"]
         repatch__project_ir___ProjectIRParser__handle_starttag["handle_starttag"]
@@ -129,6 +143,23 @@ flowchart TD
         repatch__ui_patch___css_for["_css_for"]
         repatch__ui_patch__apply_ui_patch_options{{apply_ui_patch_options CC=25}}
     end
+    subgraph repatch__web_fetch
+        repatch__web_fetch___validate_http_url["_validate_http_url"]
+        repatch__web_fetch___charset_from_content_type["_charset_from_content_type"]
+        repatch__web_fetch___decode_http_bytes["_decode_http_bytes"]
+        repatch__web_fetch___same_origin["_same_origin"]
+        repatch__web_fetch___read_http_body["_read_http_body"]
+        repatch__web_fetch___render_with_playwright["_render_with_playwright"]
+        repatch__web_fetch___extension_from_url_or_type["_extension_from_url_or_type"]
+        repatch__web_fetch___save_asset["_save_asset"]
+        repatch__web_fetch___is_stylesheet_link["_is_stylesheet_link"]
+        repatch__web_fetch___replace_attr["_replace_attr"]
+        repatch__web_fetch___mirror_stylesheets["_mirror_stylesheets"]
+        repatch__web_fetch___parse_srcset["_parse_srcset"]
+        repatch__web_fetch___format_srcset["_format_srcset"]
+        repatch__web_fetch___mirror_images["_mirror_images"]
+        repatch__web_fetch__fetch_complete_web_page["fetch_complete_web_page"]
+    end
     subgraph repatch__web_preprocess
         repatch__web_preprocess__safe_read_under["safe_read_under"]
         repatch__web_preprocess__extract_inline_css["extract_inline_css"]
@@ -148,7 +179,8 @@ flowchart TD
         repatch__web_preprocess__sanitize_http_preview_html["sanitize_http_preview_html"]
         repatch__web_preprocess__inject_http_preview_shim["inject_http_preview_shim"]
         repatch__web_preprocess__prepare_http_preview_html["prepare_http_preview_html"]
-        repatch__web_preprocess__build_http_llm_context["build_http_llm_context"]
+        repatch__web_preprocess___cap_patch_text["_cap_patch_text"]
+        repatch__web_preprocess__build_http_llm_context{{build_http_llm_context CC=29}}
         repatch__web_preprocess__http_patch_llm_rules["http_patch_llm_rules"]
     end
     subgraph sdks__js
@@ -284,17 +316,6 @@ flowchart TD
     repatch__options__sync_option_previews_from_workspace --> repatch__spatial__apply_spatial_deletes_to_html
     repatch__options__sync_option_previews_from_workspace --> repatch__options__replace_html_title
     repatch__options__enforce_deletes_on_option_previews --> repatch__spatial__apply_spatial_deletes_to_html
-    repatch__web_preprocess__normalize_linked_paths --> repatch__web_preprocess__extract_stylesheet_hrefs
-    repatch__web_preprocess__filter_visual_css --> repatch__css__split_css_rules
-    repatch__web_preprocess__filter_visual_css --> repatch__web_preprocess___rule_is_visual
-    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__extract_inline_css
-    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__normalize_linked_paths
-    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__filter_visual_css
-    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__safe_read_under
-    repatch__web_preprocess___should_remove_preview_script --> repatch__web_preprocess___script_src_allowed_for_preview
-    repatch__web_preprocess__sanitize_http_preview_html --> repatch__web_preprocess___should_remove_preview_script
-    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__sanitize_http_preview_html
-    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__inject_http_preview_shim
     repatch__css__validate_css_safety --> repatch__css___strip_css_comments
     repatch__css__validate_css_safety --> repatch__css___selector_is_runtime_only
     repatch__spatial___element_delete_candidates --> repatch__spatial___delete_match_keys
@@ -310,8 +331,47 @@ flowchart TD
     sdks__js__repatch_sdk__RepatchSDK__apply --> sdks__js__repatch_sdk__RepatchSDK__cb
     sdks__js__repatch_sdk__RepatchSDK__removeMatch --> sdks__js__repatch_sdk__RepatchSDK__cb
     sdks__python__repatch_sdk__RepatchClient___trigger_listeners --> sdks__js__repatch_sdk__RepatchSDK__cb
+    repatch__organize_html__is_lazy_placeholder_img_tag --> repatch__organize_html___attr_map
+    repatch__organize_html___strip_lazy_placeholder_imgs --> repatch__organize_html__is_lazy_placeholder_img_tag
+    repatch__organize_html___add_markable_targets --> repatch__organize_html___attr_map
+    repatch__organize_html___add_markable_targets --> repatch__organize_html___slug_piece
+    repatch__organize_html__organize_html --> repatch__organize_html___extract_inline_styles
+    repatch__organize_html__organize_html --> repatch__organize_html___strip_lazy_placeholder_imgs
+    repatch__organize_html__organize_html --> repatch__organize_html___add_markable_targets
+    repatch__organize_html__organize_html --> repatch__web_preprocess___should_remove_preview_script
+    repatch__organize_html__organize_html_project_dir --> repatch__organize_html__organize_html
+    repatch__organize_html__organize_html_project --> repatch__organize_html__organize_html
+    repatch__web_preprocess__normalize_linked_paths --> repatch__web_preprocess__extract_stylesheet_hrefs
+    repatch__web_preprocess__filter_visual_css --> repatch__css__split_css_rules
+    repatch__web_preprocess__filter_visual_css --> repatch__web_preprocess___rule_is_visual
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__extract_inline_css
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__normalize_linked_paths
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__filter_visual_css
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__safe_read_under
+    repatch__web_preprocess___should_remove_preview_script --> repatch__web_preprocess___script_src_allowed_for_preview
+    repatch__web_preprocess__sanitize_http_preview_html --> repatch__web_preprocess___should_remove_preview_script
+    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__sanitize_http_preview_html
+    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__inject_http_preview_shim
+    repatch__web_preprocess__build_http_llm_context --> repatch__web_preprocess___cap_patch_text
+    repatch__web_fetch___decode_http_bytes --> repatch__web_fetch___charset_from_content_type
+    repatch__web_fetch___read_http_body --> repatch__web_fetch___validate_http_url
+    repatch__web_fetch___read_http_body --> repatch__web_fetch___charset_from_content_type
+    repatch__web_fetch___save_asset --> repatch__web_fetch___extension_from_url_or_type
+    repatch__web_fetch___save_asset --> repatch__web_fetch___read_http_body
+    repatch__web_fetch___mirror_stylesheets --> repatch__web_fetch___save_asset
+    repatch__web_fetch___mirror_stylesheets --> repatch__web_fetch___replace_attr
+    repatch__web_fetch___mirror_stylesheets --> repatch__web_fetch___is_stylesheet_link
+    repatch__web_fetch___mirror_stylesheets --> repatch__web_fetch___same_origin
+    repatch__web_fetch___mirror_images --> repatch__web_fetch___save_asset
+    repatch__web_fetch___mirror_images --> repatch__web_fetch___same_origin
+    repatch__web_fetch___mirror_images --> repatch__web_fetch___replace_attr
+    repatch__web_fetch__fetch_complete_web_page --> repatch__web_fetch___read_http_body
+    repatch__web_fetch__fetch_complete_web_page --> repatch__web_fetch___decode_http_bytes
+    repatch__web_fetch__fetch_complete_web_page --> repatch__web_fetch___mirror_stylesheets
+    repatch__web_fetch__fetch_complete_web_page --> repatch__web_fetch___mirror_images
+    repatch__web_fetch__fetch_complete_web_page --> repatch__web_fetch___render_with_playwright
 
     classDef highCC fill:#ff6b6b,stroke:#c92a2a,color:#fff
     classDef medCC fill:#ffd43b,stroke:#f08c00,color:#000
-    class repatch__scope___bind_annotations_to_html,repatch__scope__inject_scope_style,repatch__marked_context__resolve_marked_selectors,repatch__marked_context___find_marked_subtrees,repatch__ui_patch__apply_ui_patch_options highCC
-    class repatch__project_ir___ProjectIRParser___classify_node,repatch__project_ir___ProjectIRParser__handle_endtag,repatch__project_ir__summarize_project_ir,repatch__scope__ui_type_for_kind,repatch__scope___resolve_scope_kind,repatch__dom_patch__build_function_option_patches,repatch__marked_context__has_ui_marks,repatch__marked_context__effective_delete_ids,repatch__marked_context___collect_keep_selectors,repatch__marked_context__marked_scope_colors_css,repatch__marked_context__marked_scope_orientation_css,repatch__marked_context__restrict_scope_css_to_marks,repatch__marked_context___logical_id,repatch__marked_context___extract_balanced_html,repatch__marked_context___selector_tokens,repatch__marked_context___client_fragment_html,repatch__marked_context___format_context_body,repatch__marked_context__build_marked_element_context,repatch__ui_patch__build_ui_patch_prompt,repatch__ui_patch___safe_css,repatch__options__sync_option_previews_from_workspace,repatch__options__enforce_deletes_on_option_previews,repatch__web_preprocess__normalize_linked_paths,repatch__web_preprocess__extract_visual_css,repatch__web_preprocess___OutlineParser__handle_starttag,repatch__css__split_css_rules,repatch__css__validate_css_safety,sdks__js__repatch_sdk__RepatchSDK__apply,sdks__js__repatch_sdk__RepatchSDK__removeMatch medCC
+    class repatch__scope___bind_annotations_to_html,repatch__scope__inject_scope_style,repatch__marked_context__resolve_marked_selectors,repatch__marked_context___find_marked_subtrees,repatch__ui_patch__apply_ui_patch_options,repatch__organize_html__organize_html,repatch__web_preprocess__build_http_llm_context highCC
+    class repatch__project_ir___ProjectIRParser___classify_node,repatch__project_ir___ProjectIRParser__handle_endtag,repatch__project_ir__summarize_project_ir,repatch__scope__ui_type_for_kind,repatch__scope___resolve_scope_kind,repatch__dom_patch__build_function_option_patches,repatch__marked_context__has_ui_marks,repatch__marked_context__effective_delete_ids,repatch__marked_context___collect_keep_selectors,repatch__marked_context__marked_scope_colors_css,repatch__marked_context__marked_scope_orientation_css,repatch__marked_context__restrict_scope_css_to_marks,repatch__marked_context___logical_id,repatch__marked_context___extract_balanced_html,repatch__marked_context___selector_tokens,repatch__marked_context___client_fragment_html,repatch__marked_context___format_context_body,repatch__marked_context__build_marked_element_context,repatch__ui_patch__build_ui_patch_prompt,repatch__ui_patch___safe_css,repatch__options__sync_option_previews_from_workspace,repatch__options__enforce_deletes_on_option_previews,repatch__css__split_css_rules,repatch__css__validate_css_safety,sdks__js__repatch_sdk__RepatchSDK__apply,sdks__js__repatch_sdk__RepatchSDK__removeMatch,repatch__organize_html__is_lazy_placeholder_img_tag,repatch__organize_html__organize_html_project_dir,repatch__web_preprocess__normalize_linked_paths,repatch__web_preprocess__extract_visual_css medCC

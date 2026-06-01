@@ -1,130 +1,156 @@
 flowchart LR
-%% generated in 0.00s
+%% generated in 0.02s
     subgraph repatch__css
         repatch__css__validate_css_safety["validate_css_safety"]
-        repatch__css___strip_css_comments["_strip_css_comments"]
         repatch__css___selector_is_runtime_only["_selector_is_runtime_only"]
         repatch__css__split_css_rules["split_css_rules"]
+        repatch__css___strip_css_comments["_strip_css_comments"]
     end
     subgraph repatch__dom_patch
-        repatch__dom_patch__supports_function_patch["supports_function_patch"]
-        repatch__dom_patch__build_function_option_patches["build_function_option_patches"]
+        repatch__dom_patch___inject_into_head["_inject_into_head"]
+        repatch__dom_patch___target_candidates["_target_candidates"]
         repatch__dom_patch___strip_existing_patch["_strip_existing_patch"]
         repatch__dom_patch___attrs_from_open_tag["_attrs_from_open_tag"]
-        repatch__dom_patch___goal_label["_goal_label"]
-        repatch__dom_patch___target_candidates["_target_candidates"]
-        repatch__dom_patch___inject_into_body["_inject_into_body"]
-        repatch__dom_patch___patch_function_targets["_patch_function_targets"]
-        repatch__dom_patch___matches_target["_matches_target"]
-        repatch__dom_patch___variant_target_label["_variant_target_label"]
         repatch__dom_patch___strip_tags["_strip_tags"]
+        repatch__dom_patch__supports_function_patch["supports_function_patch"]
+        repatch__dom_patch__build_function_option_patches["build_function_option_patches"]
+        repatch__dom_patch___inject_into_body["_inject_into_body"]
+        repatch__dom_patch___variant_target_label["_variant_target_label"]
         repatch__dom_patch___variant_section["_variant_section"]
-        repatch__dom_patch___inject_into_head["_inject_into_head"]
+        repatch__dom_patch___matches_target["_matches_target"]
         repatch__dom_patch__build_function_patch_context["build_function_patch_context"]
+        repatch__dom_patch___goal_label["_goal_label"]
+        repatch__dom_patch___patch_function_targets["_patch_function_targets"]
     end
     subgraph repatch__marked_context
-        repatch__marked_context___collect_button_candidates["_collect_button_candidates"]
-        repatch__marked_context___css_id_selector["_css_id_selector"]
-        repatch__marked_context___get_relevant_css["_get_relevant_css"]
-        repatch__marked_context__resolve_marked_llm_context["resolve_marked_llm_context"]
-        repatch__marked_context___normalize_label_text["_normalize_label_text"]
-        repatch__marked_context___extract_and_format_fragment["_extract_and_format_fragment"]
-        repatch__marked_context__effective_delete_ids["effective_delete_ids"]
-        repatch__marked_context___filter_css_for_tokens["_filter_css_for_tokens"]
-        repatch__marked_context___assemble_marked_subtrees["_assemble_marked_subtrees"]
-        repatch__marked_context__has_ui_marks["has_ui_marks"]
-        repatch__marked_context__restrict_scope_css_to_marks["restrict_scope_css_to_marks"]
-        repatch__marked_context___parse_attrs["_parse_attrs"]
-        repatch__marked_context___cap_text["_cap_text"]
-        repatch__marked_context__build_marked_element_context["build_marked_element_context"]
-        repatch__marked_context__resolve_marked_selectors["resolve_marked_selectors"]
+        repatch__marked_context___collect_match_candidates["_collect_match_candidates"]
+        repatch__marked_context___logical_id["_logical_id"]
         repatch__marked_context___fragment_class_names["_fragment_class_names"]
+        repatch__marked_context___parse_attrs["_parse_attrs"]
+        repatch__marked_context__resolve_marked_selectors["resolve_marked_selectors"]
+        repatch__marked_context___get_relevant_css["_get_relevant_css"]
+        repatch__marked_context__restrict_scope_css_to_marks["restrict_scope_css_to_marks"]
+        repatch__marked_context__build_marked_element_context["build_marked_element_context"]
+        repatch__marked_context__effective_delete_ids["effective_delete_ids"]
+        repatch__marked_context___extract_balanced_html["_extract_balanced_html"]
+        repatch__marked_context___normalize_label_text["_normalize_label_text"]
         repatch__marked_context___client_fragment_html["_client_fragment_html"]
+        repatch__marked_context___collect_keep_selectors["_collect_keep_selectors"]
         repatch__marked_context___id_candidates["_id_candidates"]
         repatch__marked_context___find_marked_subtrees["_find_marked_subtrees"]
-        repatch__marked_context___selector_tokens["_selector_tokens"]
+        repatch__marked_context__has_ui_marks["has_ui_marks"]
+        repatch__marked_context___css_id_selector["_css_id_selector"]
         repatch__marked_context___collect_css_sources["_collect_css_sources"]
-        repatch__marked_context___collect_match_candidates["_collect_match_candidates"]
-        repatch__marked_context___format_context_body["_format_context_body"]
-        repatch__marked_context___collect_keep_selectors["_collect_keep_selectors"]
-        repatch__marked_context___extract_balanced_html["_extract_balanced_html"]
         repatch__marked_context__marked_css_selectors["marked_css_selectors"]
-        repatch__marked_context___logical_id["_logical_id"]
+        repatch__marked_context___selector_tokens["_selector_tokens"]
+        repatch__marked_context___filter_css_for_tokens["_filter_css_for_tokens"]
+        repatch__marked_context___assemble_marked_subtrees["_assemble_marked_subtrees"]
+        repatch__marked_context__resolve_marked_llm_context["resolve_marked_llm_context"]
+        repatch__marked_context___extract_and_format_fragment["_extract_and_format_fragment"]
+        repatch__marked_context___cap_text["_cap_text"]
+        repatch__marked_context___collect_button_candidates["_collect_button_candidates"]
+        repatch__marked_context___format_context_body["_format_context_body"]
     end
     subgraph repatch__options
-        repatch__options__html_files_distinct["html_files_distinct"]
-        repatch__options__normalize_html_body["normalize_html_body"]
         repatch__options__sync_option_previews_from_workspace["sync_option_previews_from_work"]
         repatch__options__enforce_deletes_on_option_previews["enforce_deletes_on_option_prev"]
+        repatch__options__normalize_html_body["normalize_html_body"]
+        repatch__options__html_files_distinct["html_files_distinct"]
+    end
+    subgraph repatch__organize_html
+        repatch__organize_html__is_lazy_placeholder_img_tag["is_lazy_placeholder_img_tag"]
+        repatch__organize_html___extract_inline_styles["_extract_inline_styles"]
+        repatch__organize_html___add_markable_targets["_add_markable_targets"]
+        repatch__organize_html___attr_map["_attr_map"]
+        repatch__organize_html__organize_html["organize_html"]
+        repatch__organize_html__organize_html_project_dir["organize_html_project_dir"]
+        repatch__organize_html__organize_html_project["organize_html_project"]
+        repatch__organize_html___strip_lazy_placeholder_imgs["_strip_lazy_placeholder_imgs"]
     end
     subgraph repatch__project_ir
+        repatch__project_ir___ProjectIRParser__handle_data["handle_data"]
+        repatch__project_ir__build_project_ir["build_project_ir"]
+        repatch__project_ir___ProjectIRParser___classify_node["_classify_node"]
         repatch__project_ir___clean_text["_clean_text"]
         repatch__project_ir___ProjectIRParser__handle_endtag["handle_endtag"]
-        repatch__project_ir___ProjectIRParser___classify_node["_classify_node"]
-        repatch__project_ir___ProjectIRParser__handle_data["handle_data"]
         repatch__project_ir__summarize_project_ir["summarize_project_ir"]
-        repatch__project_ir__build_project_ir["build_project_ir"]
     end
     subgraph repatch__scope
-        repatch__scope__should_block_full_html_iterate["should_block_full_html_iterate"]
-        repatch__scope__allowed_scope_ids["allowed_scope_ids"]
-        repatch__scope___get_scope_css["_get_scope_css"]
+        repatch__scope___calc_scope_css["_calc_scope_css"]
         repatch__scope__offline_fast_scopes_for_kind["offline_fast_scopes_for_kind"]
-        repatch__scope__inject_scope_style["inject_scope_style"]
-        repatch__scope___scope_css["_scope_css"]
-        repatch__scope__strip_scope_style["strip_scope_style"]
+        repatch__scope__scoped_html_fragment["scoped_html_fragment"]
+        repatch__scope__allowed_scope_ids["allowed_scope_ids"]
         repatch__scope__default_scope_for_kind["default_scope_for_kind"]
         repatch__scope__scope_supports_offline_fast_path["scope_supports_offline_fast_pa"]
-        repatch__scope___calc_scope_css["_calc_scope_css"]
-        repatch__scope___inject_css_block["_inject_css_block"]
+        repatch__scope___scope_css["_scope_css"]
+        repatch__scope___get_scope_css["_get_scope_css"]
         repatch__scope___bind_annotations_to_html["_bind_annotations_to_html"]
-        repatch__scope___web_display_scope_css["_web_display_scope_css"]
-        repatch__scope___resolve_scope_kind["_resolve_scope_kind"]
-        repatch__scope__scoped_html_fragment["scoped_html_fragment"]
         repatch__scope__normalize_focus_scope["normalize_focus_scope"]
-        repatch__scope___web_shapes_scope_css["_web_shapes_scope_css"]
-        repatch__scope___web_scope_css["_web_scope_css"]
+        repatch__scope___resolve_scope_kind["_resolve_scope_kind"]
+        repatch__scope___inject_css_block["_inject_css_block"]
+        repatch__scope__inject_scope_style["inject_scope_style"]
+        repatch__scope__should_block_full_html_iterate["should_block_full_html_iterate"]
         repatch__scope__goal_requests_column_layout["goal_requests_column_layout"]
         repatch__scope___web_orientation_scope_css["_web_orientation_scope_css"]
+        repatch__scope__strip_scope_style["strip_scope_style"]
+        repatch__scope___web_shapes_scope_css["_web_shapes_scope_css"]
+        repatch__scope___web_scope_css["_web_scope_css"]
+        repatch__scope___web_display_scope_css["_web_display_scope_css"]
     end
     subgraph repatch__spatial
-        repatch__spatial___element_delete_candidates["_element_delete_candidates"]
-        repatch__spatial__apply_spatial_deletes_to_html["apply_spatial_deletes_to_html"]
         repatch__spatial___delete_match_keys["_delete_match_keys"]
+        repatch__spatial__apply_spatial_deletes_to_html["apply_spatial_deletes_to_html"]
+        repatch__spatial___element_delete_candidates["_element_delete_candidates"]
     end
     subgraph repatch__ui_patch
-        repatch__ui_patch___strip_json_fence["_strip_json_fence"]
-        repatch__ui_patch__build_ui_patch_prompt["build_ui_patch_prompt"]
-        repatch__ui_patch___css_for["_css_for"]
-        repatch__ui_patch__supports_llm_patch_scope["supports_llm_patch_scope"]
-        repatch__ui_patch___safe_css["_safe_css"]
         repatch__ui_patch___patch_scope_rules["_patch_scope_rules"]
+        repatch__ui_patch__apply_ui_patch_options["apply_ui_patch_options"]
+        repatch__ui_patch__build_ui_patch_prompt["build_ui_patch_prompt"]
+        repatch__ui_patch___strip_json_fence["_strip_json_fence"]
         repatch__ui_patch___compact_html["_compact_html"]
         repatch__ui_patch__parse_ui_patch_response["parse_ui_patch_response"]
-        repatch__ui_patch__apply_ui_patch_options["apply_ui_patch_options"]
+        repatch__ui_patch___safe_css["_safe_css"]
+        repatch__ui_patch__supports_llm_patch_scope["supports_llm_patch_scope"]
+        repatch__ui_patch___css_for["_css_for"]
+    end
+    subgraph repatch__web_fetch
+        repatch__web_fetch___mirror_stylesheets["_mirror_stylesheets"]
+        repatch__web_fetch___save_asset["_save_asset"]
+        repatch__web_fetch___validate_http_url["_validate_http_url"]
+        repatch__web_fetch__fetch_complete_web_page["fetch_complete_web_page"]
+        repatch__web_fetch___same_origin["_same_origin"]
+        repatch__web_fetch___mirror_images["_mirror_images"]
+        repatch__web_fetch___replace_attr["_replace_attr"]
+        repatch__web_fetch___charset_from_content_type["_charset_from_content_type"]
+        repatch__web_fetch___is_stylesheet_link["_is_stylesheet_link"]
+        repatch__web_fetch___extension_from_url_or_type["_extension_from_url_or_type"]
+        repatch__web_fetch___read_http_body["_read_http_body"]
+        repatch__web_fetch___decode_http_bytes["_decode_http_bytes"]
     end
     subgraph repatch__web_preprocess
-        repatch__web_preprocess__safe_read_under["safe_read_under"]
-        repatch__web_preprocess__extract_visual_css["extract_visual_css"]
+        repatch__web_preprocess__prepare_http_preview_html["prepare_http_preview_html"]
         repatch__web_preprocess__inject_http_preview_shim["inject_http_preview_shim"]
-        repatch__web_preprocess__normalize_linked_paths["normalize_linked_paths"]
         repatch__web_preprocess__extract_inline_css["extract_inline_css"]
-        repatch__web_preprocess___rule_is_visual["_rule_is_visual"]
-        repatch__web_preprocess__filter_visual_css["filter_visual_css"]
         repatch__web_preprocess___script_src_allowed_for_preview["_script_src_allowed_for_previe"]
+        repatch__web_preprocess__filter_visual_css["filter_visual_css"]
+        repatch__web_preprocess__safe_read_under["safe_read_under"]
+        repatch__web_preprocess___rule_is_visual["_rule_is_visual"]
+        repatch__web_preprocess___cap_patch_text["_cap_patch_text"]
+        repatch__web_preprocess__extract_visual_css["extract_visual_css"]
+        repatch__web_preprocess__normalize_linked_paths["normalize_linked_paths"]
+        repatch__web_preprocess__extract_stylesheet_hrefs["extract_stylesheet_hrefs"]
+        repatch__web_preprocess__build_http_llm_context["build_http_llm_context"]
         repatch__web_preprocess__sanitize_http_preview_html["sanitize_http_preview_html"]
         repatch__web_preprocess___should_remove_preview_script["_should_remove_preview_script"]
-        repatch__web_preprocess__extract_stylesheet_hrefs["extract_stylesheet_hrefs"]
-        repatch__web_preprocess__prepare_http_preview_html["prepare_http_preview_html"]
     end
     subgraph sdks__js
-        sdks__js__repatch_sdk__RepatchSDK__connect["connect"]
+        sdks__js__repatch_sdk__RepatchSDK__payload["payload"]
         sdks__js__repatch_sdk__RepatchSDK___connectWS["_connectWS"]
+        sdks__js__repatch_sdk__RepatchSDK__connect["connect"]
+        sdks__js__repatch_sdk__RepatchSDK__apply["apply"]
+        sdks__js__repatch_sdk__RepatchSDK__cb["cb"]
         sdks__js__repatch_sdk__RepatchSDK___connectSSE["_connectSSE"]
         sdks__js__repatch_sdk__RepatchSDK__setTimeout["setTimeout"]
-        sdks__js__repatch_sdk__RepatchSDK__cb["cb"]
-        sdks__js__repatch_sdk__RepatchSDK__apply["apply"]
-        sdks__js__repatch_sdk__RepatchSDK__payload["payload"]
     end
     subgraph sdks__python
         sdks__python__repatch_sdk__RepatchClient___trigger_listeners["_trigger_listeners"]
@@ -221,17 +247,6 @@ flowchart LR
     repatch__options__html_files_distinct --> repatch__options__normalize_html_body
     repatch__options__sync_option_previews_from_workspace --> repatch__spatial__apply_spatial_deletes_to_html
     repatch__options__enforce_deletes_on_option_previews --> repatch__spatial__apply_spatial_deletes_to_html
-    repatch__web_preprocess__normalize_linked_paths --> repatch__web_preprocess__extract_stylesheet_hrefs
-    repatch__web_preprocess__filter_visual_css --> repatch__css__split_css_rules
-    repatch__web_preprocess__filter_visual_css --> repatch__web_preprocess___rule_is_visual
-    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__extract_inline_css
-    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__normalize_linked_paths
-    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__filter_visual_css
-    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__safe_read_under
-    repatch__web_preprocess___should_remove_preview_script --> repatch__web_preprocess___script_src_allowed_for_preview
-    repatch__web_preprocess__sanitize_http_preview_html --> repatch__web_preprocess___should_remove_preview_script
-    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__sanitize_http_preview_html
-    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__inject_http_preview_shim
     repatch__css__validate_css_safety --> repatch__css___strip_css_comments
     repatch__css__validate_css_safety --> repatch__css___selector_is_runtime_only
     repatch__spatial___element_delete_candidates --> repatch__spatial___delete_match_keys
@@ -245,3 +260,38 @@ flowchart LR
     sdks__js__repatch_sdk__RepatchSDK__setTimeout --> sdks__js__repatch_sdk__RepatchSDK___connectSSE
     sdks__js__repatch_sdk__RepatchSDK___connectSSE --> sdks__js__repatch_sdk__RepatchSDK__apply
     sdks__python__repatch_sdk__RepatchClient___trigger_listeners --> sdks__js__repatch_sdk__RepatchSDK__cb
+    repatch__organize_html__is_lazy_placeholder_img_tag --> repatch__organize_html___attr_map
+    repatch__organize_html___strip_lazy_placeholder_imgs --> repatch__organize_html__is_lazy_placeholder_img_tag
+    repatch__organize_html___add_markable_targets --> repatch__organize_html___attr_map
+    repatch__organize_html__organize_html --> repatch__organize_html___extract_inline_styles
+    repatch__organize_html__organize_html --> repatch__organize_html___strip_lazy_placeholder_imgs
+    repatch__organize_html__organize_html --> repatch__organize_html___add_markable_targets
+    repatch__organize_html__organize_html_project_dir --> repatch__organize_html__organize_html
+    repatch__organize_html__organize_html_project --> repatch__organize_html__organize_html
+    repatch__web_preprocess__normalize_linked_paths --> repatch__web_preprocess__extract_stylesheet_hrefs
+    repatch__web_preprocess__filter_visual_css --> repatch__css__split_css_rules
+    repatch__web_preprocess__filter_visual_css --> repatch__web_preprocess___rule_is_visual
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__extract_inline_css
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__normalize_linked_paths
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__filter_visual_css
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__safe_read_under
+    repatch__web_preprocess___should_remove_preview_script --> repatch__web_preprocess___script_src_allowed_for_preview
+    repatch__web_preprocess__sanitize_http_preview_html --> repatch__web_preprocess___should_remove_preview_script
+    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__sanitize_http_preview_html
+    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__inject_http_preview_shim
+    repatch__web_preprocess__build_http_llm_context --> repatch__web_preprocess___cap_patch_text
+    repatch__web_fetch___decode_http_bytes --> repatch__web_fetch___charset_from_content_type
+    repatch__web_fetch___read_http_body --> repatch__web_fetch___validate_http_url
+    repatch__web_fetch___read_http_body --> repatch__web_fetch___charset_from_content_type
+    repatch__web_fetch___save_asset --> repatch__web_fetch___extension_from_url_or_type
+    repatch__web_fetch___save_asset --> repatch__web_fetch___read_http_body
+    repatch__web_fetch___mirror_stylesheets --> repatch__web_fetch___save_asset
+    repatch__web_fetch___mirror_stylesheets --> repatch__web_fetch___replace_attr
+    repatch__web_fetch___mirror_stylesheets --> repatch__web_fetch___is_stylesheet_link
+    repatch__web_fetch___mirror_stylesheets --> repatch__web_fetch___same_origin
+    repatch__web_fetch___mirror_images --> repatch__web_fetch___save_asset
+    repatch__web_fetch___mirror_images --> repatch__web_fetch___same_origin
+    repatch__web_fetch__fetch_complete_web_page --> repatch__web_fetch___read_http_body
+    repatch__web_fetch__fetch_complete_web_page --> repatch__web_fetch___decode_http_bytes
+    repatch__web_fetch__fetch_complete_web_page --> repatch__web_fetch___mirror_stylesheets
+    repatch__web_fetch__fetch_complete_web_page --> repatch__web_fetch___mirror_images

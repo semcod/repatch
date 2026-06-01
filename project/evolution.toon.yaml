@@ -1,7 +1,7 @@
-# code2llm/evolution | 156 func | 12f | 2026-06-01
+# code2llm/evolution | 184 func | 14f | 2026-06-01
 # generated in 0.00s
 
-NEXT[8] (ranked by impact):
+NEXT[10] (ranked by impact):
   [1] !! SPLIT           repatch/scope.py
       WHY: 647L, 0 classes, max CC=29
       EFFORT: ~4h  IMPACT: 18763
@@ -18,19 +18,27 @@ NEXT[8] (ranked by impact):
       WHY: CC=27 exceeds 15
       EFFORT: ~1h  IMPACT: 540
 
-  [5] !! SPLIT-FUNC      apply_ui_patch_options  CC=25  fan=21
+  [5] !  SPLIT-FUNC      organize_html  CC=24  fan=22
+      WHY: CC=24 exceeds 15
+      EFFORT: ~1h  IMPACT: 528
+
+  [6] !! SPLIT-FUNC      apply_ui_patch_options  CC=25  fan=21
       WHY: CC=25 exceeds 15
       EFFORT: ~1h  IMPACT: 525
 
-  [6] !  SPLIT-FUNC      resolve_marked_selectors  CC=16  fan=15
+  [7] !! SPLIT-FUNC      build_http_llm_context  CC=29  fan=11
+      WHY: CC=29 exceeds 15
+      EFFORT: ~1h  IMPACT: 319
+
+  [8] !  SPLIT-FUNC      resolve_marked_selectors  CC=16  fan=15
       WHY: CC=16 exceeds 15
       EFFORT: ~1h  IMPACT: 240
 
-  [7] !  SPLIT-FUNC      _find_marked_subtrees  CC=17  fan=13
+  [9] !  SPLIT-FUNC      _find_marked_subtrees  CC=17  fan=13
       WHY: CC=17 exceeds 15
       EFFORT: ~1h  IMPACT: 221
 
-  [8] !! SPLIT           deps.json
+  [10] !! SPLIT           deps.json
       WHY: 3394L, 0 classes, max CC=0
       EFFORT: ~4h  IMPACT: 0
 
@@ -44,7 +52,7 @@ METRICS-TARGET:
   CC̄:          5.2 → ≤3.6
   max-CC:      29 → ≤14
   god-modules: 4 → 0
-  high-CC(≥15): 5 → ≤2
+  high-CC(≥15): 7 → ≤3
   hub-types:   0 → ≤0
 
 PATTERNS (language parser shared logic):

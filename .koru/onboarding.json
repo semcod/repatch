@@ -1,0 +1,12 @@
+{
+  "created_ticket_id": "PLF-001",
+  "created_ticket_title": "DevX: lokalny dev",
+  "project": "/home/tom/github/semcod/repatch",
+  "schema": "koru.onboarding/v1",
+  "selected_ide": "jetbrains",
+  "strategy_path": [
+    "devx",
+    "local_dev"
+  ],
+  "updated_at": "2026-06-01T14:17:09.562247+00:00"
+}

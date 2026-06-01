@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.15] - 2026-06-01
+
+### Docs
+- Update README.md
+- Update SUMD.md
+- Update SUMR.md
+- Update project/README.md
+- Update project/context.md
+
+### Other
+- Update .koru/event-store.jsonl
+- Update .koru/events/observability.jsonl
+- Update .koru/history.jsonl
+- Update .koru/onboarding.json
+- Update .planfile/.koru/operator-steps/mcp_koru.ticket
+- Update .planfile/.koru/operator-steps/self_control.ticket
+- Update .planfile/.koru/queue-runner.lock
+- Update .planfile/config.yaml
+- Update .planfile/sprints/current.yaml
+- Update app.doql.less
+- ... and 21 more files
+
 ## [0.2.14] - 2026-06-01
 
 ### Docs

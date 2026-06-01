@@ -1,15 +1,15 @@
-# redup/duplication | 1 groups | 11f 3000L | 2026-06-01
+# redup/duplication | 1 groups | 13f 3735L | 2026-06-01
 
 SUMMARY:
-  files_scanned: 11
-  total_lines:   3000
+  files_scanned: 13
+  total_lines:   3735
   dup_groups:    1
   dup_fragments: 2
   saved_lines:   12
-  scan_ms:       2379
+  scan_ms:       4131
 
 HOTSPOTS[1] (files with most duplication):
-  repatch/marked_context.py  dup=24L  groups=1  frags=2  (0.8%)
+  repatch/marked_context.py  dup=24L  groups=1  frags=2  (0.6%)
 
 DUPLICATES[1] (ranked by impact):
   [1576f29b2f19a9f4]   STRU  marked_scope_display_css  L=12 N=2 saved=12 sim=1.00

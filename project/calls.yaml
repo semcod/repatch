@@ -1,23 +1,72 @@
 project: /home/tom/github/semcod/repatch
 generated_from: code2llm call graph analysis
 stats:
-  total_nodes: 107
-  total_edges: 116
-  modules_count: 11
+  total_nodes: 129
+  total_edges: 140
+  modules_count: 13
 nodes:
-  repatch.options.html_files_distinct:
-    name: html_files_distinct
-    module: repatch.options
-    line: 41
-    cyclomatic_complexity: 3
-    calls_out: 7
+  repatch.dom_patch._inject_into_head:
+    name: _inject_into_head
+    module: repatch.dom_patch
+    line: 153
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 1
+  repatch.ui_patch._patch_scope_rules:
+    name: _patch_scope_rules
+    module: repatch.ui_patch
+    line: 58
+    cyclomatic_complexity: 7
+    calls_out: 9
+    calls_in: 1
+  repatch.web_preprocess.prepare_http_preview_html:
+    name: prepare_http_preview_html
+    module: repatch.web_preprocess
+    line: 363
+    cyclomatic_complexity: 1
+    calls_out: 2
     calls_in: 0
-  repatch.marked_context._collect_button_candidates:
-    name: _collect_button_candidates
+  repatch.web_preprocess.inject_http_preview_shim:
+    name: inject_http_preview_shim
+    module: repatch.web_preprocess
+    line: 347
+    cyclomatic_complexity: 4
+    calls_out: 4
+    calls_in: 1
+  repatch.marked_context._collect_match_candidates:
+    name: _collect_match_candidates
     module: repatch.marked_context
-    line: 433
-    cyclomatic_complexity: 3
-    calls_out: 8
+    line: 421
+    cyclomatic_complexity: 6
+    calls_out: 11
+    calls_in: 1
+  repatch.options.sync_option_previews_from_workspace:
+    name: sync_option_previews_from_workspace
+    module: repatch.options
+    line: 53
+    cyclomatic_complexity: 10
+    calls_out: 17
+    calls_in: 0
+  repatch.dom_patch._target_candidates:
+    name: _target_candidates
+    module: repatch.dom_patch
+    line: 172
+    cyclomatic_complexity: 4
+    calls_out: 9
+    calls_in: 3
+  repatch.marked_context._logical_id:
+    name: _logical_id
+    module: repatch.marked_context
+    line: 375
+    cyclomatic_complexity: 8
+    calls_out: 9
+    calls_in: 4
+  repatch.web_preprocess.extract_inline_css:
+    name: extract_inline_css
+    module: repatch.web_preprocess
+    line: 143
+    cyclomatic_complexity: 4
+    calls_out: 4
     calls_in: 1
   repatch.css.validate_css_safety:
     name: validate_css_safety
@@ -26,27 +75,153 @@ nodes:
     cyclomatic_complexity: 14
     calls_out: 26
     calls_in: 1
-  repatch.scope.should_block_full_html_iterate:
-    name: should_block_full_html_iterate
-    module: repatch.scope
-    line: 452
-    cyclomatic_complexity: 3
-    calls_out: 3
-    calls_in: 0
-  repatch.marked_context._css_id_selector:
-    name: _css_id_selector
-    module: repatch.marked_context
-    line: 108
-    cyclomatic_complexity: 4
-    calls_out: 3
-    calls_in: 3
-  repatch.dom_patch.supports_function_patch:
-    name: supports_function_patch
+  repatch.dom_patch._strip_existing_patch:
+    name: _strip_existing_patch
     module: repatch.dom_patch
-    line: 20
+    line: 39
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  repatch.marked_context._fragment_class_names:
+    name: _fragment_class_names
+    module: repatch.marked_context
+    line: 130
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 2
+  repatch.ui_patch.apply_ui_patch_options:
+    name: apply_ui_patch_options
+    module: repatch.ui_patch
+    line: 212
+    cyclomatic_complexity: 25
+    calls_out: 31
+    calls_in: 0
+  repatch.web_fetch._mirror_stylesheets:
+    name: _mirror_stylesheets
+    module: repatch.web_fetch
+    line: 185
+    cyclomatic_complexity: 1
+    calls_out: 13
+    calls_in: 1
+  repatch.organize_html.is_lazy_placeholder_img_tag:
+    name: is_lazy_placeholder_img_tag
+    module: repatch.organize_html
+    line: 43
+    cyclomatic_complexity: 11
+    calls_out: 14
+    calls_in: 1
+  repatch.web_fetch._save_asset:
+    name: _save_asset
+    module: repatch.web_fetch
+    line: 139
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 2
+  repatch.options.enforce_deletes_on_option_previews:
+    name: enforce_deletes_on_option_previews
+    module: repatch.options
+    line: 106
+    cyclomatic_complexity: 9
+    calls_out: 14
+    calls_in: 0
+  repatch.web_preprocess._script_src_allowed_for_preview:
+    name: _script_src_allowed_for_preview
+    module: repatch.web_preprocess
+    line: 315
     cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 1
+  repatch.marked_context._parse_attrs:
+    name: _parse_attrs
+    module: repatch.marked_context
+    line: 366
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 2
+  repatch.web_preprocess.filter_visual_css:
+    name: filter_visual_css
+    module: repatch.web_preprocess
+    line: 190
+    cyclomatic_complexity: 3
     calls_out: 4
     calls_in: 1
+  repatch.scope._calc_scope_css:
+    name: _calc_scope_css
+    module: repatch.scope
+    line: 235
+    cyclomatic_complexity: 7
+    calls_out: 0
+    calls_in: 1
+  sdks.js.repatch-sdk.RepatchSDK.payload:
+    name: payload
+    module: sdks.js.repatch-sdk
+    line: 61
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 0
+  repatch.scope.offline_fast_scopes_for_kind:
+    name: offline_fast_scopes_for_kind
+    module: repatch.scope
+    line: 150
+    cyclomatic_complexity: 5
+    calls_out: 2
+    calls_in: 1
+  repatch.spatial._delete_match_keys:
+    name: _delete_match_keys
+    module: repatch.spatial
+    line: 17
+    cyclomatic_complexity: 4
+    calls_out: 11
+    calls_in: 2
+  repatch.web_fetch._validate_http_url:
+    name: _validate_http_url
+    module: repatch.web_fetch
+    line: 57
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 1
+  repatch.spatial.apply_spatial_deletes_to_html:
+    name: apply_spatial_deletes_to_html
+    module: repatch.spatial
+    line: 63
+    cyclomatic_complexity: 4
+    calls_out: 29
+    calls_in: 2
+  repatch.scope.scoped_html_fragment:
+    name: scoped_html_fragment
+    module: repatch.scope
+    line: 630
+    cyclomatic_complexity: 6
+    calls_out: 7
+    calls_in: 1
+  repatch.organize_html._extract_inline_styles:
+    name: _extract_inline_styles
+    module: repatch.organize_html
+    line: 73
+    cyclomatic_complexity: 4
+    calls_out: 5
+    calls_in: 1
+  repatch.marked_context.resolve_marked_selectors:
+    name: resolve_marked_selectors
+    module: repatch.marked_context
+    line: 159
+    cyclomatic_complexity: 16
+    calls_out: 23
+    calls_in: 3
+  repatch.options.normalize_html_body:
+    name: normalize_html_body
+    module: repatch.options
+    line: 35
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 1
+  repatch.ui_patch.build_ui_patch_prompt:
+    name: build_ui_patch_prompt
+    module: repatch.ui_patch
+    line: 105
+    cyclomatic_complexity: 9
+    calls_out: 5
+    calls_in: 0
   repatch.marked_context._get_relevant_css:
     name: _get_relevant_css
     module: repatch.marked_context
@@ -54,33 +229,145 @@ nodes:
     cyclomatic_complexity: 2
     calls_out: 6
     calls_in: 1
-  repatch.marked_context.resolve_marked_llm_context:
-    name: resolve_marked_llm_context
-    module: repatch.marked_context
-    line: 673
-    cyclomatic_complexity: 5
-    calls_out: 3
-    calls_in: 0
-  repatch.dom_patch.build_function_option_patches:
-    name: build_function_option_patches
+  repatch.dom_patch._attrs_from_open_tag:
+    name: _attrs_from_open_tag
     module: repatch.dom_patch
-    line: 279
-    cyclomatic_complexity: 12
-    calls_out: 16
+    line: 198
+    cyclomatic_complexity: 2
+    calls_out: 6
+    calls_in: 2
+  repatch.web_preprocess.safe_read_under:
+    name: safe_read_under
+    module: repatch.web_preprocess
+    line: 129
+    cyclomatic_complexity: 5
+    calls_out: 7
+    calls_in: 1
+  repatch.web_fetch.fetch_complete_web_page:
+    name: fetch_complete_web_page
+    module: repatch.web_fetch
+    line: 314
+    cyclomatic_complexity: 7
+    calls_out: 15
     calls_in: 0
-  sdks.js.repatch-sdk.RepatchSDK.connect:
-    name: connect
-    module: sdks.js.repatch-sdk
-    line: 18
+  repatch.web_fetch._same_origin:
+    name: _same_origin
+    module: repatch.web_fetch
+    line: 81
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 2
+  repatch.marked_context.restrict_scope_css_to_marks:
+    name: restrict_scope_css_to_marks
+    module: repatch.marked_context
+    line: 306
+    cyclomatic_complexity: 14
+    calls_out: 17
+    calls_in: 2
+  repatch.marked_context.build_marked_element_context:
+    name: build_marked_element_context
+    module: repatch.marked_context
+    line: 644
+    cyclomatic_complexity: 11
+    calls_out: 13
+    calls_in: 1
+  repatch.web_preprocess._rule_is_visual:
+    name: _rule_is_visual
+    module: repatch.web_preprocess
+    line: 174
+    cyclomatic_complexity: 6
+    calls_out: 8
+    calls_in: 1
+  repatch.organize_html._add_markable_targets:
+    name: _add_markable_targets
+    module: repatch.organize_html
+    line: 110
+    cyclomatic_complexity: 1
+    calls_out: 14
+    calls_in: 1
+  repatch.scope.allowed_scope_ids:
+    name: allowed_scope_ids
+    module: repatch.scope
+    line: 131
     cyclomatic_complexity: 2
     calls_out: 3
-    calls_in: 0
+    calls_in: 2
   repatch.ui_patch._strip_json_fence:
     name: _strip_json_fence
     module: repatch.ui_patch
     line: 153
     cyclomatic_complexity: 3
     calls_out: 5
+    calls_in: 1
+  repatch.css._selector_is_runtime_only:
+    name: _selector_is_runtime_only
+    module: repatch.css
+    line: 16
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 1
+  repatch.scope.default_scope_for_kind:
+    name: default_scope_for_kind
+    module: repatch.scope
+    line: 136
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 1
+  repatch.marked_context.effective_delete_ids:
+    name: effective_delete_ids
+    module: repatch.marked_context
+    line: 52
+    cyclomatic_complexity: 9
+    calls_out: 11
+    calls_in: 2
+  repatch.web_fetch._mirror_images:
+    name: _mirror_images
+    module: repatch.web_fetch
+    line: 252
+    cyclomatic_complexity: 1
+    calls_out: 24
+    calls_in: 1
+  repatch.options.html_files_distinct:
+    name: html_files_distinct
+    module: repatch.options
+    line: 41
+    cyclomatic_complexity: 3
+    calls_out: 7
+    calls_in: 0
+  repatch.organize_html._attr_map:
+    name: _attr_map
+    module: repatch.organize_html
+    line: 39
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 2
+  repatch.ui_patch._compact_html:
+    name: _compact_html
+    module: repatch.ui_patch
+    line: 49
+    cyclomatic_complexity: 3
+    calls_out: 4
+    calls_in: 1
+  repatch.web_preprocess._cap_patch_text:
+    name: _cap_patch_text
+    module: repatch.web_preprocess
+    line: 371
+    cyclomatic_complexity: 4
+    calls_out: 6
+    calls_in: 2
+  repatch.web_preprocess.extract_visual_css:
+    name: extract_visual_css
+    module: repatch.web_preprocess
+    line: 198
+    cyclomatic_complexity: 8
+    calls_out: 19
+    calls_in: 0
+  repatch.marked_context._extract_balanced_html:
+    name: _extract_balanced_html
+    module: repatch.marked_context
+    line: 389
+    cyclomatic_complexity: 10
+    calls_out: 18
     calls_in: 1
   repatch.marked_context._normalize_label_text:
     name: _normalize_label_text
@@ -96,195 +383,48 @@ nodes:
     cyclomatic_complexity: 3
     calls_out: 7
     calls_in: 1
-  repatch.scope.allowed_scope_ids:
-    name: allowed_scope_ids
-    module: repatch.scope
-    line: 131
+  repatch.project_ir._ProjectIRParser.handle_data:
+    name: handle_data
+    module: repatch.project_ir
+    line: 80
+    cyclomatic_complexity: 4
+    calls_out: 2
+    calls_in: 0
+  repatch.dom_patch._strip_tags:
+    name: _strip_tags
+    module: repatch.dom_patch
+    line: 185
     cyclomatic_complexity: 2
     calls_out: 3
-    calls_in: 2
-  repatch.scope._get_scope_css:
-    name: _get_scope_css
-    module: repatch.scope
-    line: 540
-    cyclomatic_complexity: 7
-    calls_out: 7
     calls_in: 1
-  repatch.marked_context._extract_and_format_fragment:
-    name: _extract_and_format_fragment
-    module: repatch.marked_context
-    line: 444
-    cyclomatic_complexity: 3
-    calls_out: 6
-    calls_in: 1
-  repatch.ui_patch.build_ui_patch_prompt:
-    name: build_ui_patch_prompt
-    module: repatch.ui_patch
-    line: 105
-    cyclomatic_complexity: 9
-    calls_out: 5
-    calls_in: 0
-  repatch.spatial._element_delete_candidates:
-    name: _element_delete_candidates
-    module: repatch.spatial
-    line: 50
-    cyclomatic_complexity: 6
+  repatch.project_ir.build_project_ir:
+    name: build_project_ir
+    module: repatch.project_ir
+    line: 92
+    cyclomatic_complexity: 2
     calls_out: 8
     calls_in: 2
-  repatch.web_preprocess.safe_read_under:
-    name: safe_read_under
-    module: repatch.web_preprocess
-    line: 128
-    cyclomatic_complexity: 5
-    calls_out: 7
-    calls_in: 1
-  repatch.marked_context.effective_delete_ids:
-    name: effective_delete_ids
-    module: repatch.marked_context
-    line: 52
-    cyclomatic_complexity: 9
-    calls_out: 11
-    calls_in: 2
-  repatch.options.normalize_html_body:
-    name: normalize_html_body
-    module: repatch.options
-    line: 35
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  repatch.project_ir._clean_text:
-    name: _clean_text
-    module: repatch.project_ir
-    line: 88
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 3
-  repatch.spatial.apply_spatial_deletes_to_html:
-    name: apply_spatial_deletes_to_html
-    module: repatch.spatial
-    line: 63
+  repatch.dom_patch.supports_function_patch:
+    name: supports_function_patch
+    module: repatch.dom_patch
+    line: 20
     cyclomatic_complexity: 4
-    calls_out: 29
-    calls_in: 2
-  repatch.project_ir._ProjectIRParser.handle_endtag:
-    name: handle_endtag
-    module: repatch.project_ir
-    line: 56
-    cyclomatic_complexity: 8
-    calls_out: 11
-    calls_in: 0
-  repatch.marked_context._filter_css_for_tokens:
-    name: _filter_css_for_tokens
-    module: repatch.marked_context
-    line: 510
-    cyclomatic_complexity: 6
-    calls_out: 7
+    calls_out: 4
     calls_in: 1
-  repatch.marked_context._assemble_marked_subtrees:
-    name: _assemble_marked_subtrees
-    module: repatch.marked_context
-    line: 576
-    cyclomatic_complexity: 4
-    calls_out: 3
-    calls_in: 1
-  sdks.js.repatch-sdk.RepatchSDK._connectSSE:
-    name: _connectSSE
-    module: sdks.js.repatch-sdk
-    line: 52
-    cyclomatic_complexity: 3
-    calls_out: 5
-    calls_in: 2
-  repatch.scope.offline_fast_scopes_for_kind:
-    name: offline_fast_scopes_for_kind
+  repatch.scope.scope_supports_offline_fast_path:
+    name: scope_supports_offline_fast_path
     module: repatch.scope
-    line: 150
-    cyclomatic_complexity: 5
+    line: 160
+    cyclomatic_complexity: 1
     calls_out: 2
     calls_in: 1
-  repatch.dom_patch._strip_existing_patch:
-    name: _strip_existing_patch
-    module: repatch.dom_patch
-    line: 39
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  repatch.ui_patch._css_for:
-    name: _css_for
+  repatch.ui_patch.parse_ui_patch_response:
+    name: parse_ui_patch_response
     module: repatch.ui_patch
-    line: 206
-    cyclomatic_complexity: 2
-    calls_out: 4
-    calls_in: 1
-  repatch.web_preprocess.extract_visual_css:
-    name: extract_visual_css
-    module: repatch.web_preprocess
-    line: 197
-    cyclomatic_complexity: 8
-    calls_out: 19
-    calls_in: 0
-  repatch.marked_context.has_ui_marks:
-    name: has_ui_marks
-    module: repatch.marked_context
-    line: 42
-    cyclomatic_complexity: 8
-    calls_out: 9
-    calls_in: 1
-  repatch.scope.inject_scope_style:
-    name: inject_scope_style
-    module: repatch.scope
-    line: 573
-    cyclomatic_complexity: 27
-    calls_out: 29
-    calls_in: 0
-  repatch.ui_patch.supports_llm_patch_scope:
-    name: supports_llm_patch_scope
-    module: repatch.ui_patch
-    line: 36
-    cyclomatic_complexity: 3
-    calls_out: 1
-    calls_in: 0
-  repatch.marked_context.restrict_scope_css_to_marks:
-    name: restrict_scope_css_to_marks
-    module: repatch.marked_context
-    line: 306
-    cyclomatic_complexity: 14
-    calls_out: 17
-    calls_in: 2
-  repatch.web_preprocess.inject_http_preview_shim:
-    name: inject_http_preview_shim
-    module: repatch.web_preprocess
-    line: 346
-    cyclomatic_complexity: 4
-    calls_out: 4
-    calls_in: 1
-  sdks.js.repatch-sdk.RepatchSDK.setTimeout:
-    name: setTimeout
-    module: sdks.js.repatch-sdk
-    line: 48
-    cyclomatic_complexity: 1
-    calls_out: 1
-    calls_in: 1
-  repatch.spatial._delete_match_keys:
-    name: _delete_match_keys
-    module: repatch.spatial
-    line: 17
-    cyclomatic_complexity: 4
+    line: 161
+    cyclomatic_complexity: 6
     calls_out: 11
-    calls_in: 2
-  repatch.web_preprocess.normalize_linked_paths:
-    name: normalize_linked_paths
-    module: repatch.web_preprocess
-    line: 157
-    cyclomatic_complexity: 9
-    calls_out: 9
-    calls_in: 1
-  sdks.js.repatch-sdk.RepatchSDK.cb:
-    name: cb
-    module: sdks.js.repatch-sdk
-    line: 164
-    cyclomatic_complexity: 1
-    calls_out: 0
-    calls_in: 3
+    calls_in: 0
   repatch.ui_patch._safe_css:
     name: _safe_css
     module: repatch.ui_patch
@@ -299,40 +439,12 @@ nodes:
     cyclomatic_complexity: 6
     calls_out: 0
     calls_in: 2
-  repatch.scope.strip_scope_style:
-    name: strip_scope_style
+  repatch.scope._get_scope_css:
+    name: _get_scope_css
     module: repatch.scope
-    line: 166
-    cyclomatic_complexity: 2
-    calls_out: 1
-    calls_in: 3
-  repatch.scope.default_scope_for_kind:
-    name: default_scope_for_kind
-    module: repatch.scope
-    line: 136
-    cyclomatic_complexity: 3
-    calls_out: 4
-    calls_in: 1
-  repatch.scope.scope_supports_offline_fast_path:
-    name: scope_supports_offline_fast_path
-    module: repatch.scope
-    line: 160
-    cyclomatic_complexity: 1
-    calls_out: 2
-    calls_in: 1
-  repatch.scope._calc_scope_css:
-    name: _calc_scope_css
-    module: repatch.scope
-    line: 235
+    line: 540
     cyclomatic_complexity: 7
-    calls_out: 0
-    calls_in: 1
-  repatch.scope._inject_css_block:
-    name: _inject_css_block
-    module: repatch.scope
-    line: 557
-    cyclomatic_complexity: 5
-    calls_out: 4
+    calls_out: 7
     calls_in: 1
   repatch.scope._bind_annotations_to_html:
     name: _bind_annotations_to_html
@@ -341,258 +453,13 @@ nodes:
     cyclomatic_complexity: 29
     calls_out: 44
     calls_in: 1
-  repatch.dom_patch._attrs_from_open_tag:
-    name: _attrs_from_open_tag
-    module: repatch.dom_patch
-    line: 198
-    cyclomatic_complexity: 2
-    calls_out: 6
+  repatch.organize_html.organize_html:
+    name: organize_html
+    module: repatch.organize_html
+    line: 136
+    cyclomatic_complexity: 24
+    calls_out: 29
     calls_in: 2
-  repatch.scope._web_display_scope_css:
-    name: _web_display_scope_css
-    module: repatch.scope
-    line: 321
-    cyclomatic_complexity: 5
-    calls_out: 3
-    calls_in: 2
-  repatch.dom_patch._goal_label:
-    name: _goal_label
-    module: repatch.dom_patch
-    line: 55
-    cyclomatic_complexity: 3
-    calls_out: 2
-    calls_in: 2
-  repatch.project_ir._ProjectIRParser._classify_node:
-    name: _classify_node
-    module: repatch.project_ir
-    line: 35
-    cyclomatic_complexity: 12
-    calls_out: 10
-    calls_in: 0
-  repatch.options.sync_option_previews_from_workspace:
-    name: sync_option_previews_from_workspace
-    module: repatch.options
-    line: 53
-    cyclomatic_complexity: 10
-    calls_out: 17
-    calls_in: 0
-  repatch.marked_context._parse_attrs:
-    name: _parse_attrs
-    module: repatch.marked_context
-    line: 366
-    cyclomatic_complexity: 3
-    calls_out: 5
-    calls_in: 2
-  repatch.dom_patch._target_candidates:
-    name: _target_candidates
-    module: repatch.dom_patch
-    line: 172
-    cyclomatic_complexity: 4
-    calls_out: 9
-    calls_in: 3
-  repatch.scope._resolve_scope_kind:
-    name: _resolve_scope_kind
-    module: repatch.scope
-    line: 440
-    cyclomatic_complexity: 10
-    calls_out: 3
-    calls_in: 1
-  repatch.css._strip_css_comments:
-    name: _strip_css_comments
-    module: repatch.css
-    line: 12
-    cyclomatic_complexity: 2
-    calls_out: 2
-    calls_in: 1
-  repatch.marked_context._cap_text:
-    name: _cap_text
-    module: repatch.marked_context
-    line: 553
-    cyclomatic_complexity: 2
-    calls_out: 4
-    calls_in: 2
-  repatch.web_preprocess.extract_inline_css:
-    name: extract_inline_css
-    module: repatch.web_preprocess
-    line: 142
-    cyclomatic_complexity: 4
-    calls_out: 4
-    calls_in: 1
-  sdks.python.repatch_sdk.RepatchClient._trigger_listeners:
-    name: _trigger_listeners
-    module: sdks.python.repatch_sdk
-    line: 58
-    cyclomatic_complexity: 3
-    calls_out: 2
-    calls_in: 0
-  repatch.dom_patch._inject_into_body:
-    name: _inject_into_body
-    module: repatch.dom_patch
-    line: 165
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  repatch.css._selector_is_runtime_only:
-    name: _selector_is_runtime_only
-    module: repatch.css
-    line: 16
-    cyclomatic_complexity: 2
-    calls_out: 2
-    calls_in: 1
-  repatch.marked_context.build_marked_element_context:
-    name: build_marked_element_context
-    module: repatch.marked_context
-    line: 644
-    cyclomatic_complexity: 11
-    calls_out: 13
-    calls_in: 1
-  repatch.web_preprocess._rule_is_visual:
-    name: _rule_is_visual
-    module: repatch.web_preprocess
-    line: 173
-    cyclomatic_complexity: 6
-    calls_out: 8
-    calls_in: 1
-  repatch.marked_context.resolve_marked_selectors:
-    name: resolve_marked_selectors
-    module: repatch.marked_context
-    line: 159
-    cyclomatic_complexity: 16
-    calls_out: 23
-    calls_in: 3
-  repatch.ui_patch._patch_scope_rules:
-    name: _patch_scope_rules
-    module: repatch.ui_patch
-    line: 58
-    cyclomatic_complexity: 7
-    calls_out: 9
-    calls_in: 1
-  repatch.web_preprocess.filter_visual_css:
-    name: filter_visual_css
-    module: repatch.web_preprocess
-    line: 189
-    cyclomatic_complexity: 3
-    calls_out: 4
-    calls_in: 1
-  repatch.dom_patch._patch_function_targets:
-    name: _patch_function_targets
-    module: repatch.dom_patch
-    line: 236
-    cyclomatic_complexity: 6
-    calls_out: 24
-    calls_in: 1
-  repatch.marked_context._fragment_class_names:
-    name: _fragment_class_names
-    module: repatch.marked_context
-    line: 130
-    cyclomatic_complexity: 5
-    calls_out: 7
-    calls_in: 2
-  repatch.marked_context._client_fragment_html:
-    name: _client_fragment_html
-    module: repatch.marked_context
-    line: 561
-    cyclomatic_complexity: 9
-    calls_out: 10
-    calls_in: 1
-  repatch.dom_patch._matches_target:
-    name: _matches_target
-    module: repatch.dom_patch
-    line: 205
-    cyclomatic_complexity: 4
-    calls_out: 7
-    calls_in: 1
-  repatch.marked_context._id_candidates:
-    name: _id_candidates
-    module: repatch.marked_context
-    line: 342
-    cyclomatic_complexity: 4
-    calls_out: 13
-    calls_in: 10
-  repatch.marked_context._find_marked_subtrees:
-    name: _find_marked_subtrees
-    module: repatch.marked_context
-    line: 455
-    cyclomatic_complexity: 17
-    calls_out: 23
-    calls_in: 3
-  repatch.marked_context._selector_tokens:
-    name: _selector_tokens
-    module: repatch.marked_context
-    line: 493
-    cyclomatic_complexity: 9
-    calls_out: 14
-    calls_in: 1
-  repatch.ui_patch._compact_html:
-    name: _compact_html
-    module: repatch.ui_patch
-    line: 49
-    cyclomatic_complexity: 3
-    calls_out: 4
-    calls_in: 1
-  repatch.marked_context._collect_css_sources:
-    name: _collect_css_sources
-    module: repatch.marked_context
-    line: 521
-    cyclomatic_complexity: 7
-    calls_out: 10
-    calls_in: 1
-  repatch.marked_context._collect_match_candidates:
-    name: _collect_match_candidates
-    module: repatch.marked_context
-    line: 421
-    cyclomatic_complexity: 6
-    calls_out: 11
-    calls_in: 1
-  repatch.options.enforce_deletes_on_option_previews:
-    name: enforce_deletes_on_option_previews
-    module: repatch.options
-    line: 106
-    cyclomatic_complexity: 9
-    calls_out: 14
-    calls_in: 0
-  repatch.project_ir._ProjectIRParser.handle_data:
-    name: handle_data
-    module: repatch.project_ir
-    line: 80
-    cyclomatic_complexity: 4
-    calls_out: 2
-    calls_in: 0
-  repatch.scope.scoped_html_fragment:
-    name: scoped_html_fragment
-    module: repatch.scope
-    line: 630
-    cyclomatic_complexity: 6
-    calls_out: 7
-    calls_in: 1
-  repatch.web_preprocess._script_src_allowed_for_preview:
-    name: _script_src_allowed_for_preview
-    module: repatch.web_preprocess
-    line: 314
-    cyclomatic_complexity: 4
-    calls_out: 5
-    calls_in: 1
-  sdks.js.repatch-sdk.RepatchSDK.apply:
-    name: apply
-    module: sdks.js.repatch-sdk
-    line: 89
-    cyclomatic_complexity: 12
-    calls_out: 14
-    calls_in: 3
-  repatch.dom_patch._variant_target_label:
-    name: _variant_target_label
-    module: repatch.dom_patch
-    line: 217
-    cyclomatic_complexity: 3
-    calls_out: 1
-    calls_in: 1
-  repatch.marked_context._format_context_body:
-    name: _format_context_body
-    module: repatch.marked_context
-    line: 599
-    cyclomatic_complexity: 14
-    calls_out: 15
-    calls_in: 1
   repatch.scope.normalize_focus_scope:
     name: normalize_focus_scope
     module: repatch.scope
@@ -600,61 +467,47 @@ nodes:
     cyclomatic_complexity: 3
     calls_out: 5
     calls_in: 7
-  repatch.project_ir.summarize_project_ir:
-    name: summarize_project_ir
-    module: repatch.project_ir
-    line: 112
-    cyclomatic_complexity: 12
-    calls_out: 21
-    calls_in: 1
-  repatch.dom_patch._strip_tags:
-    name: _strip_tags
-    module: repatch.dom_patch
-    line: 185
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  sdks.js.repatch-sdk.RepatchSDK.payload:
-    name: payload
-    module: sdks.js.repatch-sdk
-    line: 61
-    cyclomatic_complexity: 2
-    calls_out: 1
-    calls_in: 0
-  repatch.web_preprocess.sanitize_http_preview_html:
-    name: sanitize_http_preview_html
+  repatch.web_preprocess.normalize_linked_paths:
+    name: normalize_linked_paths
     module: repatch.web_preprocess
-    line: 330
-    cyclomatic_complexity: 2
-    calls_out: 4
+    line: 158
+    cyclomatic_complexity: 9
+    calls_out: 9
     calls_in: 1
-  repatch.ui_patch.parse_ui_patch_response:
-    name: parse_ui_patch_response
-    module: repatch.ui_patch
-    line: 161
-    cyclomatic_complexity: 6
-    calls_out: 11
-    calls_in: 0
-  repatch.web_preprocess._should_remove_preview_script:
-    name: _should_remove_preview_script
-    module: repatch.web_preprocess
-    line: 323
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 1
-  repatch.web_preprocess.extract_stylesheet_hrefs:
-    name: extract_stylesheet_hrefs
-    module: repatch.web_preprocess
-    line: 147
-    cyclomatic_complexity: 7
-    calls_out: 4
-    calls_in: 1
-  repatch.scope._web_shapes_scope_css:
-    name: _web_shapes_scope_css
+  repatch.scope._resolve_scope_kind:
+    name: _resolve_scope_kind
     module: repatch.scope
-    line: 346
+    line: 440
+    cyclomatic_complexity: 10
+    calls_out: 3
+    calls_in: 1
+  repatch.marked_context._client_fragment_html:
+    name: _client_fragment_html
+    module: repatch.marked_context
+    line: 561
+    cyclomatic_complexity: 9
+    calls_out: 10
+    calls_in: 1
+  repatch.dom_patch.build_function_option_patches:
+    name: build_function_option_patches
+    module: repatch.dom_patch
+    line: 279
+    cyclomatic_complexity: 12
+    calls_out: 16
+    calls_in: 0
+  repatch.web_fetch._replace_attr:
+    name: _replace_attr
+    module: repatch.web_fetch
+    line: 179
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 5
+  repatch.web_fetch._charset_from_content_type:
+    name: _charset_from_content_type
+    module: repatch.web_fetch
+    line: 66
     cyclomatic_complexity: 3
-    calls_out: 2
+    calls_out: 4
     calls_in: 2
   repatch.marked_context._collect_keep_selectors:
     name: _collect_keep_selectors
@@ -663,48 +516,111 @@ nodes:
     cyclomatic_complexity: 11
     calls_out: 19
     calls_in: 1
-  repatch.scope._web_scope_css:
-    name: _web_scope_css
+  repatch.web_fetch._is_stylesheet_link:
+    name: _is_stylesheet_link
+    module: repatch.web_fetch
+    line: 174
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 1
+  repatch.project_ir._ProjectIRParser._classify_node:
+    name: _classify_node
+    module: repatch.project_ir
+    line: 35
+    cyclomatic_complexity: 12
+    calls_out: 10
+    calls_in: 0
+  repatch.scope._inject_css_block:
+    name: _inject_css_block
     module: repatch.scope
-    line: 409
-    cyclomatic_complexity: 6
+    line: 557
+    cyclomatic_complexity: 5
+    calls_out: 4
+    calls_in: 1
+  repatch.organize_html.organize_html_project_dir:
+    name: organize_html_project_dir
+    module: repatch.organize_html
+    line: 245
+    cyclomatic_complexity: 8
+    calls_out: 6
+    calls_in: 0
+  repatch.scope.inject_scope_style:
+    name: inject_scope_style
+    module: repatch.scope
+    line: 573
+    cyclomatic_complexity: 27
+    calls_out: 29
+    calls_in: 0
+  repatch.web_fetch._extension_from_url_or_type:
+    name: _extension_from_url_or_type
+    module: repatch.web_fetch
+    line: 131
+    cyclomatic_complexity: 4
+    calls_out: 7
+    calls_in: 1
+  repatch.scope.should_block_full_html_iterate:
+    name: should_block_full_html_iterate
+    module: repatch.scope
+    line: 452
+    cyclomatic_complexity: 3
+    calls_out: 3
+    calls_in: 0
+  sdks.python.repatch_sdk.RepatchClient._trigger_listeners:
+    name: _trigger_listeners
+    module: sdks.python.repatch_sdk
+    line: 58
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 0
+  sdks.js.repatch-sdk.RepatchSDK.connect:
+    name: connect
+    module: sdks.js.repatch-sdk
+    line: 18
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 0
+  repatch.organize_html.organize_html_project:
+    name: organize_html_project
+    module: repatch.organize_html
+    line: 269
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 0
+  repatch.project_ir._clean_text:
+    name: _clean_text
+    module: repatch.project_ir
+    line: 88
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 3
+  repatch.marked_context._id_candidates:
+    name: _id_candidates
+    module: repatch.marked_context
+    line: 342
+    cyclomatic_complexity: 4
+    calls_out: 13
+    calls_in: 10
+  repatch.dom_patch._inject_into_body:
+    name: _inject_into_body
+    module: repatch.dom_patch
+    line: 165
+    cyclomatic_complexity: 2
     calls_out: 3
     calls_in: 1
-  repatch.css.split_css_rules:
-    name: split_css_rules
-    module: repatch.css
-    line: 20
-    cyclomatic_complexity: 9
-    calls_out: 6
-    calls_in: 3
-  repatch.dom_patch._variant_section:
-    name: _variant_section
-    module: repatch.dom_patch
-    line: 60
+  repatch.ui_patch.supports_llm_patch_scope:
+    name: supports_llm_patch_scope
+    module: repatch.ui_patch
+    line: 36
     cyclomatic_complexity: 3
-    calls_out: 11
-    calls_in: 1
-  repatch.project_ir.build_project_ir:
-    name: build_project_ir
+    calls_out: 1
+    calls_in: 0
+  repatch.project_ir._ProjectIRParser.handle_endtag:
+    name: handle_endtag
     module: repatch.project_ir
-    line: 92
-    cyclomatic_complexity: 2
-    calls_out: 8
-    calls_in: 2
-  repatch.dom_patch._inject_into_head:
-    name: _inject_into_head
-    module: repatch.dom_patch
-    line: 153
-    cyclomatic_complexity: 4
-    calls_out: 5
-    calls_in: 1
-  repatch.marked_context._extract_balanced_html:
-    name: _extract_balanced_html
-    module: repatch.marked_context
-    line: 389
-    cyclomatic_complexity: 10
-    calls_out: 18
-    calls_in: 1
+    line: 56
+    cyclomatic_complexity: 8
+    calls_out: 11
+    calls_in: 0
   repatch.scope.goal_requests_column_layout:
     name: goal_requests_column_layout
     module: repatch.scope
@@ -712,41 +628,27 @@ nodes:
     cyclomatic_complexity: 3
     calls_out: 3
     calls_in: 2
-  repatch.ui_patch.apply_ui_patch_options:
-    name: apply_ui_patch_options
-    module: repatch.ui_patch
-    line: 212
-    cyclomatic_complexity: 25
-    calls_out: 31
-    calls_in: 0
-  repatch.marked_context.marked_css_selectors:
-    name: marked_css_selectors
-    module: repatch.marked_context
-    line: 116
+  repatch.spatial._element_delete_candidates:
+    name: _element_delete_candidates
+    module: repatch.spatial
+    line: 50
     cyclomatic_complexity: 6
-    calls_out: 5
+    calls_out: 8
+    calls_in: 2
+  repatch.css.split_css_rules:
+    name: split_css_rules
+    module: repatch.css
+    line: 20
+    cyclomatic_complexity: 9
+    calls_out: 6
     calls_in: 3
-  repatch.marked_context._logical_id:
-    name: _logical_id
-    module: repatch.marked_context
-    line: 375
-    cyclomatic_complexity: 8
-    calls_out: 9
-    calls_in: 4
-  repatch.web_preprocess.prepare_http_preview_html:
-    name: prepare_http_preview_html
-    module: repatch.web_preprocess
-    line: 362
-    cyclomatic_complexity: 1
-    calls_out: 2
-    calls_in: 0
-  repatch.dom_patch.build_function_patch_context:
-    name: build_function_patch_context
-    module: repatch.dom_patch
-    line: 33
-    cyclomatic_complexity: 2
-    calls_out: 3
-    calls_in: 0
+  sdks.js.repatch-sdk.RepatchSDK.apply:
+    name: apply
+    module: sdks.js.repatch-sdk
+    line: 89
+    cyclomatic_complexity: 12
+    calls_out: 14
+    calls_in: 3
   repatch.scope._web_orientation_scope_css:
     name: _web_orientation_scope_css
     module: repatch.scope
@@ -754,6 +656,258 @@ nodes:
     cyclomatic_complexity: 6
     calls_out: 2
     calls_in: 2
+  repatch.css._strip_css_comments:
+    name: _strip_css_comments
+    module: repatch.css
+    line: 12
+    cyclomatic_complexity: 2
+    calls_out: 2
+    calls_in: 1
+  repatch.marked_context._find_marked_subtrees:
+    name: _find_marked_subtrees
+    module: repatch.marked_context
+    line: 455
+    cyclomatic_complexity: 17
+    calls_out: 23
+    calls_in: 3
+  repatch.marked_context.has_ui_marks:
+    name: has_ui_marks
+    module: repatch.marked_context
+    line: 42
+    cyclomatic_complexity: 8
+    calls_out: 9
+    calls_in: 1
+  repatch.project_ir.summarize_project_ir:
+    name: summarize_project_ir
+    module: repatch.project_ir
+    line: 112
+    cyclomatic_complexity: 12
+    calls_out: 21
+    calls_in: 1
+  repatch.dom_patch._variant_target_label:
+    name: _variant_target_label
+    module: repatch.dom_patch
+    line: 217
+    cyclomatic_complexity: 3
+    calls_out: 1
+    calls_in: 1
+  repatch.dom_patch._variant_section:
+    name: _variant_section
+    module: repatch.dom_patch
+    line: 60
+    cyclomatic_complexity: 3
+    calls_out: 11
+    calls_in: 1
+  repatch.marked_context._css_id_selector:
+    name: _css_id_selector
+    module: repatch.marked_context
+    line: 108
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 3
+  repatch.dom_patch._matches_target:
+    name: _matches_target
+    module: repatch.dom_patch
+    line: 205
+    cyclomatic_complexity: 4
+    calls_out: 7
+    calls_in: 1
+  repatch.marked_context._collect_css_sources:
+    name: _collect_css_sources
+    module: repatch.marked_context
+    line: 521
+    cyclomatic_complexity: 7
+    calls_out: 10
+    calls_in: 1
+  repatch.marked_context.marked_css_selectors:
+    name: marked_css_selectors
+    module: repatch.marked_context
+    line: 116
+    cyclomatic_complexity: 6
+    calls_out: 5
+    calls_in: 3
+  repatch.web_preprocess.extract_stylesheet_hrefs:
+    name: extract_stylesheet_hrefs
+    module: repatch.web_preprocess
+    line: 148
+    cyclomatic_complexity: 7
+    calls_out: 4
+    calls_in: 1
+  repatch.web_fetch._read_http_body:
+    name: _read_http_body
+    module: repatch.web_fetch
+    line: 87
+    cyclomatic_complexity: 7
+    calls_out: 16
+    calls_in: 2
+  repatch.marked_context._selector_tokens:
+    name: _selector_tokens
+    module: repatch.marked_context
+    line: 493
+    cyclomatic_complexity: 9
+    calls_out: 14
+    calls_in: 1
+  repatch.scope.strip_scope_style:
+    name: strip_scope_style
+    module: repatch.scope
+    line: 166
+    cyclomatic_complexity: 2
+    calls_out: 1
+    calls_in: 3
+  repatch.marked_context._filter_css_for_tokens:
+    name: _filter_css_for_tokens
+    module: repatch.marked_context
+    line: 510
+    cyclomatic_complexity: 6
+    calls_out: 7
+    calls_in: 1
+  repatch.marked_context._assemble_marked_subtrees:
+    name: _assemble_marked_subtrees
+    module: repatch.marked_context
+    line: 576
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 1
+  sdks.js.repatch-sdk.RepatchSDK.cb:
+    name: cb
+    module: sdks.js.repatch-sdk
+    line: 164
+    cyclomatic_complexity: 1
+    calls_out: 0
+    calls_in: 3
+  repatch.marked_context.resolve_marked_llm_context:
+    name: resolve_marked_llm_context
+    module: repatch.marked_context
+    line: 673
+    cyclomatic_complexity: 5
+    calls_out: 3
+    calls_in: 0
+  repatch.marked_context._extract_and_format_fragment:
+    name: _extract_and_format_fragment
+    module: repatch.marked_context
+    line: 444
+    cyclomatic_complexity: 3
+    calls_out: 6
+    calls_in: 1
+  repatch.organize_html._strip_lazy_placeholder_imgs:
+    name: _strip_lazy_placeholder_imgs
+    module: repatch.organize_html
+    line: 59
+    cyclomatic_complexity: 1
+    calls_out: 3
+    calls_in: 1
+  repatch.scope._web_shapes_scope_css:
+    name: _web_shapes_scope_css
+    module: repatch.scope
+    line: 346
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 2
+  sdks.js.repatch-sdk.RepatchSDK._connectSSE:
+    name: _connectSSE
+    module: sdks.js.repatch-sdk
+    line: 52
+    cyclomatic_complexity: 3
+    calls_out: 5
+    calls_in: 2
+  repatch.dom_patch.build_function_patch_context:
+    name: build_function_patch_context
+    module: repatch.dom_patch
+    line: 33
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 0
+  repatch.scope._web_scope_css:
+    name: _web_scope_css
+    module: repatch.scope
+    line: 409
+    cyclomatic_complexity: 6
+    calls_out: 3
+    calls_in: 1
+  repatch.ui_patch._css_for:
+    name: _css_for
+    module: repatch.ui_patch
+    line: 206
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 1
+  repatch.marked_context._cap_text:
+    name: _cap_text
+    module: repatch.marked_context
+    line: 553
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 2
+  repatch.dom_patch._goal_label:
+    name: _goal_label
+    module: repatch.dom_patch
+    line: 55
+    cyclomatic_complexity: 3
+    calls_out: 2
+    calls_in: 2
+  sdks.js.repatch-sdk.RepatchSDK.setTimeout:
+    name: setTimeout
+    module: sdks.js.repatch-sdk
+    line: 48
+    cyclomatic_complexity: 1
+    calls_out: 1
+    calls_in: 1
+  repatch.web_preprocess.build_http_llm_context:
+    name: build_http_llm_context
+    module: repatch.web_preprocess
+    line: 382
+    cyclomatic_complexity: 29
+    calls_out: 41
+    calls_in: 0
+  repatch.web_fetch._decode_http_bytes:
+    name: _decode_http_bytes
+    module: repatch.web_fetch
+    line: 73
+    cyclomatic_complexity: 4
+    calls_out: 3
+    calls_in: 1
+  repatch.web_preprocess.sanitize_http_preview_html:
+    name: sanitize_http_preview_html
+    module: repatch.web_preprocess
+    line: 331
+    cyclomatic_complexity: 2
+    calls_out: 4
+    calls_in: 1
+  repatch.marked_context._collect_button_candidates:
+    name: _collect_button_candidates
+    module: repatch.marked_context
+    line: 433
+    cyclomatic_complexity: 3
+    calls_out: 8
+    calls_in: 1
+  repatch.scope._web_display_scope_css:
+    name: _web_display_scope_css
+    module: repatch.scope
+    line: 321
+    cyclomatic_complexity: 5
+    calls_out: 3
+    calls_in: 2
+  repatch.dom_patch._patch_function_targets:
+    name: _patch_function_targets
+    module: repatch.dom_patch
+    line: 236
+    cyclomatic_complexity: 6
+    calls_out: 24
+    calls_in: 1
+  repatch.web_preprocess._should_remove_preview_script:
+    name: _should_remove_preview_script
+    module: repatch.web_preprocess
+    line: 324
+    cyclomatic_complexity: 2
+    calls_out: 3
+    calls_in: 2
+  repatch.marked_context._format_context_body:
+    name: _format_context_body
+    module: repatch.marked_context
+    line: 599
+    cyclomatic_complexity: 14
+    calls_out: 15
+    calls_in: 1
 edges:
 - caller: repatch.project_ir._ProjectIRParser._classify_node
   callee: repatch.project_ir._clean_text
@@ -1031,39 +1185,6 @@ edges:
 - caller: repatch.options.enforce_deletes_on_option_previews
   callee: repatch.spatial.apply_spatial_deletes_to_html
   call_type: resolved
-- caller: repatch.web_preprocess.normalize_linked_paths
-  callee: repatch.web_preprocess.extract_stylesheet_hrefs
-  call_type: resolved
-- caller: repatch.web_preprocess.filter_visual_css
-  callee: repatch.css.split_css_rules
-  call_type: resolved
-- caller: repatch.web_preprocess.filter_visual_css
-  callee: repatch.web_preprocess._rule_is_visual
-  call_type: resolved
-- caller: repatch.web_preprocess.extract_visual_css
-  callee: repatch.web_preprocess.extract_inline_css
-  call_type: resolved
-- caller: repatch.web_preprocess.extract_visual_css
-  callee: repatch.web_preprocess.normalize_linked_paths
-  call_type: resolved
-- caller: repatch.web_preprocess.extract_visual_css
-  callee: repatch.web_preprocess.filter_visual_css
-  call_type: resolved
-- caller: repatch.web_preprocess.extract_visual_css
-  callee: repatch.web_preprocess.safe_read_under
-  call_type: resolved
-- caller: repatch.web_preprocess._should_remove_preview_script
-  callee: repatch.web_preprocess._script_src_allowed_for_preview
-  call_type: resolved
-- caller: repatch.web_preprocess.sanitize_http_preview_html
-  callee: repatch.web_preprocess._should_remove_preview_script
-  call_type: resolved
-- caller: repatch.web_preprocess.prepare_http_preview_html
-  callee: repatch.web_preprocess.sanitize_http_preview_html
-  call_type: resolved
-- caller: repatch.web_preprocess.prepare_http_preview_html
-  callee: repatch.web_preprocess.inject_http_preview_shim
-  call_type: resolved
 - caller: repatch.css.validate_css_safety
   callee: repatch.css._strip_css_comments
   call_type: resolved
@@ -1102,6 +1223,111 @@ edges:
   call_type: resolved
 - caller: sdks.python.repatch_sdk.RepatchClient._trigger_listeners
   callee: sdks.js.repatch-sdk.RepatchSDK.cb
+  call_type: resolved
+- caller: repatch.organize_html.is_lazy_placeholder_img_tag
+  callee: repatch.organize_html._attr_map
+  call_type: resolved
+- caller: repatch.organize_html._strip_lazy_placeholder_imgs
+  callee: repatch.organize_html.is_lazy_placeholder_img_tag
+  call_type: resolved
+- caller: repatch.organize_html._add_markable_targets
+  callee: repatch.organize_html._attr_map
+  call_type: resolved
+- caller: repatch.organize_html.organize_html
+  callee: repatch.organize_html._extract_inline_styles
+  call_type: resolved
+- caller: repatch.organize_html.organize_html
+  callee: repatch.organize_html._strip_lazy_placeholder_imgs
+  call_type: resolved
+- caller: repatch.organize_html.organize_html
+  callee: repatch.organize_html._add_markable_targets
+  call_type: resolved
+- caller: repatch.organize_html.organize_html_project_dir
+  callee: repatch.organize_html.organize_html
+  call_type: resolved
+- caller: repatch.organize_html.organize_html_project
+  callee: repatch.organize_html.organize_html
+  call_type: resolved
+- caller: repatch.web_preprocess.normalize_linked_paths
+  callee: repatch.web_preprocess.extract_stylesheet_hrefs
+  call_type: resolved
+- caller: repatch.web_preprocess.filter_visual_css
+  callee: repatch.css.split_css_rules
+  call_type: resolved
+- caller: repatch.web_preprocess.filter_visual_css
+  callee: repatch.web_preprocess._rule_is_visual
+  call_type: resolved
+- caller: repatch.web_preprocess.extract_visual_css
+  callee: repatch.web_preprocess.extract_inline_css
+  call_type: resolved
+- caller: repatch.web_preprocess.extract_visual_css
+  callee: repatch.web_preprocess.normalize_linked_paths
+  call_type: resolved
+- caller: repatch.web_preprocess.extract_visual_css
+  callee: repatch.web_preprocess.filter_visual_css
+  call_type: resolved
+- caller: repatch.web_preprocess.extract_visual_css
+  callee: repatch.web_preprocess.safe_read_under
+  call_type: resolved
+- caller: repatch.web_preprocess._should_remove_preview_script
+  callee: repatch.web_preprocess._script_src_allowed_for_preview
+  call_type: resolved
+- caller: repatch.web_preprocess.sanitize_http_preview_html
+  callee: repatch.web_preprocess._should_remove_preview_script
+  call_type: resolved
+- caller: repatch.web_preprocess.prepare_http_preview_html
+  callee: repatch.web_preprocess.sanitize_http_preview_html
+  call_type: resolved
+- caller: repatch.web_preprocess.prepare_http_preview_html
+  callee: repatch.web_preprocess.inject_http_preview_shim
+  call_type: resolved
+- caller: repatch.web_preprocess.build_http_llm_context
+  callee: repatch.web_preprocess._cap_patch_text
+  call_type: resolved
+- caller: repatch.web_fetch._decode_http_bytes
+  callee: repatch.web_fetch._charset_from_content_type
+  call_type: resolved
+- caller: repatch.web_fetch._read_http_body
+  callee: repatch.web_fetch._validate_http_url
+  call_type: resolved
+- caller: repatch.web_fetch._read_http_body
+  callee: repatch.web_fetch._charset_from_content_type
+  call_type: resolved
+- caller: repatch.web_fetch._save_asset
+  callee: repatch.web_fetch._extension_from_url_or_type
+  call_type: resolved
+- caller: repatch.web_fetch._save_asset
+  callee: repatch.web_fetch._read_http_body
+  call_type: resolved
+- caller: repatch.web_fetch._mirror_stylesheets
+  callee: repatch.web_fetch._save_asset
+  call_type: resolved
+- caller: repatch.web_fetch._mirror_stylesheets
+  callee: repatch.web_fetch._replace_attr
+  call_type: resolved
+- caller: repatch.web_fetch._mirror_stylesheets
+  callee: repatch.web_fetch._is_stylesheet_link
+  call_type: resolved
+- caller: repatch.web_fetch._mirror_stylesheets
+  callee: repatch.web_fetch._same_origin
+  call_type: resolved
+- caller: repatch.web_fetch._mirror_images
+  callee: repatch.web_fetch._save_asset
+  call_type: resolved
+- caller: repatch.web_fetch._mirror_images
+  callee: repatch.web_fetch._same_origin
+  call_type: resolved
+- caller: repatch.web_fetch.fetch_complete_web_page
+  callee: repatch.web_fetch._read_http_body
+  call_type: resolved
+- caller: repatch.web_fetch.fetch_complete_web_page
+  callee: repatch.web_fetch._decode_http_bytes
+  call_type: resolved
+- caller: repatch.web_fetch.fetch_complete_web_page
+  callee: repatch.web_fetch._mirror_stylesheets
+  call_type: resolved
+- caller: repatch.web_fetch.fetch_complete_web_page
+  callee: repatch.web_fetch._mirror_images
   call_type: resolved
 modules:
   repatch.css:
@@ -1157,6 +1383,15 @@ modules:
   - repatch.options.html_files_distinct
   - repatch.options.normalize_html_body
   - repatch.options.sync_option_previews_from_workspace
+  repatch.organize_html:
+  - repatch.organize_html._add_markable_targets
+  - repatch.organize_html._attr_map
+  - repatch.organize_html._extract_inline_styles
+  - repatch.organize_html._strip_lazy_placeholder_imgs
+  - repatch.organize_html.is_lazy_placeholder_img_tag
+  - repatch.organize_html.organize_html
+  - repatch.organize_html.organize_html_project
+  - repatch.organize_html.organize_html_project_dir
   repatch.project_ir:
   - repatch.project_ir._ProjectIRParser._classify_node
   - repatch.project_ir._ProjectIRParser.handle_data
@@ -1199,10 +1434,25 @@ modules:
   - repatch.ui_patch.build_ui_patch_prompt
   - repatch.ui_patch.parse_ui_patch_response
   - repatch.ui_patch.supports_llm_patch_scope
+  repatch.web_fetch:
+  - repatch.web_fetch._charset_from_content_type
+  - repatch.web_fetch._decode_http_bytes
+  - repatch.web_fetch._extension_from_url_or_type
+  - repatch.web_fetch._is_stylesheet_link
+  - repatch.web_fetch._mirror_images
+  - repatch.web_fetch._mirror_stylesheets
+  - repatch.web_fetch._read_http_body
+  - repatch.web_fetch._replace_attr
+  - repatch.web_fetch._same_origin
+  - repatch.web_fetch._save_asset
+  - repatch.web_fetch._validate_http_url
+  - repatch.web_fetch.fetch_complete_web_page
   repatch.web_preprocess:
+  - repatch.web_preprocess._cap_patch_text
   - repatch.web_preprocess._rule_is_visual
   - repatch.web_preprocess._script_src_allowed_for_preview
   - repatch.web_preprocess._should_remove_preview_script
+  - repatch.web_preprocess.build_http_llm_context
   - repatch.web_preprocess.extract_inline_css
   - repatch.web_preprocess.extract_stylesheet_hrefs
   - repatch.web_preprocess.extract_visual_css
@@ -1231,6 +1481,9 @@ entry_points:
 - repatch.options.enforce_deletes_on_option_previews
 - repatch.options.html_files_distinct
 - repatch.options.sync_option_previews_from_workspace
+- repatch.organize_html.organize_html_project
+- repatch.organize_html.organize_html_project_dir
+- repatch.organize_html.organize_result_manifest
 - repatch.project_ir._ProjectIRParser.__init__
 - repatch.project_ir._ProjectIRParser._classify_node
 - repatch.project_ir._ProjectIRParser.handle_data
@@ -1250,6 +1503,7 @@ entry_points:
 - repatch.ui_patch.build_ui_patch_prompt
 - repatch.ui_patch.parse_ui_patch_response
 - repatch.ui_patch.supports_llm_patch_scope
+- repatch.web_fetch.fetch_complete_web_page
 - repatch.web_preprocess._OutlineParser.__init__
 - repatch.web_preprocess._OutlineParser._keep_attr
 - repatch.web_preprocess._OutlineParser.handle_data

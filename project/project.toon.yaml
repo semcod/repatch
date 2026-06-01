@@ -1,52 +1,52 @@
-# repatch | 156 func | 12f | 7521L | python | 2026-06-01
+# repatch | 184 func | 14f | 8259L | python | 2026-06-01
 # generated in 0.00s
 
 HEALTH:
-  CC̄=5.2  critical=20 (limit:10)  dup=0  cycles=0
+  CC̄=5.2  critical=23 (limit:10)  dup=0  cycles=0
 
 ALERTS[20]:
   !!! cc_exceeded      _bind_annotations_to_html = 29 (limit:15)
+  !!! cc_exceeded      build_http_llm_context = 29 (limit:15)
   !!! cc_exceeded      inject_scope_style = 27 (limit:15)
   !!! cc_exceeded      apply_ui_patch_options = 25 (limit:15)
+  !!! high_fan_out     organize_html = 22 (limit:10)
   !!! high_fan_out     _bind_annotations_to_html = 21 (limit:10)
   !!! high_fan_out     apply_ui_patch_options = 21 (limit:10)
   !!! high_fan_out     inject_scope_style = 20 (limit:10)
-  !!  high_fan_out     _patch_function_targets = 18 (limit:10)
-  !!  high_fan_out     validate_css_safety = 18 (limit:10)
-  !!  high_fan_out     sync_option_previews_from_workspace = 16 (limit:10)
-  !!  high_fan_out     build_function_option_patches = 15 (limit:10)
+  !!  cc_exceeded      organize_html = 24 (limit:15)
+  !!  high_fan_out     _mirror_images = 19 (limit:10)
 
-MODULES[21] (top by size):
+MODULES[23] (top by size):
   M[deps.json] 3394L C:0 F:0 CC↑0 D:0 (json)
   M[repatch/marked_context.py] 696L C:0 F:32 CC↑17 D:3 (python)
   M[repatch/scope.py] 647L C:0 F:22 CC↑29 D:2 (python)
   M[goal.yaml] 511L C:0 F:0 CC↑0 D:0 (yaml)
-  M[repatch/web_preprocess.py] 397L C:1 F:20 CC↑9 D:0 (python)
+  M[repatch/web_preprocess.py] 459L C:1 F:21 CC↑29 D:1 (python)
+  M[repatch/web_fetch.py] 370L C:2 F:15 CC↑7 D:0 (python)
   M[repatch/dom_patch.py] 315L C:0 F:19 CC↑12 D:0 (python)
+  M[repatch/organize_html.py] 287L C:1 F:12 CC↑24 D:0 (python)
   M[repatch/ui_patch.py] 267L C:0 F:10 CC↑25 D:0 (python)
   M[sdks/js/repatch-sdk.js] 186L C:1 F:18 CC↑12 D:1 (javascript)
   M[repatch/options.py] 140L C:0 F:5 CC↑10 D:0 (python)
+  M[repatch/__init__.py] 139L C:0 F:0 CC↑0 D:0 (python)
   M[wup.yaml] 134L C:0 F:0 CC↑0 D:0 (yaml)
   M[repatch/project_ir.py] 132L C:1 F:8 CC↑12 D:1 (python)
-  M[repatch/__init__.py] 123L C:0 F:0 CC↑0 D:0 (python)
   M[repatch/spatial.py] 108L C:0 F:4 CC↑6 D:1 (python)
-  M[repatch/service.py] 105L C:2 F:7 CC↑6 D:0 (python)
-  M[tree.txt] 88L C:0 F:0 CC↑0 D:0 (txt)
-  LANGS: python:12/yaml:4/javascript:1/json:1/shell:1/toml:1/txt:1
+  LANGS: python:14/yaml:4/javascript:1/json:1/shell:1/toml:1/txt:1
 
 HOTSPOTS[10]:
+  ★ organize_html fan=22  // Extract substantial inline CSS/JS, strip preview scripts and lazy imgs, tag mark
   ★ _bind_annotations_to_html fan=21  // Orchestrates 21 calls
   ★ apply_ui_patch_options fan=21  // Apply validated CSS patches to one baseline HTML document.
   ★ inject_scope_style fan=20  // Orchestrates 20 calls
-  ★ _patch_function_targets fan=18  // Orchestrates 18 calls
-  ★ validate_css_safety fan=18  // Reject CSS patterns that commonly break HTML/CSS patch previews.
+  ★ _mirror_images fan=19  // Orchestrates 19 calls
 
-REFACTOR[12]:
+REFACTOR[14]:
   [1] H/L Split _bind_annotations_to_html (CC=29)
   [2] H/L Split inject_scope_style (CC=27)
   [3] H/L Split apply_ui_patch_options (CC=25)
-  [4] H/H Split god module repatch/scope.py (647L, 0 classes)
-  [5] H/H Split god module repatch/marked_context.py (696L, 0 classes)
+  [4] H/L Split build_http_llm_context (CC=29)
+  [5] H/H Split god module repatch/scope.py (647L, 0 classes)
 
 EVOLUTION:
-  2026-06-01 CC̄=5.2 crit=20 7521L // Automated analysis
+  2026-06-01 CC̄=5.2 crit=23 8259L // Automated analysis

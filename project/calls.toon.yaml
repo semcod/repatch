@@ -1,15 +1,19 @@
 # code2llm call graph | /home/tom/github/semcod/repatch
-# generated in 0.05s
-# nodes: 107 | edges: 116 | modules: 11
+# generated in 0.09s
+# nodes: 129 | edges: 140 | modules: 13
 # CC̄=5.2
 
 HUBS[20]:
   repatch.scope._bind_annotations_to_html
     CC=29  in:1  out:44  total:45
-  repatch.spatial.apply_spatial_deletes_to_html
-    CC=4  in:2  out:29  total:31
+  repatch.web_preprocess.build_http_llm_context
+    CC=29  in:0  out:41  total:41
   repatch.ui_patch.apply_ui_patch_options
     CC=25  in:0  out:31  total:31
+  repatch.spatial.apply_spatial_deletes_to_html
+    CC=4  in:2  out:29  total:31
+  repatch.organize_html.organize_html
+    CC=24  in:2  out:29  total:31
   repatch.scope.inject_scope_style
     CC=27  in:0  out:29  total:29
   repatch.css.validate_css_safety
@@ -18,6 +22,8 @@ HUBS[20]:
     CC=16  in:3  out:23  total:26
   repatch.marked_context._find_marked_subtrees
     CC=17  in:3  out:23  total:26
+  repatch.web_fetch._mirror_images
+    CC=1  in:1  out:24  total:25
   repatch.dom_patch._patch_function_targets
     CC=6  in:1  out:24  total:25
   repatch.marked_context._id_candidates
@@ -26,24 +32,18 @@ HUBS[20]:
     CC=12  in:1  out:21  total:22
   repatch.marked_context._collect_keep_selectors
     CC=11  in:1  out:19  total:20
-  repatch.web_preprocess.extract_visual_css
-    CC=8  in:0  out:19  total:19
   repatch.marked_context.restrict_scope_css_to_marks
     CC=14  in:2  out:17  total:19
+  repatch.web_preprocess.extract_visual_css
+    CC=8  in:0  out:19  total:19
   repatch.marked_context._extract_balanced_html
     CC=10  in:1  out:18  total:19
+  repatch.web_fetch._read_http_body
+    CC=7  in:2  out:16  total:18
   repatch.options.sync_option_previews_from_workspace
     CC=10  in:0  out:17  total:17
   sdks.js.repatch-sdk.RepatchSDK.apply
     CC=12  in:3  out:14  total:17
-  repatch.dom_patch.build_function_option_patches
-    CC=12  in:0  out:16  total:16
-  repatch.marked_context._format_context_body
-    CC=14  in:1  out:15  total:16
-  repatch.marked_context._selector_tokens
-    CC=9  in:1  out:14  total:15
-  repatch.marked_context.build_marked_element_context
-    CC=11  in:1  out:13  total:14
 
 MODULES:
   repatch.css  [4 funcs]
@@ -78,6 +78,15 @@ MODULES:
     html_files_distinct  CC=3  out:7
     normalize_html_body  CC=2  out:3
     sync_option_previews_from_workspace  CC=10  out:17
+  repatch.organize_html  [8 funcs]
+    _add_markable_targets  CC=1  out:14
+    _attr_map  CC=3  out:4
+    _extract_inline_styles  CC=4  out:5
+    _strip_lazy_placeholder_imgs  CC=1  out:3
+    is_lazy_placeholder_img_tag  CC=11  out:14
+    organize_html  CC=24  out:29
+    organize_html_project  CC=1  out:1
+    organize_html_project_dir  CC=8  out:6
   repatch.project_ir  [6 funcs]
     _classify_node  CC=12  out:10
     handle_data  CC=4  out:2
@@ -110,17 +119,28 @@ MODULES:
     build_ui_patch_prompt  CC=9  out:5
     parse_ui_patch_response  CC=6  out:11
     supports_llm_patch_scope  CC=3  out:1
-  repatch.web_preprocess  [12 funcs]
+  repatch.web_fetch  [12 funcs]
+    _charset_from_content_type  CC=3  out:4
+    _decode_http_bytes  CC=4  out:3
+    _extension_from_url_or_type  CC=4  out:7
+    _is_stylesheet_link  CC=2  out:4
+    _mirror_images  CC=1  out:24
+    _mirror_stylesheets  CC=1  out:13
+    _read_http_body  CC=7  out:16
+    _replace_attr  CC=2  out:4
+    _same_origin  CC=2  out:2
+    _save_asset  CC=3  out:5
+  repatch.web_preprocess  [14 funcs]
+    _cap_patch_text  CC=4  out:6
     _rule_is_visual  CC=6  out:8
     _script_src_allowed_for_preview  CC=4  out:5
     _should_remove_preview_script  CC=2  out:3
+    build_http_llm_context  CC=29  out:41
     extract_inline_css  CC=4  out:4
     extract_stylesheet_hrefs  CC=7  out:4
     extract_visual_css  CC=8  out:19
     filter_visual_css  CC=3  out:4
     inject_http_preview_shim  CC=4  out:4
-    normalize_linked_paths  CC=9  out:9
-    prepare_http_preview_html  CC=1  out:2
   sdks.js.repatch-sdk  [7 funcs]
     _connectSSE  CC=3  out:5
     _connectWS  CC=3  out:7

@@ -1,18 +1,20 @@
-# code2llm | 21f 7521L | python:12,yaml:4,json:1,txt:1,shell:1,javascript:1,toml:1 | 2026-06-01
+# code2llm | 23f 8259L | python:14,yaml:4,json:1,txt:1,shell:1,javascript:1,toml:1 | 2026-06-01
 # generated in 0.01s
-# CC̅=5.2 | critical:5/156 | dups:0 | cycles:0
+# CC̅=5.2 | critical:7/184 | dups:0 | cycles:0
 
-HEALTH[5]:
+HEALTH[7]:
   🟡 CC    _bind_annotations_to_html CC=29 (limit:15)
   🟡 CC    inject_scope_style CC=27 (limit:15)
   🟡 CC    resolve_marked_selectors CC=16 (limit:15)
   🟡 CC    _find_marked_subtrees CC=17 (limit:15)
   🟡 CC    apply_ui_patch_options CC=25 (limit:15)
+  🟡 CC    organize_html CC=24 (limit:15)
+  🟡 CC    build_http_llm_context CC=29 (limit:15)
 
 REFACTOR[1]:
-  1. split 5 high-CC methods  (CC>15)
+  1. split 7 high-CC methods  (CC>15)
 
-PIPELINES[54]:
+PIPELINES[58]:
   [1] Src [__init__]: __init__
       PURITY: 100% pure
   [2] Src [handle_starttag]: handle_starttag
@@ -51,79 +53,81 @@ PIPELINES[54]:
       PURITY: 100% pure
   [19] Src [enforce_deletes_on_option_previews]: enforce_deletes_on_option_previews → apply_spatial_deletes_to_html → _delete_match_keys
       PURITY: 100% pure
-  [20] Src [extract_visual_css]: extract_visual_css → extract_inline_css
+  [20] Src [generate_patch_suggestions]: generate_patch_suggestions
       PURITY: 100% pure
-  [21] Src [__init__]: __init__
+  [21] Src [_normalize_scopes]: _normalize_scopes
       PURITY: 100% pure
-  [22] Src [_keep_attr]: _keep_attr
+  [22] Src [_build_user_prompt]: _build_user_prompt
       PURITY: 100% pure
-  [23] Src [handle_starttag]: handle_starttag
+  [23] Src [_parse_choice]: _parse_choice
       PURITY: 100% pure
-  [24] Src [handle_endtag]: handle_endtag
+  [24] Src [_choice_content]: _choice_content
       PURITY: 100% pure
-  [25] Src [handle_data]: handle_data
+  [25] Src [_default_completion]: _default_completion
       PURITY: 100% pure
-  [26] Src [build_html_outline]: build_html_outline
+  [26] Src [connect]: connect → _connectSSE → apply → cb
       PURITY: 100% pure
-  [27] Src [prepare_http_preview_html]: prepare_http_preview_html → sanitize_http_preview_html → _should_remove_preview_script → _script_src_allowed_for_preview
+  [27] Src [payload]: payload → apply → cb
       PURITY: 100% pure
-  [28] Src [build_http_llm_context]: build_http_llm_context
+  [28] Src [onPatch]: onPatch
       PURITY: 100% pure
-  [29] Src [http_patch_llm_rules]: http_patch_llm_rules
+  [29] Src [dslClean]: dslClean
       PURITY: 100% pure
-  [30] Src [generate_patch_suggestions]: generate_patch_suggestions
+  [30] Src [addMatch]: addMatch
       PURITY: 100% pure
-  [31] Src [_normalize_scopes]: _normalize_scopes
+  [31] Src [replaceMatch]: replaceMatch
       PURITY: 100% pure
-  [32] Src [_build_user_prompt]: _build_user_prompt
+  [32] Src [styleMatch]: styleMatch
       PURITY: 100% pure
-  [33] Src [_parse_choice]: _parse_choice
+  [33] Src [removeMatch]: removeMatch → cb
       PURITY: 100% pure
-  [34] Src [_choice_content]: _choice_content
+  [34] Src [html]: html
       PURITY: 100% pure
-  [35] Src [_default_completion]: _default_completion
+  [35] Src [target]: target
       PURITY: 100% pure
-  [36] Src [connect]: connect → _connectSSE → apply → cb
+  [36] Src [css]: css
       PURITY: 100% pure
-  [37] Src [payload]: payload → apply → cb
+  [37] Src [styleEl]: styleEl
       PURITY: 100% pure
-  [38] Src [onPatch]: onPatch
+  [38] Src [sendPatchRequest]: sendPatchRequest
       PURITY: 100% pure
-  [39] Src [dslClean]: dslClean
+  [39] Src [on_patch]: on_patch
       PURITY: 100% pure
-  [40] Src [addMatch]: addMatch
+  [40] Src [start]: start
       PURITY: 100% pure
-  [41] Src [replaceMatch]: replaceMatch
+  [41] Src [_run_event_loop]: _run_event_loop
       PURITY: 100% pure
-  [42] Src [styleMatch]: styleMatch
+  [42] Src [_connect_and_listen]: _connect_and_listen
       PURITY: 100% pure
-  [43] Src [removeMatch]: removeMatch → cb
+  [43] Src [_trigger_listeners]: _trigger_listeners → cb
       PURITY: 100% pure
-  [44] Src [html]: html
+  [44] Src [send_patch]: send_patch
       PURITY: 100% pure
-  [45] Src [target]: target
+  [45] Src [organize_html_project_dir]: organize_html_project_dir → organize_html → _extract_inline_styles
       PURITY: 100% pure
-  [46] Src [css]: css
+  [46] Src [organize_html_project]: organize_html_project → organize_html → _extract_inline_styles
       PURITY: 100% pure
-  [47] Src [styleEl]: styleEl
+  [47] Src [organize_result_manifest]: organize_result_manifest
       PURITY: 100% pure
-  [48] Src [sendPatchRequest]: sendPatchRequest
+  [48] Src [extract_visual_css]: extract_visual_css → extract_inline_css
       PURITY: 100% pure
-  [49] Src [on_patch]: on_patch
+  [49] Src [__init__]: __init__
       PURITY: 100% pure
-  [50] Src [start]: start
+  [50] Src [_keep_attr]: _keep_attr
       PURITY: 100% pure
 
 LAYERS:
-  repatch/                        CC̄=5.7    ←in:0  →out:0
+  repatch/                        CC̄=5.6    ←in:0  →out:0
   │ !! marked_context             696L  0C   32m  CC=17     ←3
   │ !! scope                      647L  0C   22m  CC=29     ←2
-  │ web_preprocess             397L  1C   20m  CC=9      ←0
+  │ !! web_preprocess             459L  1C   21m  CC=29     ←1
+  │ web_fetch                  370L  2C   15m  CC=7      ←0
   │ dom_patch                  315L  0C   19m  CC=12     ←0
+  │ !! organize_html              287L  1C   12m  CC=24     ←0
   │ !! ui_patch                   267L  0C   10m  CC=25     ←0
   │ options                    140L  0C    5m  CC=10     ←0
+  │ __init__                   139L  0C    0m  CC=0.0    ←0
   │ project_ir                 132L  1C    8m  CC=12     ←1
-  │ __init__                   123L  0C    0m  CC=0.0    ←0
   │ spatial                    108L  0C    4m  CC=6      ←1
   │ service                    105L  2C    7m  CC=6      ←0
   │ css                         70L  0C    4m  CC=14     ←3
@@ -136,8 +140,8 @@ LAYERS:
   │ !! deps.json                 3394L  0C    0m  CC=0.0    ←0
   │ !! goal.yaml                  511L  0C    0m  CC=0.0    ←0
   │ wup.yaml                   134L  0C    0m  CC=0.0    ←0
-  │ tree.txt                    88L  0C    0m  CC=0.0    ←0
-  │ pyproject.toml              55L  0C    0m  CC=0.0    ←0
+  │ tree.txt                    90L  0C    0m  CC=0.0    ←0
+  │ pyproject.toml              56L  0C    0m  CC=0.0    ←0
   │ project.sh                  50L  0C    0m  CC=0.0    ←0
   │
   testql-scenarios/               CC̄=0.0    ←in:0  →out:0

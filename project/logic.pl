@@ -1,29 +1,33 @@
 % ── Project Metadata ─────────────────────────────────────
-project_metadata('repatch', '0.2.12', 'python').
+project_metadata('repatch', '0.2.14', 'python').
 
 % ── Project Files ────────────────────────────────────────
 project_file('app.doql.less', 22, 'less').
 project_file('project.sh', 50, 'shell').
-project_file('repatch/__init__.py', 124, 'python').
+project_file('repatch/__init__.py', 140, 'python').
 project_file('repatch/css.py', 71, 'python').
 project_file('repatch/dom_patch.py', 316, 'python').
 project_file('repatch/marked_context.py', 697, 'python').
 project_file('repatch/options.py', 141, 'python').
+project_file('repatch/organize_html.py', 288, 'python').
 project_file('repatch/project_ir.py', 133, 'python').
 project_file('repatch/scope.py', 648, 'python').
 project_file('repatch/service.py', 106, 'python').
 project_file('repatch/spatial.py', 109, 'python').
 project_file('repatch/ui_patch.py', 268, 'python').
-project_file('repatch/web_preprocess.py', 398, 'python').
+project_file('repatch/web_fetch.py', 371, 'python').
+project_file('repatch/web_preprocess.py', 460, 'python').
 project_file('sdks/js/repatch-sdk.js', 187, 'javascript').
 project_file('sdks/python/repatch_sdk.py', 74, 'python').
 project_file('tests/test_dom_patch.py', 74, 'python').
 project_file('tests/test_marked_context.py', 442, 'python').
 project_file('tests/test_options.py', 81, 'python').
+project_file('tests/test_organize_html.py', 85, 'python').
 project_file('tests/test_service.py', 54, 'python').
 project_file('tests/test_spatial.py', 30, 'python').
 project_file('tests/test_ui_patch.py', 157, 'python').
-project_file('tests/test_web_preprocess.py', 64, 'python').
+project_file('tests/test_web_fetch.py', 222, 'python').
+project_file('tests/test_web_preprocess.py', 86, 'python').
 project_file('tree.sh', 2, 'shell').
 
 % ── Python Functions ─────────────────────────────────────
@@ -87,6 +91,18 @@ python_function('repatch/options.py', 'normalize_html_body', 1, 2, 3).
 python_function('repatch/options.py', 'html_files_distinct', 2, 3, 7).
 python_function('repatch/options.py', 'sync_option_previews_from_workspace', 1, 10, 10).
 python_function('repatch/options.py', 'enforce_deletes_on_option_previews', 2, 9, 12).
+python_function('repatch/organize_html.py', '_attr_map', 1, 3, 3).
+python_function('repatch/organize_html.py', 'is_lazy_placeholder_img_tag', 1, 11, 10).
+python_function('repatch/organize_html.py', '_strip_lazy_placeholder_imgs', 1, 1, 3).
+python_function('repatch/organize_html.py', '_extract_inline_styles', 1, 4, 4).
+python_function('repatch/organize_html.py', '_inject_head_link', 1, 3, 2).
+python_function('repatch/organize_html.py', '_inject_head_script', 1, 3, 2).
+python_function('repatch/organize_html.py', '_slug_piece', 1, 3, 4).
+python_function('repatch/organize_html.py', '_add_markable_targets', 1, 1, 8).
+python_function('repatch/organize_html.py', 'organize_html', 1, 24, 19).
+python_function('repatch/organize_html.py', 'organize_html_project_dir', 1, 8, 6).
+python_function('repatch/organize_html.py', 'organize_html_project', 1, 1, 1).
+python_function('repatch/organize_html.py', 'organize_result_manifest', 1, 6, 6).
 python_function('repatch/project_ir.py', '_clean_text', 1, 2, 3).
 python_function('repatch/project_ir.py', 'build_project_ir', 1, 2, 5).
 python_function('repatch/project_ir.py', 'summarize_project_ir', 1, 12, 7).
@@ -126,6 +142,21 @@ python_function('repatch/ui_patch.py', '_safe_css', 1, 9, 7).
 python_function('repatch/ui_patch.py', '_label_for', 3, 4, 4).
 python_function('repatch/ui_patch.py', '_css_for', 1, 2, 3).
 python_function('repatch/ui_patch.py', 'apply_ui_patch_options', 2, 25, 19).
+python_function('repatch/web_fetch.py', '_validate_http_url', 1, 3, 2).
+python_function('repatch/web_fetch.py', '_charset_from_content_type', 1, 3, 4).
+python_function('repatch/web_fetch.py', '_decode_http_bytes', 1, 4, 2).
+python_function('repatch/web_fetch.py', '_same_origin', 2, 2, 1).
+python_function('repatch/web_fetch.py', '_read_http_body', 1, 7, 13).
+python_function('repatch/web_fetch.py', '_render_with_playwright', 1, 7, 10).
+python_function('repatch/web_fetch.py', '_extension_from_url_or_type', 3, 4, 7).
+python_function('repatch/web_fetch.py', '_save_asset', 0, 3, 5).
+python_function('repatch/web_fetch.py', '_is_stylesheet_link', 1, 2, 4).
+python_function('repatch/web_fetch.py', '_replace_attr', 3, 2, 4).
+python_function('repatch/web_fetch.py', '_mirror_stylesheets', 1, 1, 10).
+python_function('repatch/web_fetch.py', '_parse_srcset', 1, 4, 5).
+python_function('repatch/web_fetch.py', '_format_srcset', 1, 3, 3).
+python_function('repatch/web_fetch.py', '_mirror_images', 1, 1, 13).
+python_function('repatch/web_fetch.py', 'fetch_complete_web_page', 1, 7, 10).
 python_function('repatch/web_preprocess.py', 'safe_read_under', 2, 5, 5).
 python_function('repatch/web_preprocess.py', 'extract_inline_css', 1, 4, 3).
 python_function('repatch/web_preprocess.py', 'extract_stylesheet_hrefs', 1, 7, 4).
@@ -139,7 +170,8 @@ python_function('repatch/web_preprocess.py', '_should_remove_preview_script', 1,
 python_function('repatch/web_preprocess.py', 'sanitize_http_preview_html', 1, 2, 4).
 python_function('repatch/web_preprocess.py', 'inject_http_preview_shim', 1, 4, 2).
 python_function('repatch/web_preprocess.py', 'prepare_http_preview_html', 1, 1, 2).
-python_function('repatch/web_preprocess.py', 'build_http_llm_context', 1, 7, 5).
+python_function('repatch/web_preprocess.py', '_cap_patch_text', 2, 4, 6).
+python_function('repatch/web_preprocess.py', 'build_http_llm_context', 1, 29, 9).
 python_function('repatch/web_preprocess.py', 'http_patch_llm_rules', 0, 1, 1).
 python_function('tests/test_dom_patch.py', 'test_build_function_option_patches_returns_valid_abc', 0, 7, 3).
 python_function('tests/test_dom_patch.py', 'test_build_function_option_patches_xpatches_delete_marks', 0, 8, 3).
@@ -174,6 +206,12 @@ python_function('tests/test_options.py', 'test_sync_option_previews_from_workspa
 python_function('tests/test_options.py', 'test_sync_option_previews_uses_delete_resolver_only_for_none', 1, 3, 3).
 python_function('tests/test_options.py', 'test_enforce_deletes_on_option_previews', 1, 5, 3).
 python_function('tests/test_options.py', 'test_html_files_distinct_ignores_title', 1, 4, 2).
+python_function('tests/test_organize_html.py', 'test_organize_extracts_substantial_inline_css', 1, 6, 4).
+python_function('tests/test_organize_html.py', 'test_organize_strips_preview_scripts_and_lazy_imgs', 0, 6, 1).
+python_function('tests/test_organize_html.py', 'test_is_lazy_placeholder_img_tag', 0, 3, 1).
+python_function('tests/test_organize_html.py', 'test_organize_html_project_dir_writes_index', 1, 5, 6).
+python_function('tests/test_organize_html.py', 'test_organize_noop_for_minimal_html', 0, 3, 1).
+python_function('tests/test_organize_html.py', 'test_organize_result_manifest_summarizes_extracted_files', 1, 5, 2).
 python_function('tests/test_spatial.py', 'test_apply_spatial_deletes_removes_dashboard_kpi_card', 0, 4, 1).
 python_function('tests/test_spatial.py', 'test_apply_spatial_deletes_removes_only_marked_buttons', 0, 4, 2).
 python_function('tests/test_ui_patch.py', 'test_build_ui_patch_prompt_is_json_contract', 0, 7, 1).
@@ -183,11 +221,20 @@ python_function('tests/test_ui_patch.py', 'test_apply_ui_patch_noops_visual_scop
 python_function('tests/test_ui_patch.py', 'test_apply_ui_patch_rejects_unsafe_css', 0, 1, 2).
 python_function('tests/test_ui_patch.py', 'test_apply_ui_patch_rejects_flow_breaking_css', 0, 1, 2).
 python_function('tests/test_ui_patch.py', 'test_supports_llm_patch_scope', 0, 6, 1).
+python_function('tests/test_web_fetch.py', 'test_fetch_complete_web_page_mirrors_stylesheets_and_images', 1, 8, 6).
+python_function('tests/test_web_fetch.py', 'test_fetch_complete_web_page_uses_rendered_dom_and_mirrors_assets', 1, 6, 5).
+python_function('tests/test_web_fetch.py', 'test_fetch_complete_web_page_falls_back_when_rendering_fails', 1, 4, 4).
+python_function('tests/test_web_fetch.py', 'test_fetch_complete_web_page_deduplicates_and_skips_external_assets', 1, 6, 6).
+python_function('tests/test_web_fetch.py', 'test_fetch_complete_web_page_rejects_non_http_urls', 1, 1, 2).
+python_function('tests/test_web_fetch.py', 'test_fetch_complete_web_page_against_local_http_server', 1, 7, 13).
+python_function('tests/test_web_fetch.py', 'test_fetch_complete_web_page_records_asset_errors_without_breaking_page', 1, 5, 5).
 python_function('tests/test_web_preprocess.py', 'test_extract_visual_css_keeps_patch_relevant_rules', 1, 5, 3).
 python_function('tests/test_web_preprocess.py', 'test_build_html_outline_strips_scripts_and_text', 0, 5, 2).
 python_function('tests/test_web_preprocess.py', 'test_prepare_http_preview_html_blocks_cross_origin_runtime', 0, 5, 2).
+python_function('tests/test_web_preprocess.py', 'test_build_http_llm_context_includes_organize_manifest', 0, 4, 2).
 
 % ── Python Classes ───────────────────────────────────────
+python_class('repatch/organize_html.py', 'OrganizeResult').
 python_class('repatch/project_ir.py', '_ProjectIRParser').
 python_method('_ProjectIRParser', '__init__', 0, 1, 2).
 python_method('_ProjectIRParser', 'handle_starttag', 2, 5, 2).
@@ -203,6 +250,8 @@ python_method('RepatchService', '_build_user_prompt', 2, 1, 1).
 python_method('RepatchService', '_parse_choice', 1, 2, 7).
 python_method('RepatchService', '_choice_content', 1, 2, 1).
 python_method('RepatchService', '_default_completion', 0, 1, 1).
+python_class('repatch/web_fetch.py', 'WebAsset').
+python_class('repatch/web_fetch.py', 'WebFetchResult').
 python_class('repatch/web_preprocess.py', '_OutlineParser').
 python_method('_OutlineParser', '__init__', 0, 1, 2).
 python_method('_OutlineParser', '_keep_attr', 1, 2, 2).
@@ -220,6 +269,11 @@ python_method('RepatchClient', 'send_patch', 1, 3, 4).
 python_class('tests/test_service.py', 'RepatchServiceTests').
 python_method('RepatchServiceTests', 'test_rejects_invalid_scope', 0, 1, 3).
 python_method('RepatchServiceTests', 'test_returns_three_variants_from_completion', 0, 1, 7).
+python_class('tests/test_web_fetch.py', 'FakeResp').
+python_method('FakeResp', '__init__', 1, 1, 0).
+python_method('FakeResp', 'read', 1, 3, 3).
+python_method('FakeResp', '__enter__', 0, 1, 0).
+python_method('FakeResp', '__exit__', 0, 1, 0).
 
 % ── Dependencies ─────────────────────────────────────────
 

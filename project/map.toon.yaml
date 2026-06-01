@@ -1,32 +1,36 @@
-# repatch | 23f 4248L | python:19,shell:2,less:1,javascript:1 | 2026-06-01
-# stats: 159 func | 6 cls | 23 mod | CC̄=5.6 | critical:17 | cycles:0
-# alerts[5]: CC _bind_annotations_to_html=29; CC inject_scope_style=27; CC apply_ui_patch_options=25; CC _find_marked_subtrees=17; CC resolve_marked_selectors=16
-# hotspots[5]: inject_scope_style fan=20; _bind_annotations_to_html fan=19; apply_ui_patch_options fan=19; _patch_function_targets fan=18; validate_css_safety fan=15
+# repatch | 27f 5314L | python:23,shell:2,less:1,javascript:1 | 2026-06-01
+# stats: 201 func | 10 cls | 27 mod | CC̄=5.5 | critical:20 | cycles:0
+# alerts[5]: CC _bind_annotations_to_html=29; CC build_http_llm_context=29; CC inject_scope_style=27; CC apply_ui_patch_options=25; CC organize_html=24
+# hotspots[5]: inject_scope_style fan=20; organize_html fan=19; _bind_annotations_to_html fan=19; apply_ui_patch_options fan=19; _patch_function_targets fan=18
 # evolution: baseline
 # Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
-M[23]:
+M[27]:
   app.doql.less,22
   project.sh,50
-  repatch/__init__.py,124
+  repatch/__init__.py,140
   repatch/css.py,71
   repatch/dom_patch.py,316
   repatch/marked_context.py,697
   repatch/options.py,141
+  repatch/organize_html.py,288
   repatch/project_ir.py,133
   repatch/scope.py,648
   repatch/service.py,106
   repatch/spatial.py,109
   repatch/ui_patch.py,268
-  repatch/web_preprocess.py,398
+  repatch/web_fetch.py,371
+  repatch/web_preprocess.py,460
   sdks/js/repatch-sdk.js,187
   sdks/python/repatch_sdk.py,74
   tests/test_dom_patch.py,74
   tests/test_marked_context.py,442
   tests/test_options.py,81
+  tests/test_organize_html.py,85
   tests/test_service.py,54
   tests/test_spatial.py,30
   tests/test_ui_patch.py,157
-  tests/test_web_preprocess.py,64
+  tests/test_web_fetch.py,222
+  tests/test_web_preprocess.py,86
   tree.sh,2
 D:
   repatch/__init__.py:
@@ -98,6 +102,21 @@ D:
     html_files_distinct(base_dir;names)
     sync_option_previews_from_workspace(cinema_dir)
     enforce_deletes_on_option_previews(cinema_dir;delete_ids)
+  repatch/organize_html.py:
+    e: _attr_map,is_lazy_placeholder_img_tag,_strip_lazy_placeholder_imgs,_extract_inline_styles,_inject_head_link,_inject_head_script,_slug_piece,_add_markable_targets,organize_html,organize_html_project_dir,organize_html_project,organize_result_manifest,OrganizeResult
+    OrganizeResult:  # HTML after organization plus counters for import metadata.
+    _attr_map(tag_attrs)
+    is_lazy_placeholder_img_tag(tag)
+    _strip_lazy_placeholder_imgs(html)
+    _extract_inline_styles(html)
+    _inject_head_link(html)
+    _inject_head_script(html)
+    _slug_piece(value)
+    _add_markable_targets(html)
+    organize_html(html)
+    organize_html_project_dir(source_dir)
+    organize_html_project(html)
+    organize_result_manifest(result)
   repatch/project_ir.py:
     e: _clean_text,build_project_ir,summarize_project_ir,_ProjectIRParser
     _ProjectIRParser: __init__(0),handle_starttag(2),_classify_node(4),handle_endtag(1),handle_data(1)
@@ -150,8 +169,27 @@ D:
     _label_for(filename;item;fallback)
     _css_for(item)
     apply_ui_patch_options(html;patch)
+  repatch/web_fetch.py:
+    e: _validate_http_url,_charset_from_content_type,_decode_http_bytes,_same_origin,_read_http_body,_render_with_playwright,_extension_from_url_or_type,_save_asset,_is_stylesheet_link,_replace_attr,_mirror_stylesheets,_parse_srcset,_format_srcset,_mirror_images,fetch_complete_web_page,WebAsset,WebFetchResult
+    WebAsset:  # One mirrored page asset.
+    WebFetchResult:  # Fetched page HTML plus mirrored assets and diagnostics.
+    _validate_http_url(url)
+    _charset_from_content_type(content_type)
+    _decode_http_bytes(body)
+    _same_origin(url;base_url)
+    _read_http_body(url)
+    _render_with_playwright(url)
+    _extension_from_url_or_type(url;content_type;fallback)
+    _save_asset()
+    _is_stylesheet_link(tag)
+    _replace_attr(tag;pattern;value)
+    _mirror_stylesheets(html)
+    _parse_srcset(value)
+    _format_srcset(items)
+    _mirror_images(html)
+    fetch_complete_web_page(url)
   repatch/web_preprocess.py:
-    e: safe_read_under,extract_inline_css,extract_stylesheet_hrefs,normalize_linked_paths,_rule_is_visual,filter_visual_css,extract_visual_css,build_html_outline,_script_src_allowed_for_preview,_should_remove_preview_script,sanitize_http_preview_html,inject_http_preview_shim,prepare_http_preview_html,build_http_llm_context,http_patch_llm_rules,_OutlineParser
+    e: safe_read_under,extract_inline_css,extract_stylesheet_hrefs,normalize_linked_paths,_rule_is_visual,filter_visual_css,extract_visual_css,build_html_outline,_script_src_allowed_for_preview,_should_remove_preview_script,sanitize_http_preview_html,inject_http_preview_shim,prepare_http_preview_html,_cap_patch_text,build_http_llm_context,http_patch_llm_rules,_OutlineParser
     _OutlineParser: __init__(0),_keep_attr(1),handle_starttag(2),handle_endtag(1),handle_data(1)
     safe_read_under(base_dir;rel_path)
     extract_inline_css(html)
@@ -166,6 +204,7 @@ D:
     sanitize_http_preview_html(html)
     inject_http_preview_shim(html)
     prepare_http_preview_html(html)
+    _cap_patch_text(text;max_bytes)
     build_http_llm_context(artifacts)
     http_patch_llm_rules()
   sdks/python/repatch_sdk.py:
@@ -210,6 +249,14 @@ D:
     test_sync_option_previews_uses_delete_resolver_only_for_none(tmp_path)
     test_enforce_deletes_on_option_previews(tmp_path)
     test_html_files_distinct_ignores_title(tmp_path)
+  tests/test_organize_html.py:
+    e: test_organize_extracts_substantial_inline_css,test_organize_strips_preview_scripts_and_lazy_imgs,test_is_lazy_placeholder_img_tag,test_organize_html_project_dir_writes_index,test_organize_noop_for_minimal_html,test_organize_result_manifest_summarizes_extracted_files
+    test_organize_extracts_substantial_inline_css(tmp_path)
+    test_organize_strips_preview_scripts_and_lazy_imgs()
+    test_is_lazy_placeholder_img_tag()
+    test_organize_html_project_dir_writes_index(tmp_path)
+    test_organize_noop_for_minimal_html()
+    test_organize_result_manifest_summarizes_extracted_files(tmp_path)
   tests/test_service.py:
     e: RepatchServiceTests
     RepatchServiceTests: test_rejects_invalid_scope(0),test_returns_three_variants_from_completion(0)
@@ -226,8 +273,19 @@ D:
     test_apply_ui_patch_rejects_unsafe_css()
     test_apply_ui_patch_rejects_flow_breaking_css()
     test_supports_llm_patch_scope()
+  tests/test_web_fetch.py:
+    e: test_fetch_complete_web_page_mirrors_stylesheets_and_images,test_fetch_complete_web_page_uses_rendered_dom_and_mirrors_assets,test_fetch_complete_web_page_falls_back_when_rendering_fails,test_fetch_complete_web_page_deduplicates_and_skips_external_assets,test_fetch_complete_web_page_rejects_non_http_urls,test_fetch_complete_web_page_against_local_http_server,test_fetch_complete_web_page_records_asset_errors_without_breaking_page,FakeResp
+    FakeResp: __init__(1),read(1),__enter__(0),__exit__(0)
+    test_fetch_complete_web_page_mirrors_stylesheets_and_images(tmp_path)
+    test_fetch_complete_web_page_uses_rendered_dom_and_mirrors_assets(tmp_path)
+    test_fetch_complete_web_page_falls_back_when_rendering_fails(tmp_path)
+    test_fetch_complete_web_page_deduplicates_and_skips_external_assets(tmp_path)
+    test_fetch_complete_web_page_rejects_non_http_urls(tmp_path)
+    test_fetch_complete_web_page_against_local_http_server(tmp_path)
+    test_fetch_complete_web_page_records_asset_errors_without_breaking_page(tmp_path)
   tests/test_web_preprocess.py:
-    e: test_extract_visual_css_keeps_patch_relevant_rules,test_build_html_outline_strips_scripts_and_text,test_prepare_http_preview_html_blocks_cross_origin_runtime
+    e: test_extract_visual_css_keeps_patch_relevant_rules,test_build_html_outline_strips_scripts_and_text,test_prepare_http_preview_html_blocks_cross_origin_runtime,test_build_http_llm_context_includes_organize_manifest
     test_extract_visual_css_keeps_patch_relevant_rules(tmp_path)
     test_build_html_outline_strips_scripts_and_text()
     test_prepare_http_preview_html_blocks_cross_origin_runtime()
+    test_build_http_llm_context_includes_organize_manifest()
