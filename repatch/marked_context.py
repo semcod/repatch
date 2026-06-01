@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from html import unescape
 from html.parser import HTMLParser
 from typing import Any
 
@@ -207,7 +208,7 @@ def marked_scope_colors_css(selectors: list[str], variant: str) -> str:
         return base_rule
     inline_beat = ", ".join(
         f"{sel} *, {sel} [style*='color'], {sel} [style*='Color']"
-        for sel in clean[:8]
+        for sel in clean
     )
     return f"{base_rule}\n{inline_beat} {{{color_decl};}}"
 
@@ -342,7 +343,8 @@ def _id_candidates(element_id: str) -> set[str]:
     raw = str(element_id or "").strip()
     if not raw:
         return set()
-    out = {raw, raw.lower()}
+    normalized = _normalize_label_text(raw)
+    out = {raw, raw.lower(), normalized, normalized.lower()}
     if raw.startswith("btn-"):
         out.add(raw[4:])
         out.add(raw[4:].lower())
@@ -353,11 +355,19 @@ def _id_candidates(element_id: str) -> set[str]:
     return out
 
 
+def _normalize_label_text(text: str) -> str:
+    """Normalize visible UI labels copied from browser DOM or imported HTML."""
+    value = unescape(str(text or ""))
+    value = value.replace("\xa0", " ")
+    value = re.sub(r"\s+", " ", value).strip()
+    return value
+
+
 def _parse_attrs(attr_text: str) -> dict[str, str]:
     attrs: dict[str, str] = {}
     for match in _ATTR_RE.finditer(attr_text or ""):
         key = match.group(1).lower()
-        value = re.sub(r"\s+", " ", match.group(3)).strip()
+        value = _normalize_label_text(match.group(3))
         attrs[key] = value
     return attrs
 
@@ -370,7 +380,7 @@ def _logical_id(tag: str, attrs: dict[str, str], *, text: str = "") -> str | Non
     if target:
         return target
     if tag.lower() in _TEXT_LABEL_TAGS:
-        label = re.sub(r"\s+", " ", text).strip()
+        label = _normalize_label_text(text)
         if label:
             return label
     return None
@@ -424,7 +434,7 @@ def _collect_button_candidates(tag: str, attrs: dict[str, str], match, raw_html:
     inner_start = match.end()
     inner_end = raw_html.lower().find(f"</{tag}>", inner_start)
     inner = raw_html[inner_start:inner_end if inner_end >= 0 else inner_start]
-    label = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", inner)).strip()
+    label = _normalize_label_text(re.sub(r"<[^>]+>", "", inner))
     logical = _logical_id(tag, attrs, text=label)
     if logical:
         return _id_candidates(logical)

@@ -5,26 +5,36 @@
 
 - **Project**: /home/tom/github/semcod/repatch
 - **Primary Language**: python
-- **Languages**: python: 9, yaml: 3, txt: 1, shell: 1, toml: 1
+- **Languages**: python: 12, yaml: 4, json: 1, txt: 1, shell: 1
 - **Analysis Mode**: static
-- **Total Functions**: 102
-- **Total Classes**: 3
-- **Modules**: 15
-- **Entry Points**: 27
+- **Total Functions**: 156
+- **Total Classes**: 6
+- **Modules**: 21
+- **Entry Points**: 57
 
 ## Architecture by Module
 
 ### repatch.marked_context
-- **Functions**: 28
+- **Functions**: 32
 - **File**: `marked_context.py`
+
+### sdks.js.repatch-sdk
+- **Functions**: 23
+- **Classes**: 1
+- **File**: `repatch-sdk.js`
+
+### repatch.scope
+- **Functions**: 22
+- **File**: `scope.py`
+
+### repatch.web_preprocess
+- **Functions**: 20
+- **Classes**: 1
+- **File**: `web_preprocess.py`
 
 ### repatch.dom_patch
 - **Functions**: 19
 - **File**: `dom_patch.py`
-
-### repatch.scope
-- **Functions**: 17
-- **File**: `scope.py`
 
 ### repatch.ui_patch
 - **Functions**: 10
@@ -39,6 +49,11 @@
 - **Functions**: 7
 - **Classes**: 2
 - **File**: `service.py`
+
+### sdks.python.repatch_sdk
+- **Functions**: 7
+- **Classes**: 1
+- **File**: `repatch_sdk.py`
 
 ### repatch.options
 - **Functions**: 5
@@ -63,6 +78,10 @@ Main execution flows into the system:
 ### repatch.scope.inject_scope_style
 - **Calls**: repatch.scope._bind_annotations_to_html, repatch.scope._resolve_scope_kind, repatch.scope.normalize_focus_scope, repatch.marked_context.effective_delete_ids, repatch.scope._get_scope_css, repatch.scope.strip_scope_style, repatch.scope._inject_css_block, None.strip
 
+### repatch.web_preprocess.extract_visual_css
+> Extract color/shape/layout CSS from inline styles and linked sheets.
+- **Calls**: repatch.web_preprocess.extract_inline_css, repatch.web_preprocess.normalize_linked_paths, repatch.web_preprocess.filter_visual_css, filtered.encode, chunks.append, local.startswith, repatch.web_preprocess.safe_read_under, None.join
+
 ### repatch.options.sync_option_previews_from_workspace
 > Refresh Options A-C from the active workspace HTML.
 
@@ -72,11 +91,14 @@ Main execution flows into the system:
 
 ### repatch.dom_patch.build_function_option_patches
 > Create A-C function variants by patching the current HTML locally.
-- **Calls**: repatch.dom_patch._strip_existing_patch, repatch.project_ir.build_project_ir, repatch.marked_context.effective_delete_ids, repatch.dom_patch.supports_function_patch, list, list, repatch.dom_patch._patch_function_targets, repatch.dom_patch._inject_into_head
+- **Calls**: repatch.dom_patch._strip_existing_patch, repatch.project_ir.build_project_ir, repatch.marked_context.effective_delete_ids, repatch.dom_patch.supports_function_patch, None.lower, list, list, repatch.dom_patch._patch_function_targets
 
 ### repatch.options.enforce_deletes_on_option_previews
 > Apply DELETE ids to existing Option A-C preview files.
 - **Calls**: Path, None.strip, path.read_text, repatch.spatial.apply_spatial_deletes_to_html, path.write_text, touched.append, all_removed.extend, sorted
+
+### sdks.js.repatch-sdk.RepatchSDK.removeMatch
+- **Calls**: sdks.js.repatch-sdk.querySelector, sdks.js.repatch-sdk.insertAdjacentHTML, sdks.js.repatch-sdk.log, sdks.js.repatch-sdk.Error, sdks.js.repatch-sdk.trim, sdks.js.repatch-sdk.replace, sdks.js.repatch-sdk.getElementById, sdks.js.repatch-sdk.createElement
 
 ### repatch.project_ir._ProjectIRParser.handle_endtag
 - **Calls**: tag.lower, self._stack.pop, repatch.project_ir._clean_text, self._classify_node, max, None.extend, None.join, attrs.get
@@ -84,6 +106,10 @@ Main execution flows into the system:
 ### repatch.ui_patch.parse_ui_patch_response
 > Parse JSON object from an LLM patch response.
 - **Calls**: repatch.ui_patch._strip_json_fence, data.get, json.loads, isinstance, ValueError, isinstance, ValueError, raw.find
+
+### repatch.web_preprocess.build_html_outline
+> Build a compact HTML skeleton without scripts or full text content.
+- **Calls**: re.sub, _OutlineParser, parser.feed, parser.close, None.strip, str, None.startswith, len
 
 ### repatch.project_ir._ProjectIRParser._classify_node
 - **Calls**: self.cards.append, self.headings.append, None.lower, self.actions.append, attrs.get, attrs.get, attrs.get, repatch.project_ir._clean_text
@@ -94,12 +120,19 @@ Main execution flows into the system:
 ### repatch.service.RepatchService._parse_choice
 - **Calls**: RepatchService._choice_content, PatchSuggestion, json.loads, ValueError, list, list, str, payload.get
 
-### repatch.service.RepatchService.generate_patch_suggestions
-- **Calls**: self._normalize_scopes, completion_fn, self._parse_choice, len, ValueError, self._build_user_prompt, len
+### repatch.web_preprocess.build_http_llm_context
+> Combine visual CSS + HTML outline for compact LLM patch prompts.
+- **Calls**: None.strip, None.strip, None.join, parts.append, parts.append, str, str, artifacts.get
 
 ### repatch.options.html_files_distinct
 > True when all named HTML files exist and at least two have different bodies.
 - **Calls**: Path, bodies.append, len, path.exists, repatch.options.normalize_html_body, set, path.read_text
+
+### repatch.service.RepatchService.generate_patch_suggestions
+- **Calls**: self._normalize_scopes, completion_fn, self._parse_choice, len, ValueError, self._build_user_prompt, len
+
+### sdks.python.repatch_sdk.RepatchClient._connect_and_listen
+- **Calls**: logging.error, websockets.connect, logging.info, logging.warning, asyncio.sleep, json.loads, self._trigger_listeners
 
 ### repatch.ui_patch.build_ui_patch_prompt
 > Build a compact JSON-only prompt for scoped CSS A-C options.
@@ -107,6 +140,16 @@ Main execution flows into the system:
 
 ### repatch.scope.ui_type_for_kind
 - **Calls**: None.lower, None.lower, None.strip, re.sub
+
+### repatch.web_preprocess._OutlineParser.handle_starttag
+- **Calls**: None.join, self.parts.append, self.parts.append, self._keep_attr
+
+### sdks.python.repatch_sdk.RepatchClient._run_event_loop
+- **Calls**: asyncio.new_event_loop, asyncio.set_event_loop, self._loop.run_until_complete, self._connect_and_listen
+
+### sdks.python.repatch_sdk.RepatchClient.send_patch
+> Surgically send a Repatch DSL command to the stream.
+- **Calls**: asyncio.run_coroutine_threadsafe, logging.error, self._ws.send, json.dumps
 
 ### repatch.project_ir._ProjectIRParser.handle_starttag
 - **Calls**: tag.lower, self._stack.append, k.lower
@@ -122,31 +165,17 @@ Main execution flows into the system:
 > Preferred LLM context when session marks exist.
 - **Calls**: list, list, repatch.marked_context.build_marked_element_context
 
-### repatch.project_ir._ProjectIRParser.__init__
-- **Calls**: None.__init__, super
+### repatch.web_preprocess._OutlineParser.handle_endtag
+- **Calls**: max, self.parts.append, max
 
-### repatch.project_ir._ProjectIRParser.handle_data
-- **Calls**: repatch.project_ir._clean_text, None.append
+### repatch.web_preprocess._OutlineParser.handle_data
+- **Calls**: None.strip, self.parts.append, re.sub
 
-### repatch.dom_patch._default_prepare_html
-- **Calls**: None.strip, str
+### sdks.js.repatch-sdk.RepatchSDK.connect
+- **Calls**: sdks.js.repatch-sdk.log, sdks.js.repatch-sdk.RepatchSDK._connectSSE, sdks.js.repatch-sdk.RepatchSDK._connectWS
 
-### repatch.ui_patch.supports_llm_patch_scope
-> True when A-C options can be generated as a CSS patch instead of full HTML.
-- **Calls**: repatch.scope.normalize_focus_scope
-
-### repatch.service.RepatchService._build_user_prompt
-- **Calls**: None.join
-
-### repatch.service.RepatchService._choice_content
-- **Calls**: isinstance
-
-### repatch.service.RepatchService._default_completion
-- **Calls**: completion
-
-### repatch.dom_patch._default_finalize_html
-
-### repatch.service.RepatchService.__init__
+### sdks.js.repatch-sdk.RepatchSDK.target
+- **Calls**: sdks.js.repatch-sdk.remove, sdks.js.repatch-sdk.log, sdks.js.repatch-sdk.Error
 
 ## Process Flows
 
@@ -166,7 +195,15 @@ inject_scope_style [repatch.scope]
   └─ →> effective_delete_ids
 ```
 
-### Flow 3: sync_option_previews_from_workspace
+### Flow 3: extract_visual_css
+```
+extract_visual_css [repatch.web_preprocess]
+  └─> extract_inline_css
+  └─> normalize_linked_paths
+      └─> extract_stylesheet_hrefs
+```
+
+### Flow 4: sync_option_previews_from_workspace
 ```
 sync_option_previews_from_workspace [repatch.options]
   └─ →> apply_spatial_deletes_to_html
@@ -174,7 +211,7 @@ sync_option_previews_from_workspace [repatch.options]
       └─> _element_delete_candidates
 ```
 
-### Flow 4: build_function_option_patches
+### Flow 5: build_function_option_patches
 ```
 build_function_option_patches [repatch.dom_patch]
   └─> _strip_existing_patch
@@ -182,7 +219,7 @@ build_function_option_patches [repatch.dom_patch]
   └─ →> build_project_ir
 ```
 
-### Flow 5: enforce_deletes_on_option_previews
+### Flow 6: enforce_deletes_on_option_previews
 ```
 enforce_deletes_on_option_previews [repatch.options]
   └─ →> apply_spatial_deletes_to_html
@@ -190,42 +227,52 @@ enforce_deletes_on_option_previews [repatch.options]
       └─> _element_delete_candidates
 ```
 
-### Flow 6: handle_endtag
+### Flow 7: removeMatch
+```
+removeMatch [sdks.js.repatch-sdk.RepatchSDK]
+```
+
+### Flow 8: handle_endtag
 ```
 handle_endtag [repatch.project_ir._ProjectIRParser]
   └─ →> _clean_text
 ```
 
-### Flow 7: parse_ui_patch_response
+### Flow 9: parse_ui_patch_response
 ```
 parse_ui_patch_response [repatch.ui_patch]
   └─> _strip_json_fence
 ```
 
-### Flow 8: _classify_node
+### Flow 10: build_html_outline
 ```
-_classify_node [repatch.project_ir._ProjectIRParser]
-```
-
-### Flow 9: _normalize_scopes
-```
-_normalize_scopes [repatch.service.RepatchService]
-```
-
-### Flow 10: _parse_choice
-```
-_parse_choice [repatch.service.RepatchService]
+build_html_outline [repatch.web_preprocess]
 ```
 
 ## Key Classes
+
+### sdks.js.repatch-sdk.RepatchSDK
+- **Methods**: 23
+- **Key Methods**: sdks.js.repatch-sdk.RepatchSDK.connect, sdks.js.repatch-sdk.RepatchSDK._connectWS, sdks.js.repatch-sdk.RepatchSDK.payload, sdks.js.repatch-sdk.RepatchSDK.setTimeout, sdks.js.repatch-sdk.RepatchSDK._connectSSE, sdks.js.repatch-sdk.RepatchSDK.payload, sdks.js.repatch-sdk.RepatchSDK.onPatch, sdks.js.repatch-sdk.RepatchSDK.apply, sdks.js.repatch-sdk.RepatchSDK.dslClean, sdks.js.repatch-sdk.RepatchSDK.addMatch
 
 ### repatch.service.RepatchService
 - **Methods**: 7
 - **Key Methods**: repatch.service.RepatchService.__init__, repatch.service.RepatchService.generate_patch_suggestions, repatch.service.RepatchService._normalize_scopes, repatch.service.RepatchService._build_user_prompt, repatch.service.RepatchService._parse_choice, repatch.service.RepatchService._choice_content, repatch.service.RepatchService._default_completion
 
+### sdks.python.repatch_sdk.RepatchClient
+> Repatch Python Client SDK (v1.0.0)
+Allows other Python services, agents, or CLI tools to connect to 
+- **Methods**: 7
+- **Key Methods**: sdks.python.repatch_sdk.RepatchClient.__init__, sdks.python.repatch_sdk.RepatchClient.on_patch, sdks.python.repatch_sdk.RepatchClient.start, sdks.python.repatch_sdk.RepatchClient._run_event_loop, sdks.python.repatch_sdk.RepatchClient._connect_and_listen, sdks.python.repatch_sdk.RepatchClient._trigger_listeners, sdks.python.repatch_sdk.RepatchClient.send_patch
+
 ### repatch.project_ir._ProjectIRParser
 - **Methods**: 5
 - **Key Methods**: repatch.project_ir._ProjectIRParser.__init__, repatch.project_ir._ProjectIRParser.handle_starttag, repatch.project_ir._ProjectIRParser._classify_node, repatch.project_ir._ProjectIRParser.handle_endtag, repatch.project_ir._ProjectIRParser.handle_data
+- **Inherits**: HTMLParser
+
+### repatch.web_preprocess._OutlineParser
+- **Methods**: 5
+- **Key Methods**: repatch.web_preprocess._OutlineParser.__init__, repatch.web_preprocess._OutlineParser._keep_attr, repatch.web_preprocess._OutlineParser.handle_starttag, repatch.web_preprocess._OutlineParser.handle_endtag, repatch.web_preprocess._OutlineParser.handle_data
 - **Inherits**: HTMLParser
 
 ### repatch.service.PatchSuggestion
@@ -236,7 +283,7 @@ _parse_choice [repatch.service.RepatchService]
 Key functions that process and transform data:
 
 ### repatch.marked_context._parse_attrs
-- **Output to**: _ATTR_RE.finditer, None.lower, None.strip, match.group, re.sub
+- **Output to**: _ATTR_RE.finditer, None.lower, repatch.marked_context._normalize_label_text, match.group, match.group
 
 ### repatch.marked_context._extract_and_format_fragment
 - **Output to**: repatch.marked_context._extract_balanced_html, None.strip, len, re.sub, compact.encode
@@ -255,49 +302,57 @@ Key functions that process and transform data:
 ### repatch.service.RepatchService._parse_choice
 - **Output to**: RepatchService._choice_content, PatchSuggestion, json.loads, ValueError, list
 
+## Behavioral Patterns
+
+### state_machine_RepatchSDK
+- **Type**: state_machine
+- **Confidence**: 0.70
+- **Functions**: sdks.js.repatch-sdk.RepatchSDK.connect, sdks.js.repatch-sdk.RepatchSDK._connectWS, sdks.js.repatch-sdk.RepatchSDK.payload, sdks.js.repatch-sdk.RepatchSDK.setTimeout, sdks.js.repatch-sdk.RepatchSDK._connectSSE
+
 ## Public API Surface
 
 Functions exposed as public API (no underscore prefix):
 
 - `repatch.ui_patch.apply_ui_patch_options` - 31 calls
+- `repatch.scope.inject_scope_style` - 29 calls
 - `repatch.spatial.apply_spatial_deletes_to_html` - 29 calls
 - `repatch.css.validate_css_safety` - 26 calls
 - `repatch.marked_context.resolve_marked_selectors` - 23 calls
 - `repatch.project_ir.summarize_project_ir` - 21 calls
-- `repatch.scope.inject_scope_style` - 19 calls
+- `repatch.web_preprocess.extract_visual_css` - 19 calls
 - `repatch.marked_context.restrict_scope_css_to_marks` - 17 calls
 - `repatch.options.sync_option_previews_from_workspace` - 17 calls
-- `repatch.dom_patch.build_function_option_patches` - 14 calls
+- `repatch.dom_patch.build_function_option_patches` - 16 calls
 - `repatch.options.enforce_deletes_on_option_previews` - 14 calls
+- `sdks.js.repatch-sdk.RepatchSDK.apply` - 14 calls
 - `repatch.marked_context.build_marked_element_context` - 13 calls
+- `sdks.js.repatch-sdk.RepatchSDK.removeMatch` - 13 calls
 - `repatch.project_ir._ProjectIRParser.handle_endtag` - 11 calls
 - `repatch.marked_context.effective_delete_ids` - 11 calls
+- `repatch.marked_context.marked_scope_colors_css` - 11 calls
+- `repatch.marked_context.marked_scope_orientation_css` - 11 calls
 - `repatch.ui_patch.parse_ui_patch_response` - 11 calls
+- `repatch.web_preprocess.build_html_outline` - 11 calls
 - `repatch.marked_context.has_ui_marks` - 9 calls
+- `repatch.web_preprocess.normalize_linked_paths` - 9 calls
+- `repatch.web_preprocess.build_http_llm_context` - 9 calls
 - `repatch.project_ir.build_project_ir` - 8 calls
 - `repatch.scope.scoped_html_fragment` - 7 calls
-- `repatch.service.RepatchService.generate_patch_suggestions` - 7 calls
 - `repatch.options.html_files_distinct` - 7 calls
+- `repatch.web_preprocess.safe_read_under` - 7 calls
+- `repatch.service.RepatchService.generate_patch_suggestions` - 7 calls
 - `repatch.css.split_css_rules` - 6 calls
 - `repatch.scope.normalize_focus_scope` - 5 calls
 - `repatch.marked_context.marked_css_selectors` - 5 calls
+- `repatch.marked_context.marked_scope_display_css` - 5 calls
+- `repatch.marked_context.marked_scope_shapes_css` - 5 calls
 - `repatch.ui_patch.build_ui_patch_prompt` - 5 calls
 - `repatch.scope.ui_type_for_kind` - 4 calls
 - `repatch.scope.default_scope_for_kind` - 4 calls
 - `repatch.dom_patch.supports_function_patch` - 4 calls
-- `repatch.project_ir._ProjectIRParser.handle_starttag` - 3 calls
-- `repatch.scope.allowed_scope_ids` - 3 calls
-- `repatch.scope.should_block_full_html_iterate` - 3 calls
-- `repatch.dom_patch.build_function_patch_context` - 3 calls
-- `repatch.marked_context.resolve_marked_llm_context` - 3 calls
-- `repatch.options.replace_html_title` - 3 calls
-- `repatch.options.normalize_html_body` - 3 calls
-- `repatch.project_ir._ProjectIRParser.handle_data` - 2 calls
-- `repatch.scope.offline_fast_scopes_for_kind` - 2 calls
-- `repatch.scope.scope_supports_offline_fast_path` - 2 calls
-- `repatch.marked_context.marked_scope_colors_css` - 2 calls
-- `repatch.scope.strip_scope_style` - 1 calls
-- `repatch.ui_patch.supports_llm_patch_scope` - 1 calls
+- `repatch.web_preprocess.extract_inline_css` - 4 calls
+- `repatch.web_preprocess.extract_stylesheet_hrefs` - 4 calls
+- `repatch.web_preprocess.filter_visual_css` - 4 calls
 
 ## System Interactions
 
@@ -315,6 +370,11 @@ graph TD
     inject_scope_style --> normalize_focus_scop
     inject_scope_style --> effective_delete_ids
     inject_scope_style --> _get_scope_css
+    extract_visual_css --> extract_inline_css
+    extract_visual_css --> normalize_linked_pat
+    extract_visual_css --> filter_visual_css
+    extract_visual_css --> encode
+    extract_visual_css --> append
     sync_option_previews --> Path
     sync_option_previews --> read_text
     sync_option_previews --> apply_spatial_delete
@@ -323,18 +383,13 @@ graph TD
     build_function_optio --> build_project_ir
     build_function_optio --> effective_delete_ids
     build_function_optio --> supports_function_pa
-    build_function_optio --> list
+    build_function_optio --> lower
     enforce_deletes_on_o --> Path
     enforce_deletes_on_o --> strip
     enforce_deletes_on_o --> read_text
     enforce_deletes_on_o --> apply_spatial_delete
     enforce_deletes_on_o --> write_text
-    handle_endtag --> lower
-    handle_endtag --> pop
-    handle_endtag --> _clean_text
-    handle_endtag --> _classify_node
-    handle_endtag --> max
-    parse_ui_patch_respo --> _strip_json_fence
+    removeMatch --> querySelector
 ```
 
 ## Reverse Engineering Guidelines

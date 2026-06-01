@@ -242,6 +242,14 @@ def test_marked_scope_colors_css_differs_by_variant() -> None:
     assert "color:#0f172a!important" in a
 
 
+def test_marked_scope_colors_css_overrides_all_descendants() -> None:
+    selectors = [f".target-{idx}" for idx in range(12)]
+    css = marked_scope_colors_css(selectors, "c")
+    assert ".target-0 *" in css
+    assert ".target-11 *" in css
+    assert "color:#1e1b4b!important" in css
+
+
 def test_resolve_marked_selectors_heading_text_id() -> None:
     mark = "Pracownia Malort Gdynia – przestrzeń dla kreatywności Twojego dziecka"
     html = (
@@ -254,6 +262,19 @@ def test_resolve_marked_selectors_heading_text_id() -> None:
     assert ".kt-adv-heading2_289857-94" in selectors
     assert ".wp-block-kadence-advancedheading" not in selectors
     assert f'[data-nexu-target="{mark}"]' in selectors
+
+
+def test_resolve_marked_selectors_heading_text_entities() -> None:
+    mark = "Pracownia Malort Gdynia – przestrzeń dla kreatywności Twojego dziecka"
+    html = (
+        '<h2 class="kt-adv-heading2_289857-94 wp-block-kadence-advancedheading">'
+        '<strong style="color: #007D13;">Pracownia Malort Gdynia&nbsp;&#8211; </strong>'
+        "przestrzeń dla kreatywności Twojego dziecka"
+        "</h2>"
+    )
+    selectors = resolve_marked_selectors(html, [mark], narrow=True)
+    assert ".kt-adv-heading2_289857-94" in selectors
+    assert ".wp-block-kadence-advancedheading" not in selectors
 
 
 def test_inject_scope_style_colors_overrides_inline_heading_color() -> None:
@@ -277,6 +298,38 @@ def test_inject_scope_style_colors_overrides_inline_heading_color() -> None:
     assert ".kt-adv-heading2_289857-94 *" in patched
     assert "color:#0f172a!important" in patched
     assert "background-color:#38bdf8" in patched
+
+
+def test_inject_scope_style_colors_overrides_multiple_marked_headings() -> None:
+    heading = "Pracownia Malort Gdynia – przestrzeń dla kreatywności Twojego dziecka"
+    body = (
+        "Zapraszamy do wyjątkowego miejsca, gdzie dzieci rozwijają wyobraźnię i "
+        "pewność siebie poprzez spontaniczną twórczość artystyczną."
+    )
+    html = (
+        "<html><head></head><body>"
+        '<h2 class="kt-adv-heading2_289857-94 wp-block-kadence-advancedheading">'
+        '<strong style="color: #007D13;">Pracownia Malort Gdynia&nbsp;&#8211; </strong>'
+        "przestrzeń dla kreatywności Twojego dziecka"
+        "</h2>"
+        '<h2 class="kt-adv-heading2_79aa1a-c6 wp-block-kadence-advancedheading">'
+        f"{body}"
+        "</h2>"
+        "</body></html>"
+    )
+    patched = inject_scope_style(
+        html,
+        "colors",
+        "c",
+        project_kind="imported",
+        delete_ids=[body, heading],
+    )
+    assert "nexu-scope-variant" in patched
+    assert ".kt-adv-heading2_289857-94" in patched
+    assert ".kt-adv-heading2_79aa1a-c6" in patched
+    assert ".kt-adv-heading2_289857-94 *" in patched
+    assert ".kt-adv-heading2_79aa1a-c6 *" in patched
+    assert "background-color:#e879f9" in patched
 
 
 def test_should_block_full_html_for_imported_marks() -> None:

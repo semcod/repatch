@@ -1,46 +1,50 @@
-# code2llm/evolution | 102 func | 9f | 2026-06-01
+# code2llm/evolution | 156 func | 12f | 2026-06-01
 # generated in 0.00s
 
-NEXT[7] (ranked by impact):
+NEXT[8] (ranked by impact):
   [1] !! SPLIT           repatch/scope.py
-      WHY: 506L, 0 classes, max CC=29
-      EFFORT: ~4h  IMPACT: 14674
+      WHY: 647L, 0 classes, max CC=29
+      EFFORT: ~4h  IMPACT: 18763
 
   [2] !! SPLIT           repatch/marked_context.py
-      WHY: 575L, 0 classes, max CC=17
-      EFFORT: ~4h  IMPACT: 9775
+      WHY: 696L, 0 classes, max CC=17
+      EFFORT: ~4h  IMPACT: 11832
 
-  [3] !! SPLIT-FUNC      _bind_annotations_to_html  CC=29  fan=20
+  [3] !! SPLIT-FUNC      _bind_annotations_to_html  CC=29  fan=21
       WHY: CC=29 exceeds 15
-      EFFORT: ~1h  IMPACT: 580
+      EFFORT: ~1h  IMPACT: 609
 
-  [4] !! SPLIT-FUNC      apply_ui_patch_options  CC=25  fan=21
+  [4] !! SPLIT-FUNC      inject_scope_style  CC=27  fan=20
+      WHY: CC=27 exceeds 15
+      EFFORT: ~1h  IMPACT: 540
+
+  [5] !! SPLIT-FUNC      apply_ui_patch_options  CC=25  fan=21
       WHY: CC=25 exceeds 15
       EFFORT: ~1h  IMPACT: 525
 
-  [5] !  SPLIT-FUNC      resolve_marked_selectors  CC=16  fan=15
+  [6] !  SPLIT-FUNC      resolve_marked_selectors  CC=16  fan=15
       WHY: CC=16 exceeds 15
       EFFORT: ~1h  IMPACT: 240
 
-  [6] !  SPLIT-FUNC      _find_marked_subtrees  CC=17  fan=13
+  [7] !  SPLIT-FUNC      _find_marked_subtrees  CC=17  fan=13
       WHY: CC=17 exceeds 15
       EFFORT: ~1h  IMPACT: 221
 
-  [7] !! SPLIT           goal.yaml
-      WHY: 511L, 0 classes, max CC=0
+  [8] !! SPLIT           deps.json
+      WHY: 3394L, 0 classes, max CC=0
       EFFORT: ~4h  IMPACT: 0
 
 
 RISKS[3]:
-  ⚠ Splitting repatch/marked_context.py may break 28 import paths
-  ⚠ Splitting goal.yaml may break 0 import paths
-  ⚠ Splitting repatch/scope.py may break 17 import paths
+  ⚠ Splitting deps.json may break 0 import paths
+  ⚠ Splitting repatch/marked_context.py may break 32 import paths
+  ⚠ Splitting repatch/scope.py may break 22 import paths
 
 METRICS-TARGET:
-  CC̄:          5.8 → ≤4.1
+  CC̄:          5.2 → ≤3.6
   max-CC:      29 → ≤14
-  god-modules: 3 → 0
-  high-CC(≥15): 4 → ≤2
+  god-modules: 4 → 0
+  high-CC(≥15): 5 → ≤2
   hub-types:   0 → ≤0
 
 PATTERNS (language parser shared logic):
@@ -68,4 +72,4 @@ PATTERNS (language parser shared logic):
     - Standardized FunctionInfo/ClassInfo models
 
 HISTORY:
-  prev CC̄=5.8 → now CC̄=5.8
+  prev CC̄=5.2 → now CC̄=5.2

@@ -291,6 +291,7 @@ def build_function_option_patches(
         return {}, [], {"status": "unsupported"}
     prepare = prepare_html or _default_prepare_html
     finalize = finalize_html or _default_finalize_html
+    ui_type = (project_kind or "web").strip().lower() or "web"
     base = _strip_existing_patch(html_text)
     ir = build_project_ir(base)
     effective_delete = effective_delete_ids(list(delete_els or []), list(keep_els or []))
@@ -304,7 +305,7 @@ def build_function_option_patches(
         out = _patch_function_targets(base, effective_delete, variant, user_goal)
         out = _inject_into_head(out, _patch_style())
         out = _inject_into_body(out, _variant_section(variant, user_goal, ir))
-        doc, ok, errors = prepare(out, ui_type="web")
+        doc, ok, errors = prepare(out, ui_type=ui_type)
         if not ok or not doc:
             return {}, [], {"status": "invalid", "errors": errors}
         if effective_delete:

@@ -1,17 +1,18 @@
-# code2llm | 15f 2940L | python:9,yaml:3,txt:1,shell:1,toml:1 | 2026-06-01
-# generated in 0.00s
-# CC̅=5.8 | critical:4/102 | dups:0 | cycles:0
+# code2llm | 21f 7521L | python:12,yaml:4,json:1,txt:1,shell:1,javascript:1,toml:1 | 2026-06-01
+# generated in 0.01s
+# CC̅=5.2 | critical:5/156 | dups:0 | cycles:0
 
-HEALTH[4]:
+HEALTH[5]:
   🟡 CC    _bind_annotations_to_html CC=29 (limit:15)
+  🟡 CC    inject_scope_style CC=27 (limit:15)
   🟡 CC    resolve_marked_selectors CC=16 (limit:15)
   🟡 CC    _find_marked_subtrees CC=17 (limit:15)
   🟡 CC    apply_ui_patch_options CC=25 (limit:15)
 
 REFACTOR[1]:
-  1. split 4 high-CC methods  (CC>15)
+  1. split 5 high-CC methods  (CC>15)
 
-PIPELINES[25]:
+PIPELINES[54]:
   [1] Src [__init__]: __init__
       PURITY: 100% pure
   [2] Src [handle_starttag]: handle_starttag
@@ -26,7 +27,7 @@ PIPELINES[25]:
       PURITY: 100% pure
   [7] Src [should_block_full_html_iterate]: should_block_full_html_iterate → has_ui_marks
       PURITY: 100% pure
-  [8] Src [inject_scope_style]: inject_scope_style → _bind_annotations_to_html → _parse_attrs
+  [8] Src [inject_scope_style]: inject_scope_style → _bind_annotations_to_html → _parse_attrs → _normalize_label_text
       PURITY: 100% pure
   [9] Src [build_function_patch_context]: build_function_patch_context → build_project_ir
       PURITY: 100% pure
@@ -34,7 +35,7 @@ PIPELINES[25]:
       PURITY: 100% pure
   [11] Src [build_function_option_patches]: build_function_option_patches → _strip_existing_patch
       PURITY: 100% pure
-  [12] Src [resolve_marked_llm_context]: resolve_marked_llm_context → build_marked_element_context → _assemble_marked_subtrees → _find_marked_subtrees → ...(1 more)
+  [12] Src [resolve_marked_llm_context]: resolve_marked_llm_context → build_marked_element_context → _assemble_marked_subtrees → _find_marked_subtrees → ...(2 more)
       PURITY: 100% pure
   [13] Src [supports_llm_patch_scope]: supports_llm_patch_scope → normalize_focus_scope → default_scope_for_kind → allowed_scope_ids
       PURITY: 100% pure
@@ -44,40 +45,98 @@ PIPELINES[25]:
       PURITY: 100% pure
   [16] Src [apply_ui_patch_options]: apply_ui_patch_options → strip_scope_style
       PURITY: 100% pure
-  [17] Src [generate_patch_suggestions]: generate_patch_suggestions
+  [17] Src [html_files_distinct]: html_files_distinct → normalize_html_body
       PURITY: 100% pure
-  [18] Src [_normalize_scopes]: _normalize_scopes
+  [18] Src [sync_option_previews_from_workspace]: sync_option_previews_from_workspace → apply_spatial_deletes_to_html → _delete_match_keys
       PURITY: 100% pure
-  [19] Src [_build_user_prompt]: _build_user_prompt
+  [19] Src [enforce_deletes_on_option_previews]: enforce_deletes_on_option_previews → apply_spatial_deletes_to_html → _delete_match_keys
       PURITY: 100% pure
-  [20] Src [_parse_choice]: _parse_choice
+  [20] Src [extract_visual_css]: extract_visual_css → extract_inline_css
       PURITY: 100% pure
-  [21] Src [_choice_content]: _choice_content
+  [21] Src [__init__]: __init__
       PURITY: 100% pure
-  [22] Src [_default_completion]: _default_completion
+  [22] Src [_keep_attr]: _keep_attr
       PURITY: 100% pure
-  [23] Src [html_files_distinct]: html_files_distinct → normalize_html_body
+  [23] Src [handle_starttag]: handle_starttag
       PURITY: 100% pure
-  [24] Src [sync_option_previews_from_workspace]: sync_option_previews_from_workspace → apply_spatial_deletes_to_html → _delete_match_keys
+  [24] Src [handle_endtag]: handle_endtag
       PURITY: 100% pure
-  [25] Src [enforce_deletes_on_option_previews]: enforce_deletes_on_option_previews → apply_spatial_deletes_to_html → _delete_match_keys
+  [25] Src [handle_data]: handle_data
+      PURITY: 100% pure
+  [26] Src [build_html_outline]: build_html_outline
+      PURITY: 100% pure
+  [27] Src [prepare_http_preview_html]: prepare_http_preview_html → sanitize_http_preview_html → _should_remove_preview_script → _script_src_allowed_for_preview
+      PURITY: 100% pure
+  [28] Src [build_http_llm_context]: build_http_llm_context
+      PURITY: 100% pure
+  [29] Src [http_patch_llm_rules]: http_patch_llm_rules
+      PURITY: 100% pure
+  [30] Src [generate_patch_suggestions]: generate_patch_suggestions
+      PURITY: 100% pure
+  [31] Src [_normalize_scopes]: _normalize_scopes
+      PURITY: 100% pure
+  [32] Src [_build_user_prompt]: _build_user_prompt
+      PURITY: 100% pure
+  [33] Src [_parse_choice]: _parse_choice
+      PURITY: 100% pure
+  [34] Src [_choice_content]: _choice_content
+      PURITY: 100% pure
+  [35] Src [_default_completion]: _default_completion
+      PURITY: 100% pure
+  [36] Src [connect]: connect → _connectSSE → apply → cb
+      PURITY: 100% pure
+  [37] Src [payload]: payload → apply → cb
+      PURITY: 100% pure
+  [38] Src [onPatch]: onPatch
+      PURITY: 100% pure
+  [39] Src [dslClean]: dslClean
+      PURITY: 100% pure
+  [40] Src [addMatch]: addMatch
+      PURITY: 100% pure
+  [41] Src [replaceMatch]: replaceMatch
+      PURITY: 100% pure
+  [42] Src [styleMatch]: styleMatch
+      PURITY: 100% pure
+  [43] Src [removeMatch]: removeMatch → cb
+      PURITY: 100% pure
+  [44] Src [html]: html
+      PURITY: 100% pure
+  [45] Src [target]: target
+      PURITY: 100% pure
+  [46] Src [css]: css
+      PURITY: 100% pure
+  [47] Src [styleEl]: styleEl
+      PURITY: 100% pure
+  [48] Src [sendPatchRequest]: sendPatchRequest
+      PURITY: 100% pure
+  [49] Src [on_patch]: on_patch
+      PURITY: 100% pure
+  [50] Src [start]: start
       PURITY: 100% pure
 
 LAYERS:
-  repatch/                        CC̄=5.8    ←in:0  →out:0
-  │ !! marked_context             575L  0C   28m  CC=17     ←3
-  │ !! scope                      506L  0C   17m  CC=29     ←2
-  │ dom_patch                  314L  0C   19m  CC=10     ←0
+  repatch/                        CC̄=5.7    ←in:0  →out:0
+  │ !! marked_context             696L  0C   32m  CC=17     ←3
+  │ !! scope                      647L  0C   22m  CC=29     ←2
+  │ web_preprocess             397L  1C   20m  CC=9      ←0
+  │ dom_patch                  315L  0C   19m  CC=12     ←0
   │ !! ui_patch                   267L  0C   10m  CC=25     ←0
   │ options                    140L  0C    5m  CC=10     ←0
   │ project_ir                 132L  1C    8m  CC=12     ←1
+  │ __init__                   123L  0C    0m  CC=0.0    ←0
   │ spatial                    108L  0C    4m  CC=6      ←1
   │ service                    105L  2C    7m  CC=6      ←0
-  │ css                         70L  0C    4m  CC=14     ←2
+  │ css                         70L  0C    4m  CC=14     ←3
+  │
+  sdks/                           CC̄=2.7    ←in:0  →out:0
+  │ repatch-sdk.js             186L  1C   18m  CC=12     ←1
+  │ repatch_sdk                 73L  1C    7m  CC=7      ←0
   │
   ./                              CC̄=0.0    ←in:0  →out:0
+  │ !! deps.json                 3394L  0C    0m  CC=0.0    ←0
   │ !! goal.yaml                  511L  0C    0m  CC=0.0    ←0
-  │ tree.txt                    77L  0C    0m  CC=0.0    ←0
+  │ wup.yaml                   134L  0C    0m  CC=0.0    ←0
+  │ tree.txt                    88L  0C    0m  CC=0.0    ←0
   │ pyproject.toml              55L  0C    0m  CC=0.0    ←0
   │ project.sh                  50L  0C    0m  CC=0.0    ←0
   │
@@ -86,7 +145,11 @@ LAYERS:
   │ generated-from-pytests.testql.toon.yaml    10L  0C    0m  CC=0.0    ←0
   │
 
-COUPLING: no cross-package imports detected
+COUPLING:
+                   sdks.js  sdks.python
+      sdks.js           ──           ←1
+  sdks.python            1           ──
+  CYCLES: none
 
 EXTERNAL:
   validation: run `vallm batch .` → validation.toon

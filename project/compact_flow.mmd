@@ -2,13 +2,16 @@ flowchart TD
 %% generated in 0.00s
     repatch__css["repatch.css<br/>4 funcs"]
     repatch__dom_patch["repatch.dom_patch<br/>19 funcs"]
-    repatch__marked_context["repatch.marked_context<br/>28 funcs"]
+    repatch__marked_context["repatch.marked_context<br/>32 funcs"]
     repatch__options["repatch.options<br/>5 funcs"]
     repatch__project_ir["repatch.project_ir<br/>8 funcs"]
-    repatch__scope["repatch.scope<br/>17 funcs"]
+    repatch__scope["repatch.scope<br/>22 funcs"]
     repatch__spatial["repatch.spatial<br/>4 funcs"]
     repatch__ui_patch["repatch.ui_patch<br/>10 funcs"]
-    repatch__scope ==>|12| repatch__marked_context
+    repatch__web_preprocess["repatch.web_preprocess<br/>20 funcs"]
+    sdks__js["sdks.js<br/>18 funcs"]
+    sdks__python["sdks.python<br/>7 funcs"]
+    repatch__scope ==>|16| repatch__marked_context
     repatch__ui_patch ==>|5| repatch__scope
     repatch__dom_patch -->|3| repatch__project_ir
     repatch__ui_patch -->|3| repatch__marked_context
@@ -17,3 +20,5 @@ flowchart TD
     repatch__dom_patch -->|1| repatch__marked_context
     repatch__marked_context -->|1| repatch__scope
     repatch__ui_patch -->|1| repatch__css
+    repatch__web_preprocess -->|1| repatch__css
+    sdks__python -->|1| sdks__js

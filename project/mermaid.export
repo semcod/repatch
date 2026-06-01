@@ -25,7 +25,7 @@ flowchart TD
         repatch__dom_patch___patch_function_targets["_patch_function_targets"]
         repatch__dom_patch___default_prepare_html["_default_prepare_html"]
         repatch__dom_patch___default_finalize_html["_default_finalize_html"]
-        repatch__dom_patch__build_function_option_patches("build_function_option_patches CC=10")
+        repatch__dom_patch__build_function_option_patches("build_function_option_patches CC=12")
     end
     subgraph repatch__marked_context
         repatch__marked_context__has_ui_marks("has_ui_marks CC=8")
@@ -35,9 +35,13 @@ flowchart TD
         repatch__marked_context___fragment_class_names["_fragment_class_names"]
         repatch__marked_context___collect_keep_selectors("_collect_keep_selectors CC=11")
         repatch__marked_context__resolve_marked_selectors{{resolve_marked_selectors CC=16}}
-        repatch__marked_context__marked_scope_colors_css["marked_scope_colors_css"]
+        repatch__marked_context__marked_scope_colors_css("marked_scope_colors_css CC=12")
+        repatch__marked_context__marked_scope_display_css["marked_scope_display_css"]
+        repatch__marked_context__marked_scope_shapes_css["marked_scope_shapes_css"]
+        repatch__marked_context__marked_scope_orientation_css("marked_scope_orientation_css CC=8")
         repatch__marked_context__restrict_scope_css_to_marks("restrict_scope_css_to_marks CC=14")
         repatch__marked_context___id_candidates["_id_candidates"]
+        repatch__marked_context___normalize_label_text["_normalize_label_text"]
         repatch__marked_context___parse_attrs["_parse_attrs"]
         repatch__marked_context___logical_id("_logical_id CC=8")
         repatch__marked_context___extract_balanced_html("_extract_balanced_html CC=10")
@@ -75,6 +79,7 @@ flowchart TD
         repatch__project_ir__summarize_project_ir("summarize_project_ir CC=12")
     end
     subgraph repatch__scope
+        repatch__scope__goal_requests_column_layout["goal_requests_column_layout"]
         repatch__scope__ui_type_for_kind("ui_type_for_kind CC=11")
         repatch__scope__allowed_scope_ids["allowed_scope_ids"]
         repatch__scope__default_scope_for_kind["default_scope_for_kind"]
@@ -84,13 +89,17 @@ flowchart TD
         repatch__scope__strip_scope_style["strip_scope_style"]
         repatch__scope___scope_css["_scope_css"]
         repatch__scope___calc_scope_css["_calc_scope_css"]
+        repatch__scope___uses_web_scope_css["_uses_web_scope_css"]
+        repatch__scope___web_display_scope_css["_web_display_scope_css"]
+        repatch__scope___web_shapes_scope_css["_web_shapes_scope_css"]
+        repatch__scope___web_orientation_scope_css["_web_orientation_scope_css"]
         repatch__scope___web_scope_css["_web_scope_css"]
         repatch__scope___resolve_scope_kind("_resolve_scope_kind CC=10")
         repatch__scope__should_block_full_html_iterate["should_block_full_html_iterate"]
         repatch__scope___bind_annotations_to_html{{_bind_annotations_to_html CC=29}}
         repatch__scope___get_scope_css["_get_scope_css"]
         repatch__scope___inject_css_block["_inject_css_block"]
-        repatch__scope__inject_scope_style("inject_scope_style CC=14")
+        repatch__scope__inject_scope_style{{inject_scope_style CC=27}}
         repatch__scope__scoped_html_fragment["scoped_html_fragment"]
     end
     subgraph repatch__service
@@ -120,6 +129,57 @@ flowchart TD
         repatch__ui_patch___css_for["_css_for"]
         repatch__ui_patch__apply_ui_patch_options{{apply_ui_patch_options CC=25}}
     end
+    subgraph repatch__web_preprocess
+        repatch__web_preprocess__safe_read_under["safe_read_under"]
+        repatch__web_preprocess__extract_inline_css["extract_inline_css"]
+        repatch__web_preprocess__extract_stylesheet_hrefs["extract_stylesheet_hrefs"]
+        repatch__web_preprocess__normalize_linked_paths("normalize_linked_paths CC=9")
+        repatch__web_preprocess___rule_is_visual["_rule_is_visual"]
+        repatch__web_preprocess__filter_visual_css["filter_visual_css"]
+        repatch__web_preprocess__extract_visual_css("extract_visual_css CC=8")
+        repatch__web_preprocess___OutlineParser____init__["__init__"]
+        repatch__web_preprocess___OutlineParser___keep_attr["_keep_attr"]
+        repatch__web_preprocess___OutlineParser__handle_starttag("handle_starttag CC=8")
+        repatch__web_preprocess___OutlineParser__handle_endtag["handle_endtag"]
+        repatch__web_preprocess___OutlineParser__handle_data["handle_data"]
+        repatch__web_preprocess__build_html_outline["build_html_outline"]
+        repatch__web_preprocess___script_src_allowed_for_preview["_script_src_allowed_for_preview"]
+        repatch__web_preprocess___should_remove_preview_script["_should_remove_preview_script"]
+        repatch__web_preprocess__sanitize_http_preview_html["sanitize_http_preview_html"]
+        repatch__web_preprocess__inject_http_preview_shim["inject_http_preview_shim"]
+        repatch__web_preprocess__prepare_http_preview_html["prepare_http_preview_html"]
+        repatch__web_preprocess__build_http_llm_context["build_http_llm_context"]
+        repatch__web_preprocess__http_patch_llm_rules["http_patch_llm_rules"]
+    end
+    subgraph sdks__js
+        sdks__js__repatch_sdk__RepatchSDK__connect["connect"]
+        sdks__js__repatch_sdk__RepatchSDK___connectWS["_connectWS"]
+        sdks__js__repatch_sdk__RepatchSDK__payload["payload"]
+        sdks__js__repatch_sdk__RepatchSDK__setTimeout["setTimeout"]
+        sdks__js__repatch_sdk__RepatchSDK___connectSSE["_connectSSE"]
+        sdks__js__repatch_sdk__RepatchSDK__onPatch["onPatch"]
+        sdks__js__repatch_sdk__RepatchSDK__apply("apply CC=12")
+        sdks__js__repatch_sdk__RepatchSDK__dslClean["dslClean"]
+        sdks__js__repatch_sdk__RepatchSDK__addMatch["addMatch"]
+        sdks__js__repatch_sdk__RepatchSDK__replaceMatch["replaceMatch"]
+        sdks__js__repatch_sdk__RepatchSDK__styleMatch["styleMatch"]
+        sdks__js__repatch_sdk__RepatchSDK__removeMatch("removeMatch CC=12")
+        sdks__js__repatch_sdk__RepatchSDK__html["html"]
+        sdks__js__repatch_sdk__RepatchSDK__target["target"]
+        sdks__js__repatch_sdk__RepatchSDK__css["css"]
+        sdks__js__repatch_sdk__RepatchSDK__styleEl["styleEl"]
+        sdks__js__repatch_sdk__RepatchSDK__cb["cb"]
+        sdks__js__repatch_sdk__RepatchSDK__sendPatchRequest["sendPatchRequest"]
+    end
+    subgraph sdks__python
+        sdks__python__repatch_sdk__RepatchClient____init__["__init__"]
+        sdks__python__repatch_sdk__RepatchClient__on_patch["on_patch"]
+        sdks__python__repatch_sdk__RepatchClient__start["start"]
+        sdks__python__repatch_sdk__RepatchClient___run_event_loop["_run_event_loop"]
+        sdks__python__repatch_sdk__RepatchClient___connect_and_listen["_connect_and_listen"]
+        sdks__python__repatch_sdk__RepatchClient___trigger_listeners["_trigger_listeners"]
+        sdks__python__repatch_sdk__RepatchClient__send_patch["send_patch"]
+    end
     repatch__project_ir___ProjectIRParser___classify_node --> repatch__project_ir___clean_text
     repatch__project_ir___ProjectIRParser__handle_endtag --> repatch__project_ir___clean_text
     repatch__project_ir___ProjectIRParser__handle_data --> repatch__project_ir___clean_text
@@ -128,6 +188,10 @@ flowchart TD
     repatch__scope__normalize_focus_scope --> repatch__scope__allowed_scope_ids
     repatch__scope__scope_supports_offline_fast_path --> repatch__scope__normalize_focus_scope
     repatch__scope__scope_supports_offline_fast_path --> repatch__scope__offline_fast_scopes_for_kind
+    repatch__scope___web_orientation_scope_css --> repatch__scope__goal_requests_column_layout
+    repatch__scope___web_scope_css --> repatch__scope___web_shapes_scope_css
+    repatch__scope___web_scope_css --> repatch__scope___web_display_scope_css
+    repatch__scope___web_scope_css --> repatch__scope___web_orientation_scope_css
     repatch__scope__should_block_full_html_iterate --> repatch__marked_context__has_ui_marks
     repatch__scope___bind_annotations_to_html --> repatch__marked_context___parse_attrs
     repatch__scope___bind_annotations_to_html --> repatch__marked_context___logical_id
@@ -143,7 +207,6 @@ flowchart TD
     repatch__scope__inject_scope_style --> repatch__scope___inject_css_block
     repatch__scope__inject_scope_style --> repatch__marked_context__resolve_marked_selectors
     repatch__scope__inject_scope_style --> repatch__marked_context__marked_scope_colors_css
-    repatch__scope__inject_scope_style --> repatch__marked_context__restrict_scope_css_to_marks
     repatch__scope__scoped_html_fragment --> repatch__scope__normalize_focus_scope
     repatch__scope__scoped_html_fragment --> repatch__scope__scope_supports_offline_fast_path
     repatch__dom_patch__build_function_patch_context --> repatch__project_ir__build_project_ir
@@ -178,8 +241,12 @@ flowchart TD
     repatch__marked_context__restrict_scope_css_to_marks --> repatch__css__split_css_rules
     repatch__marked_context__restrict_scope_css_to_marks --> repatch__marked_context__resolve_marked_selectors
     repatch__marked_context__restrict_scope_css_to_marks --> repatch__marked_context__marked_css_selectors
+    repatch__marked_context___id_candidates --> repatch__marked_context___normalize_label_text
+    repatch__marked_context___parse_attrs --> repatch__marked_context___normalize_label_text
+    repatch__marked_context___logical_id --> repatch__marked_context___normalize_label_text
     repatch__marked_context___collect_match_candidates --> repatch__marked_context___logical_id
     repatch__marked_context___collect_match_candidates --> repatch__marked_context___id_candidates
+    repatch__marked_context___collect_button_candidates --> repatch__marked_context___normalize_label_text
     repatch__marked_context___collect_button_candidates --> repatch__marked_context___logical_id
     repatch__marked_context___collect_button_candidates --> repatch__marked_context___id_candidates
     repatch__marked_context___extract_and_format_fragment --> repatch__marked_context___extract_balanced_html
@@ -213,17 +280,38 @@ flowchart TD
     repatch__ui_patch__apply_ui_patch_options --> repatch__scope__normalize_focus_scope
     repatch__ui_patch__apply_ui_patch_options --> repatch__ui_patch___css_for
     repatch__ui_patch__apply_ui_patch_options --> repatch__ui_patch___label_for
+    repatch__options__html_files_distinct --> repatch__options__normalize_html_body
+    repatch__options__sync_option_previews_from_workspace --> repatch__spatial__apply_spatial_deletes_to_html
+    repatch__options__sync_option_previews_from_workspace --> repatch__options__replace_html_title
+    repatch__options__enforce_deletes_on_option_previews --> repatch__spatial__apply_spatial_deletes_to_html
+    repatch__web_preprocess__normalize_linked_paths --> repatch__web_preprocess__extract_stylesheet_hrefs
+    repatch__web_preprocess__filter_visual_css --> repatch__css__split_css_rules
+    repatch__web_preprocess__filter_visual_css --> repatch__web_preprocess___rule_is_visual
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__extract_inline_css
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__normalize_linked_paths
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__filter_visual_css
+    repatch__web_preprocess__extract_visual_css --> repatch__web_preprocess__safe_read_under
+    repatch__web_preprocess___should_remove_preview_script --> repatch__web_preprocess___script_src_allowed_for_preview
+    repatch__web_preprocess__sanitize_http_preview_html --> repatch__web_preprocess___should_remove_preview_script
+    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__sanitize_http_preview_html
+    repatch__web_preprocess__prepare_http_preview_html --> repatch__web_preprocess__inject_http_preview_shim
     repatch__css__validate_css_safety --> repatch__css___strip_css_comments
     repatch__css__validate_css_safety --> repatch__css___selector_is_runtime_only
     repatch__spatial___element_delete_candidates --> repatch__spatial___delete_match_keys
     repatch__spatial__apply_spatial_deletes_to_html --> repatch__spatial___delete_match_keys
     repatch__spatial__apply_spatial_deletes_to_html --> repatch__spatial___element_delete_candidates
-    repatch__options__html_files_distinct --> repatch__options__normalize_html_body
-    repatch__options__sync_option_previews_from_workspace --> repatch__spatial__apply_spatial_deletes_to_html
-    repatch__options__sync_option_previews_from_workspace --> repatch__options__replace_html_title
-    repatch__options__enforce_deletes_on_option_previews --> repatch__spatial__apply_spatial_deletes_to_html
+    sdks__js__repatch_sdk__RepatchSDK__connect --> sdks__js__repatch_sdk__RepatchSDK___connectSSE
+    sdks__js__repatch_sdk__RepatchSDK__connect --> sdks__js__repatch_sdk__RepatchSDK___connectWS
+    sdks__js__repatch_sdk__RepatchSDK___connectWS --> sdks__js__repatch_sdk__RepatchSDK__apply
+    sdks__js__repatch_sdk__RepatchSDK___connectWS --> sdks__js__repatch_sdk__RepatchSDK__setTimeout
+    sdks__js__repatch_sdk__RepatchSDK__payload --> sdks__js__repatch_sdk__RepatchSDK__apply
+    sdks__js__repatch_sdk__RepatchSDK__setTimeout --> sdks__js__repatch_sdk__RepatchSDK___connectSSE
+    sdks__js__repatch_sdk__RepatchSDK___connectSSE --> sdks__js__repatch_sdk__RepatchSDK__apply
+    sdks__js__repatch_sdk__RepatchSDK__apply --> sdks__js__repatch_sdk__RepatchSDK__cb
+    sdks__js__repatch_sdk__RepatchSDK__removeMatch --> sdks__js__repatch_sdk__RepatchSDK__cb
+    sdks__python__repatch_sdk__RepatchClient___trigger_listeners --> sdks__js__repatch_sdk__RepatchSDK__cb
 
     classDef highCC fill:#ff6b6b,stroke:#c92a2a,color:#fff
     classDef medCC fill:#ffd43b,stroke:#f08c00,color:#000
-    class repatch__scope___bind_annotations_to_html,repatch__marked_context__resolve_marked_selectors,repatch__marked_context___find_marked_subtrees,repatch__ui_patch__apply_ui_patch_options highCC
-    class repatch__project_ir___ProjectIRParser___classify_node,repatch__project_ir___ProjectIRParser__handle_endtag,repatch__project_ir__summarize_project_ir,repatch__scope__ui_type_for_kind,repatch__scope___resolve_scope_kind,repatch__scope__inject_scope_style,repatch__dom_patch__build_function_option_patches,repatch__marked_context__has_ui_marks,repatch__marked_context__effective_delete_ids,repatch__marked_context___collect_keep_selectors,repatch__marked_context__restrict_scope_css_to_marks,repatch__marked_context___logical_id,repatch__marked_context___extract_balanced_html,repatch__marked_context___selector_tokens,repatch__marked_context___client_fragment_html,repatch__marked_context___format_context_body,repatch__marked_context__build_marked_element_context,repatch__ui_patch__build_ui_patch_prompt,repatch__ui_patch___safe_css,repatch__css__split_css_rules,repatch__css__validate_css_safety,repatch__options__sync_option_previews_from_workspace,repatch__options__enforce_deletes_on_option_previews medCC
+    class repatch__scope___bind_annotations_to_html,repatch__scope__inject_scope_style,repatch__marked_context__resolve_marked_selectors,repatch__marked_context___find_marked_subtrees,repatch__ui_patch__apply_ui_patch_options highCC
+    class repatch__project_ir___ProjectIRParser___classify_node,repatch__project_ir___ProjectIRParser__handle_endtag,repatch__project_ir__summarize_project_ir,repatch__scope__ui_type_for_kind,repatch__scope___resolve_scope_kind,repatch__dom_patch__build_function_option_patches,repatch__marked_context__has_ui_marks,repatch__marked_context__effective_delete_ids,repatch__marked_context___collect_keep_selectors,repatch__marked_context__marked_scope_colors_css,repatch__marked_context__marked_scope_orientation_css,repatch__marked_context__restrict_scope_css_to_marks,repatch__marked_context___logical_id,repatch__marked_context___extract_balanced_html,repatch__marked_context___selector_tokens,repatch__marked_context___client_fragment_html,repatch__marked_context___format_context_body,repatch__marked_context__build_marked_element_context,repatch__ui_patch__build_ui_patch_prompt,repatch__ui_patch___safe_css,repatch__options__sync_option_previews_from_workspace,repatch__options__enforce_deletes_on_option_previews,repatch__web_preprocess__normalize_linked_paths,repatch__web_preprocess__extract_visual_css,repatch__web_preprocess___OutlineParser__handle_starttag,repatch__css__split_css_rules,repatch__css__validate_css_safety,sdks__js__repatch_sdk__RepatchSDK__apply,sdks__js__repatch_sdk__RepatchSDK__removeMatch medCC

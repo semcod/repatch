@@ -9,6 +9,7 @@ from .marked_context import (
     _TAG_OPEN_RE,
     _id_candidates,
     _logical_id,
+    _normalize_label_text,
     _parse_attrs,
     effective_delete_ids,
     has_ui_marks,
@@ -504,8 +505,7 @@ def _bind_annotations_to_html(
             inner_end = text.lower().find(f"</{tag}>", inner_start)
             if inner_end >= 0:
                 inner_content = text[inner_start:inner_end]
-                label = re.sub(r"<[^>]+>", "", inner_content)
-                label = re.sub(r"\s+", " ", label).strip()
+                label = _normalize_label_text(re.sub(r"<[^>]+>", "", inner_content))
                 logical = _logical_id(tag, attrs, text=label)
                 if logical:
                     hit = wanted & _id_candidates(logical)
