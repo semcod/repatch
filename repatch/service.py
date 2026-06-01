@@ -52,7 +52,9 @@ class RepatchService:
 
         suggestions = [self._parse_choice(choice) for choice in response.choices]
         if len(suggestions) != NUM_SUGGESTIONS:
-            raise ValueError(f"LLM response must contain exactly {NUM_SUGGESTIONS} suggestions.")
+            raise ValueError(
+                f"Expected {NUM_SUGGESTIONS} suggestions but received {len(suggestions)}."
+            )
         return suggestions
 
     def _normalize_scopes(self, scopes: Iterable[str]) -> List[str]:
@@ -78,7 +80,12 @@ class RepatchService:
     @staticmethod
     def _parse_choice(choice: object) -> PatchSuggestion:
         content = RepatchService._choice_content(choice)
-        payload = json.loads(content)
+        try:
+            payload = json.loads(content)
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                f"Invalid JSON in LLM suggestion: {content[:120]}"
+            ) from exc
         return PatchSuggestion(
             keep=list(payload.get("keep", [])),
             change=list(payload.get("change", [])),

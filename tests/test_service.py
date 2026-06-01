@@ -44,6 +44,8 @@ class RepatchServiceTests(unittest.TestCase):
         self.assertEqual(3, captured["n"])
         self.assertEqual({"type": "json_object"}, captured["response_format"])
         self.assertEqual("test-model", captured["model"])
+        self.assertIn("Selected scopes: colors, display", captured["messages"][1]["content"])
+        self.assertIn("<button>Zapisz dziecko</button>", captured["messages"][1]["content"])
         self.assertEqual(["title"], result[0].keep)
 
 
