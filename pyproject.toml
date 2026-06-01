@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "repatch"
-version = "0.2.4"
+version = "0.2.5"
 description = "Scope-based HTML/CSS/DOM patch utilities and LLM patch helpers"
 readme = "README.md"
 requires-python = ">=3.10"
