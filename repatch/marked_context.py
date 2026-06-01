@@ -192,6 +192,68 @@ def marked_scope_colors_css(selectors: list[str], variant: str) -> str:
     return f"{', '.join(selectors)} {{{decl}}}"
 
 
+def marked_scope_orientation_css(selectors: list[str], variant: str) -> str:
+    """Layout CSS for DELETE-marked fragments in #orientation scope.
+
+    Orientation changes need to affect the nearest content container, not only the
+    marked leaf nodes. ``:has()`` lets us target those local parents while keeping
+    the rest of the imported page unchanged.
+    """
+    clean_selectors = [str(sel).strip() for sel in (selectors or []) if str(sel).strip()]
+    if not clean_selectors:
+        return ""
+    v = variant if variant in ("a", "b", "c") else "b"
+    layouts = {
+        "a": "grid-template-columns:minmax(0,1fr)!important;max-width:980px!important;",
+        "b": (
+            "grid-template-columns:repeat(2,minmax(0,1fr))!important;"
+            "max-width:1180px!important;"
+        ),
+        "c": (
+            "grid-template-columns:repeat(auto-fit,minmax(260px,1fr))!important;"
+            "max-width:1240px!important;"
+        ),
+    }
+    parent_bases = (
+        "main",
+        "article",
+        "section",
+        ".entry-content",
+        ".wp-site-blocks",
+        ".wp-block-post-content",
+        ".wp-block-group",
+        ".site-main",
+        ".page",
+        ".content",
+    )
+    parent_selectors: list[str] = []
+    body_selectors: list[str] = []
+    for selector in clean_selectors[:8]:
+        parent_selectors.extend(f"{base}:has({selector})" for base in parent_bases)
+        body_selectors.append(f'body[data-nexu-import-preview="http"]:has({selector})')
+    target_prefix = ", ".join(clean_selectors)
+    parent_prefix = ", ".join(dict.fromkeys(parent_selectors))
+    body_prefix = ", ".join(dict.fromkeys(body_selectors))
+    return (
+        f"{parent_prefix} "
+        "{display:grid!important;"
+        f"{layouts[v]}"
+        "gap:clamp(16px,3vw,32px)!important;"
+        "align-items:start!important;margin-left:auto!important;margin-right:auto!important;}"
+        f"\n{body_prefix} "
+        "{display:grid!important;"
+        f"{layouts[v]}"
+        "gap:clamp(16px,3vw,32px)!important;align-items:start!important;}"
+        f"\n{target_prefix} "
+        "{box-sizing:border-box!important;max-width:100%!important;width:auto!important;"
+        "grid-column:auto!important;align-self:start!important;}"
+        "\n@media (max-width: 760px){"
+        f"{parent_prefix},{body_prefix}"
+        "{grid-template-columns:1fr!important;}"
+        "}"
+    )
+
+
 def restrict_scope_css_to_marks(
     css: str,
     delete_ids: list[str],

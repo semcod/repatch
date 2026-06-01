@@ -69,6 +69,37 @@ VISUAL_REDESIGN_SCOPES = frozenset(
     {"colors", "shapes", "display", "orientation", "keypad"}
 )
 
+_COLUMN_GOAL_RE = re.compile(
+    r"\b("
+    r"kolumn\w*|column\w*|"
+    r"dwie\s+kolumny|two\s+columns?|"
+    r"split|podziel\w*|"
+    r"column\s+layout|two\s+column"
+    r")\b",
+    re.I,
+)
+
+_CONTENT_LAYOUT_SELECTORS = (
+    ".entry-content",
+    ".wp-block-kadence-rowlayout",
+    ".kb-row-layout-wrap",
+    "main",
+    ".site-content",
+    ".content-area",
+    ".kt-row-column-wrap",
+    ".wp-block-columns",
+    ".hero-section",
+    "section.hero",
+)
+
+
+def goal_requests_column_layout(user_goal: str) -> bool:
+    """True when the user goal asks for a multi-column page layout."""
+    text = (user_goal or "").strip()
+    if not text:
+        return False
+    return bool(_COLUMN_GOAL_RE.search(text))
+
 # Project kinds that must not receive full-page LLM regeneration when marks exist.
 MARKED_PATCH_KINDS = frozenset(
     IMPORTED_KINDS
@@ -271,7 +302,44 @@ def _calc_scope_css(scope: str, variant: str) -> str:
     return ""
 
 
-def _web_scope_css(scope: str, variant: str) -> str:
+def _web_orientation_scope_css(variant: str, *, user_goal: str = "") -> str:
+    """WordPress/Kadence-aware layout patches for imported web HTML."""
+    v = variant if variant in ("a", "b", "c") else "b"
+    content = ", ".join(_CONTENT_LAYOUT_SELECTORS)
+    column_goal = goal_requests_column_layout(user_goal)
+    if v == "a":
+        return (
+            f"{content}{{display:flex!important;flex-direction:column!important;"
+            f"gap:12px!important;}}"
+            "body{display:flex!important;flex-direction:column!important;"
+            "gap:12px!important;}"
+        )
+    if v == "b":
+        cols = "1fr 1fr" if column_goal else "minmax(0,1fr) minmax(0,1fr)"
+        return (
+            f"{content}{{display:grid!important;grid-template-columns:{cols}!important;"
+            f"gap:16px!important;align-items:start!important;}}"
+            f"body{{display:grid!important;grid-template-columns:{cols}!important;"
+            f"gap:16px!important;}}"
+        )
+    if column_goal:
+        cols = "1fr 1.2fr"
+        return (
+            f"{content}{{display:grid!important;grid-template-columns:{cols}!important;"
+            f"gap:14px!important;align-items:start!important;}}"
+            f"@media(max-width:768px){{{content}{{grid-template-columns:1fr!important;"
+            f"gap:12px!important;}}}}"
+            "body{display:grid!important;grid-template-columns:1fr 1.2fr!important;"
+            "gap:14px!important;}"
+        )
+    return (
+        "main,section{display:grid!important;"
+        "grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;"
+        "gap:14px!important;}"
+    )
+
+
+def _web_scope_css(scope: str, variant: str, *, user_goal: str = "") -> str:
     """Generic palette / layout patches for imported or arbitrary web HTML."""
     v = variant if variant in ("a", "b", "c") else "b"
     if scope == "colors":
@@ -311,12 +379,7 @@ def _web_scope_css(scope: str, variant: str) -> str:
         }
         return scales[v]
     if scope == "orientation":
-        layouts = {
-            "a": "body{display:flex!important;flex-direction:column!important;gap:12px!important;}",
-            "b": "body{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:16px!important;}",
-            "c": "main,section{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;gap:14px!important;}",
-        }
-        return layouts[v]
+        return _web_orientation_scope_css(v, user_goal=user_goal)
     return ""
 
 
@@ -421,14 +484,21 @@ def _bind_annotations_to_html(
     return "".join(parts)
 
 
-def _get_scope_css(inferred: str, html: str, scope: str, variant: str) -> str:
+def _get_scope_css(
+    inferred: str,
+    html: str,
+    scope: str,
+    variant: str,
+    *,
+    user_goal: str = "",
+) -> str:
     if inferred == "calculator" or (
         inferred not in IMPORTED_KINDS.union(DASHBOARD_KINDS) and "calc-body" in html.lower()
     ):
         return _calc_scope_css(scope, variant)
     if inferred in DASHBOARD_KINDS or "kpi-grid" in html.lower():
         return _scope_css(scope, variant)
-    return _web_scope_css(scope, variant) or _scope_css(scope, variant)
+    return _web_scope_css(scope, variant, user_goal=user_goal) or _scope_css(scope, variant)
 
 
 def _inject_css_block(html: str, css: str) -> str:
@@ -455,6 +525,7 @@ def inject_scope_style(
     project_kind: str = "",
     delete_ids: list[str] | None = None,
     keep_ids: list[str] | None = None,
+    user_goal: str = "",
 ) -> str:
     html = _bind_annotations_to_html(html, keep_ids, delete_ids)
     inferred = _resolve_scope_kind(project_kind, html)
@@ -464,7 +535,7 @@ def inject_scope_style(
     effective_delete = effective_delete_ids(delete_list, keep_list)
     if scope in VISUAL_REDESIGN_SCOPES and keep_list and not effective_delete:
         return strip_scope_style(html)
-    css = _get_scope_css(inferred, html, scope, variant)
+    css = _get_scope_css(inferred, html, scope, variant, user_goal=user_goal)
     cleaned = strip_scope_style(html)
     if scope in VISUAL_REDESIGN_SCOPES and effective_delete:
         selectors = resolve_marked_selectors(
@@ -475,6 +546,10 @@ def inject_scope_style(
         )
         if scope == "colors" and selectors:
             css = marked_scope_colors_css(selectors, variant)
+        elif scope == "orientation":
+            if selectors:
+                prefix = ", ".join(selectors)
+                css += f"\n{prefix}{{display:flex!important;flex-direction:column!important;}}"
         else:
             css = restrict_scope_css_to_marks(
                 css,

@@ -251,3 +251,44 @@ def test_marked_css_selectors_includes_btn_prefix() -> None:
     selectors = marked_css_selectors(["tan"])
     assert "#btn-tan" in selectors
     assert "#tan" in selectors
+
+
+def test_goal_requests_column_layout_detects_polish_and_english() -> None:
+    from repatch import goal_requests_column_layout
+
+    assert goal_requests_column_layout("podziel na dwie kolumny")
+    assert goal_requests_column_layout("split into two columns")
+    assert goal_requests_column_layout("column layout refresh")
+    assert not goal_requests_column_layout("nowoczesny design strony")
+    assert not goal_requests_column_layout("")
+
+
+def test_inject_scope_style_orientation_column_goal_keeps_layout_css() -> None:
+    import re
+
+    html = """<!DOCTYPE html><html><head></head><body>
+<main class="site-content"><div class="entry-content">
+<p>Col1</p><p>Col2</p>
+</div></main>
+<a class="kb-btn2_237106-a1" href="#">Move me</a>
+</body></html>"""
+    patched = inject_scope_style(
+        html,
+        "orientation",
+        "b",
+        project_kind="imported",
+        delete_ids=["Move me"],
+        user_goal="podziel na dwie kolumny",
+    )
+    assert "nexu-scope-variant" in patched
+    style_match = re.search(
+        r'<style id="nexu-scope-variant">\s*(.*?)\s*</style>',
+        patched,
+        flags=re.I | re.S,
+    )
+    assert style_match is not None
+    scope_css = style_match.group(1)
+    assert "grid-template-columns" in scope_css
+    assert "1fr 1fr" in scope_css
+    assert "body{" in scope_css or ".entry-content{" in scope_css
+    assert ".site-content{" in scope_css or "main," in scope_css

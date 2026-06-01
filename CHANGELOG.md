@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.6] - 2026-06-01
+
+### Docs
+- Update README.md
+
+### Test
+- Update tests/test_marked_context.py
+
+### Other
+- Update repatch/__init__.py
+- Update repatch/marked_context.py
+- Update repatch/scope.py
+
 ## [0.2.5] - 2026-06-01
 
 ### Docs
