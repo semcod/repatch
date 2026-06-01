@@ -1,20 +1,22 @@
 % ── Project Metadata ─────────────────────────────────────
-project_metadata('repatch', '0.2.1', 'python').
+project_metadata('repatch', '0.2.2', 'python').
 
 % ── Project Files ────────────────────────────────────────
 project_file('app.doql.less', 22, 'less').
 project_file('project.sh', 50, 'shell').
-project_file('repatch/__init__.py', 88, 'python').
+project_file('repatch/__init__.py', 102, 'python').
 project_file('repatch/css.py', 71, 'python').
 project_file('repatch/dom_patch.py', 315, 'python').
-project_file('repatch/marked_context.py', 520, 'python').
+project_file('repatch/marked_context.py', 576, 'python').
+project_file('repatch/options.py', 141, 'python').
 project_file('repatch/project_ir.py', 133, 'python').
-project_file('repatch/scope.py', 495, 'python').
+project_file('repatch/scope.py', 507, 'python').
 project_file('repatch/service.py', 106, 'python').
 project_file('repatch/spatial.py', 109, 'python').
 project_file('repatch/ui_patch.py', 268, 'python').
 project_file('tests/test_dom_patch.py', 74, 'python').
-project_file('tests/test_marked_context.py', 208, 'python').
+project_file('tests/test_marked_context.py', 254, 'python').
+project_file('tests/test_options.py', 81, 'python').
 project_file('tests/test_service.py', 54, 'python').
 project_file('tests/test_spatial.py', 30, 'python').
 project_file('tests/test_ui_patch.py', 157, 'python').
@@ -48,7 +50,9 @@ python_function('repatch/marked_context.py', 'has_ui_marks', 2, 8, 3).
 python_function('repatch/marked_context.py', 'effective_delete_ids', 2, 9, 6).
 python_function('repatch/marked_context.py', '_css_id_selector', 1, 4, 3).
 python_function('repatch/marked_context.py', 'marked_css_selectors', 1, 6, 5).
-python_function('repatch/marked_context.py', 'resolve_marked_selectors', 2, 14, 13).
+python_function('repatch/marked_context.py', '_fragment_class_names', 1, 5, 7).
+python_function('repatch/marked_context.py', '_collect_keep_selectors', 2, 11, 12).
+python_function('repatch/marked_context.py', 'resolve_marked_selectors', 2, 16, 14).
 python_function('repatch/marked_context.py', 'marked_scope_colors_css', 2, 4, 2).
 python_function('repatch/marked_context.py', 'restrict_scope_css_to_marks', 2, 14, 11).
 python_function('repatch/marked_context.py', '_id_candidates', 1, 4, 6).
@@ -70,6 +74,11 @@ python_function('repatch/marked_context.py', '_get_relevant_css', 3, 2, 6).
 python_function('repatch/marked_context.py', '_format_context_body', 7, 14, 7).
 python_function('repatch/marked_context.py', 'build_marked_element_context', 1, 11, 7).
 python_function('repatch/marked_context.py', 'resolve_marked_llm_context', 1, 5, 2).
+python_function('repatch/options.py', 'replace_html_title', 2, 3, 3).
+python_function('repatch/options.py', 'normalize_html_body', 1, 2, 3).
+python_function('repatch/options.py', 'html_files_distinct', 2, 3, 7).
+python_function('repatch/options.py', 'sync_option_previews_from_workspace', 1, 10, 10).
+python_function('repatch/options.py', 'enforce_deletes_on_option_previews', 2, 9, 12).
 python_function('repatch/project_ir.py', '_clean_text', 1, 2, 3).
 python_function('repatch/project_ir.py', 'build_project_ir', 1, 2, 5).
 python_function('repatch/project_ir.py', 'summarize_project_ir', 1, 12, 7).
@@ -88,7 +97,7 @@ python_function('repatch/scope.py', 'should_block_full_html_iterate', 3, 3, 3).
 python_function('repatch/scope.py', '_bind_annotations_to_html', 3, 29, 18).
 python_function('repatch/scope.py', '_get_scope_css', 4, 7, 5).
 python_function('repatch/scope.py', '_inject_css_block', 2, 5, 4).
-python_function('repatch/scope.py', 'inject_scope_style', 3, 14, 11).
+python_function('repatch/scope.py', 'inject_scope_style', 3, 14, 12).
 python_function('repatch/scope.py', 'scoped_html_fragment', 3, 6, 6).
 python_function('repatch/spatial.py', '_delete_match_keys', 1, 4, 5).
 python_function('repatch/spatial.py', '_selectable_block_attrs', 1, 4, 3).
@@ -118,9 +127,16 @@ python_function('tests/test_marked_context.py', 'test_restrict_scope_css_to_mark
 python_function('tests/test_marked_context.py', 'test_inject_scope_style_skips_global_css_for_keep_only_marks', 0, 2, 1).
 python_function('tests/test_marked_context.py', 'test_inject_scope_style_scopes_css_to_delete_marks', 0, 5, 1).
 python_function('tests/test_marked_context.py', 'test_resolve_marked_selectors_includes_classes', 0, 5, 3).
+python_function('tests/test_marked_context.py', 'test_resolve_marked_selectors_narrow_excludes_keep_and_generic_classes', 0, 6, 1).
+python_function('tests/test_marked_context.py', 'test_inject_scope_style_colors_mixed_keep_delete', 0, 8, 1).
 python_function('tests/test_marked_context.py', 'test_marked_scope_colors_css_differs_by_variant', 0, 4, 1).
 python_function('tests/test_marked_context.py', 'test_should_block_full_html_for_imported_marks', 0, 5, 1).
 python_function('tests/test_marked_context.py', 'test_marked_css_selectors_includes_btn_prefix', 0, 3, 1).
+python_function('tests/test_options.py', 'test_replace_html_title_preserves_body', 0, 3, 1).
+python_function('tests/test_options.py', 'test_sync_option_previews_from_workspace_applies_delete_ids', 1, 6, 4).
+python_function('tests/test_options.py', 'test_sync_option_previews_uses_delete_resolver_only_for_none', 1, 3, 3).
+python_function('tests/test_options.py', 'test_enforce_deletes_on_option_previews', 1, 5, 3).
+python_function('tests/test_options.py', 'test_html_files_distinct_ignores_title', 1, 4, 2).
 python_function('tests/test_spatial.py', 'test_apply_spatial_deletes_removes_dashboard_kpi_card', 0, 4, 1).
 python_function('tests/test_spatial.py', 'test_apply_spatial_deletes_removes_only_marked_buttons', 0, 4, 2).
 python_function('tests/test_ui_patch.py', 'test_build_ui_patch_prompt_is_json_contract', 0, 7, 1).

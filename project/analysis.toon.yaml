@@ -1,16 +1,17 @@
-# code2llm | 13f 2713L | python:9,shell:2,yaml:1,toml:1 | 2026-06-01
-# generated in 0.01s
-# CC̅=5.8 | critical:3/95 | dups:0 | cycles:0
+# code2llm | 15f 2940L | python:9,yaml:3,txt:1,shell:1,toml:1 | 2026-06-01
+# generated in 0.00s
+# CC̅=5.8 | critical:4/102 | dups:0 | cycles:0
 
-HEALTH[3]:
+HEALTH[4]:
   🟡 CC    _bind_annotations_to_html CC=29 (limit:15)
+  🟡 CC    resolve_marked_selectors CC=16 (limit:15)
   🟡 CC    _find_marked_subtrees CC=17 (limit:15)
   🟡 CC    apply_ui_patch_options CC=25 (limit:15)
 
 REFACTOR[1]:
-  1. split 3 high-CC methods  (CC>15)
+  1. split 4 high-CC methods  (CC>15)
 
-PIPELINES[23]:
+PIPELINES[25]:
   [1] Src [__init__]: __init__
       PURITY: 100% pure
   [2] Src [handle_starttag]: handle_starttag
@@ -43,38 +44,46 @@ PIPELINES[23]:
       PURITY: 100% pure
   [16] Src [apply_ui_patch_options]: apply_ui_patch_options → strip_scope_style
       PURITY: 100% pure
-  [17] Src [apply_spatial_deletes_to_html]: apply_spatial_deletes_to_html → _delete_match_keys
+  [17] Src [generate_patch_suggestions]: generate_patch_suggestions
       PURITY: 100% pure
-  [18] Src [generate_patch_suggestions]: generate_patch_suggestions
+  [18] Src [_normalize_scopes]: _normalize_scopes
       PURITY: 100% pure
-  [19] Src [_normalize_scopes]: _normalize_scopes
+  [19] Src [_build_user_prompt]: _build_user_prompt
       PURITY: 100% pure
-  [20] Src [_build_user_prompt]: _build_user_prompt
+  [20] Src [_parse_choice]: _parse_choice
       PURITY: 100% pure
-  [21] Src [_parse_choice]: _parse_choice
+  [21] Src [_choice_content]: _choice_content
       PURITY: 100% pure
-  [22] Src [_choice_content]: _choice_content
+  [22] Src [_default_completion]: _default_completion
       PURITY: 100% pure
-  [23] Src [_default_completion]: _default_completion
+  [23] Src [html_files_distinct]: html_files_distinct → normalize_html_body
+      PURITY: 100% pure
+  [24] Src [sync_option_previews_from_workspace]: sync_option_previews_from_workspace → apply_spatial_deletes_to_html → _delete_match_keys
+      PURITY: 100% pure
+  [25] Src [enforce_deletes_on_option_previews]: enforce_deletes_on_option_previews → apply_spatial_deletes_to_html → _delete_match_keys
       PURITY: 100% pure
 
 LAYERS:
   repatch/                        CC̄=5.8    ←in:0  →out:0
-  │ !! marked_context             519L  0C   26m  CC=17     ←3
-  │ !! scope                      494L  0C   17m  CC=29     ←2
+  │ !! marked_context             575L  0C   28m  CC=17     ←3
+  │ !! scope                      506L  0C   17m  CC=29     ←2
   │ dom_patch                  314L  0C   19m  CC=10     ←0
   │ !! ui_patch                   267L  0C   10m  CC=25     ←0
+  │ options                    140L  0C    5m  CC=10     ←0
   │ project_ir                 132L  1C    8m  CC=12     ←1
-  │ spatial                    108L  0C    4m  CC=6      ←0
+  │ spatial                    108L  0C    4m  CC=6      ←1
   │ service                    105L  2C    7m  CC=6      ←0
-  │ __init__                    87L  0C    0m  CC=0.0    ←0
   │ css                         70L  0C    4m  CC=14     ←2
   │
   ./                              CC̄=0.0    ←in:0  →out:0
   │ !! goal.yaml                  511L  0C    0m  CC=0.0    ←0
+  │ tree.txt                    77L  0C    0m  CC=0.0    ←0
   │ pyproject.toml              55L  0C    0m  CC=0.0    ←0
   │ project.sh                  50L  0C    0m  CC=0.0    ←0
-  │ tree.sh                      1L  0C    0m  CC=0.0    ←0
+  │
+  testql-scenarios/               CC̄=0.0    ←in:0  →out:0
+  │ generated-cli-tests.testql.toon.yaml    20L  0C    0m  CC=0.0    ←0
+  │ generated-from-pytests.testql.toon.yaml    10L  0C    0m  CC=0.0    ←0
   │
 
 COUPLING: no cross-package imports detected

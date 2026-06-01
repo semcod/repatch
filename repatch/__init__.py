@@ -18,6 +18,14 @@ from .marked_context import (
     resolve_marked_selectors,
     restrict_scope_css_to_marks,
 )
+from .options import (
+    OPTION_PREVIEW_FILES,
+    enforce_deletes_on_option_previews,
+    html_files_distinct,
+    normalize_html_body,
+    replace_html_title,
+    sync_option_previews_from_workspace,
+)
 from .project_ir import build_project_ir, summarize_project_ir
 from .scope import (
     DASHBOARD_KINDS,
@@ -49,6 +57,7 @@ __all__ = [
     "DASHBOARD_KINDS",
     "IMPORTED_KINDS",
     "MARKED_PATCH_KINDS",
+    "OPTION_PREVIEW_FILES",
     "PatchSuggestion",
     "RepatchService",
     "SCOPE_STYLE_ID",
@@ -64,13 +73,17 @@ __all__ = [
     "build_ui_patch_prompt",
     "default_scope_for_kind",
     "effective_delete_ids",
+    "enforce_deletes_on_option_previews",
     "has_ui_marks",
+    "html_files_distinct",
     "inject_scope_style",
     "marked_css_selectors",
     "marked_scope_colors_css",
+    "normalize_html_body",
     "normalize_focus_scope",
     "offline_fast_scopes_for_kind",
     "parse_ui_patch_response",
+    "replace_html_title",
     "resolve_marked_llm_context",
     "resolve_marked_selectors",
     "restrict_scope_css_to_marks",
@@ -82,6 +95,7 @@ __all__ = [
     "summarize_project_ir",
     "supports_function_patch",
     "supports_llm_patch_scope",
+    "sync_option_previews_from_workspace",
     "ui_type_for_kind",
     "validate_css_safety",
 ]

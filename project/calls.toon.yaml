@@ -1,49 +1,49 @@
 # code2llm call graph | /home/tom/github/semcod/repatch
-# generated in 0.04s
-# nodes: 76 | edges: 82 | modules: 7
+# generated in 0.03s
+# nodes: 82 | edges: 89 | modules: 8
 # CC̄=5.8
 
 HUBS[20]:
   repatch.scope._bind_annotations_to_html
     CC=29  in:1  out:45  total:46
+  repatch.spatial.apply_spatial_deletes_to_html
+    CC=4  in:2  out:29  total:31
   repatch.ui_patch.apply_ui_patch_options
     CC=25  in:0  out:31  total:31
-  repatch.spatial.apply_spatial_deletes_to_html
-    CC=4  in:0  out:29  total:29
-  repatch.marked_context.resolve_marked_selectors
-    CC=14  in:3  out:24  total:27
   repatch.css.validate_css_safety
     CC=14  in:1  out:26  total:27
+  repatch.marked_context._find_marked_subtrees
+    CC=17  in:3  out:23  total:26
+  repatch.marked_context.resolve_marked_selectors
+    CC=16  in:3  out:23  total:26
   repatch.dom_patch._patch_function_targets
     CC=6  in:1  out:24  total:25
-  repatch.marked_context._find_marked_subtrees
-    CC=17  in:2  out:23  total:25
   repatch.project_ir.summarize_project_ir
     CC=12  in:1  out:21  total:22
   repatch.marked_context._id_candidates
     CC=4  in:10  out:11  total:21
+  repatch.marked_context._collect_keep_selectors
+    CC=11  in:1  out:19  total:20
   repatch.marked_context.restrict_scope_css_to_marks
     CC=14  in:2  out:17  total:19
+  repatch.scope.inject_scope_style
+    CC=14  in:0  out:19  total:19
   repatch.marked_context._extract_balanced_html
     CC=10  in:1  out:18  total:19
-  repatch.scope.inject_scope_style
-    CC=14  in:0  out:18  total:18
+  repatch.options.sync_option_previews_from_workspace
+    CC=10  in:0  out:17  total:17
   repatch.marked_context._format_context_body
     CC=14  in:1  out:15  total:16
   repatch.marked_context._selector_tokens
     CC=9  in:1  out:14  total:15
-  repatch.marked_context._logical_id
-    CC=8  in:4  out:10  total:14
   repatch.marked_context.build_marked_element_context
     CC=11  in:1  out:13  total:14
   repatch.dom_patch.build_function_option_patches
     CC=10  in:0  out:14  total:14
-  repatch.spatial._delete_match_keys
-    CC=4  in:2  out:11  total:13
-  repatch.ui_patch._safe_css
-    CC=9  in:2  out:11  total:13
-  repatch.marked_context._collect_match_candidates
-    CC=6  in:1  out:11  total:12
+  repatch.marked_context._logical_id
+    CC=8  in:4  out:10  total:14
+  repatch.options.enforce_deletes_on_option_previews
+    CC=9  in:0  out:14  total:14
 
 MODULES:
   repatch.css  [4 funcs]
@@ -62,17 +62,22 @@ MODULES:
     _strip_tags  CC=2  out:3
     _target_candidates  CC=4  out:9
     _variant_section  CC=3  out:11
-  repatch.marked_context  [24 funcs]
+  repatch.marked_context  [26 funcs]
     _assemble_marked_subtrees  CC=4  out:3
     _cap_text  CC=2  out:4
     _client_fragment_html  CC=9  out:10
     _collect_button_candidates  CC=3  out:8
     _collect_css_sources  CC=7  out:10
+    _collect_keep_selectors  CC=11  out:19
     _collect_match_candidates  CC=6  out:11
     _css_id_selector  CC=4  out:3
     _extract_and_format_fragment  CC=3  out:6
     _extract_balanced_html  CC=10  out:18
-    _filter_css_for_tokens  CC=6  out:7
+  repatch.options  [4 funcs]
+    enforce_deletes_on_option_previews  CC=9  out:14
+    html_files_distinct  CC=3  out:7
+    normalize_html_body  CC=2  out:3
+    sync_option_previews_from_workspace  CC=10  out:17
   repatch.project_ir  [6 funcs]
     _classify_node  CC=12  out:10
     handle_data  CC=4  out:2
@@ -90,7 +95,7 @@ MODULES:
     _web_scope_css  CC=6  out:0
     allowed_scope_ids  CC=2  out:3
     default_scope_for_kind  CC=3  out:4
-    inject_scope_style  CC=14  out:18
+    inject_scope_style  CC=14  out:19
   repatch.spatial  [3 funcs]
     _delete_match_keys  CC=4  out:11
     _element_delete_candidates  CC=6  out:8
@@ -122,10 +127,10 @@ EDGES:
   repatch.scope.inject_scope_style → repatch.scope._bind_annotations_to_html
   repatch.scope.inject_scope_style → repatch.scope._resolve_scope_kind
   repatch.scope.inject_scope_style → repatch.scope.normalize_focus_scope
+  repatch.scope.inject_scope_style → repatch.marked_context.effective_delete_ids
   repatch.scope.inject_scope_style → repatch.scope._get_scope_css
   repatch.scope.inject_scope_style → repatch.scope.strip_scope_style
   repatch.scope.inject_scope_style → repatch.scope._inject_css_block
-  repatch.scope.inject_scope_style → repatch.marked_context.resolve_marked_selectors
   repatch.scope.scoped_html_fragment → repatch.scope.normalize_focus_scope
   repatch.scope.scoped_html_fragment → repatch.scope.scope_supports_offline_fast_path
   repatch.dom_patch.build_function_patch_context → repatch.project_ir.build_project_ir
@@ -146,14 +151,14 @@ EDGES:
   repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_body
   repatch.marked_context.marked_css_selectors → repatch.marked_context._id_candidates
   repatch.marked_context.marked_css_selectors → repatch.marked_context._css_id_selector
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._fragment_class_names
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context.marked_css_selectors
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._find_marked_subtrees
   repatch.marked_context.resolve_marked_selectors → repatch.marked_context._find_marked_subtrees
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._collect_keep_selectors
   repatch.marked_context.resolve_marked_selectors → repatch.marked_context.marked_css_selectors
   repatch.marked_context.restrict_scope_css_to_marks → repatch.css.split_css_rules
   repatch.marked_context.restrict_scope_css_to_marks → repatch.marked_context.resolve_marked_selectors
   repatch.marked_context.restrict_scope_css_to_marks → repatch.marked_context.marked_css_selectors
   repatch.marked_context._collect_match_candidates → repatch.marked_context._logical_id
   repatch.marked_context._collect_match_candidates → repatch.marked_context._id_candidates
-  repatch.marked_context._collect_button_candidates → repatch.marked_context._logical_id
-  repatch.marked_context._collect_button_candidates → repatch.marked_context._id_candidates
-  repatch.marked_context._extract_and_format_fragment → repatch.marked_context._extract_balanced_html
-  repatch.marked_context._find_marked_subtrees → repatch.marked_context._parse_attrs

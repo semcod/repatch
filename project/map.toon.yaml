@@ -1,23 +1,25 @@
-# repatch | 17f 2702L | python:14,shell:2,less:1 | 2026-06-01
-# stats: 109 func | 4 cls | 17 mod | CC̄=5.7 | critical:14 | cycles:0
-# alerts[5]: CC _bind_annotations_to_html=29; CC apply_ui_patch_options=25; CC _find_marked_subtrees=17; CC validate_css_safety=14; CC resolve_marked_selectors=14
-# hotspots[5]: apply_ui_patch_options fan=19; _patch_function_targets fan=18; _bind_annotations_to_html fan=18; validate_css_safety fan=15; build_function_option_patches fan=13
+# repatch | 19f 3052L | python:16,shell:2,less:1 | 2026-06-01
+# stats: 123 func | 4 cls | 19 mod | CC̄=5.7 | critical:16 | cycles:0
+# alerts[5]: CC _bind_annotations_to_html=29; CC apply_ui_patch_options=25; CC _find_marked_subtrees=17; CC resolve_marked_selectors=16; CC validate_css_safety=14
+# hotspots[5]: apply_ui_patch_options fan=19; _patch_function_targets fan=18; _bind_annotations_to_html fan=18; validate_css_safety fan=15; resolve_marked_selectors fan=14
 # evolution: baseline
 # Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
-M[17]:
+M[19]:
   app.doql.less,22
   project.sh,50
-  repatch/__init__.py,88
+  repatch/__init__.py,102
   repatch/css.py,71
   repatch/dom_patch.py,315
-  repatch/marked_context.py,520
+  repatch/marked_context.py,576
+  repatch/options.py,141
   repatch/project_ir.py,133
-  repatch/scope.py,495
+  repatch/scope.py,507
   repatch/service.py,106
   repatch/spatial.py,109
   repatch/ui_patch.py,268
   tests/test_dom_patch.py,74
-  tests/test_marked_context.py,208
+  tests/test_marked_context.py,254
+  tests/test_options.py,81
   tests/test_service.py,54
   tests/test_spatial.py,30
   tests/test_ui_patch.py,157
@@ -52,11 +54,13 @@ D:
     _default_finalize_html(html)
     build_function_option_patches(html_text)
   repatch/marked_context.py:
-    e: has_ui_marks,effective_delete_ids,_css_id_selector,marked_css_selectors,resolve_marked_selectors,marked_scope_colors_css,restrict_scope_css_to_marks,_id_candidates,_parse_attrs,_logical_id,_extract_balanced_html,_collect_match_candidates,_collect_button_candidates,_extract_and_format_fragment,_find_marked_subtrees,_selector_tokens,_filter_css_for_tokens,_collect_css_sources,_scope_semantics,_cap_text,_client_fragment_html,_assemble_marked_subtrees,_get_relevant_css,_format_context_body,build_marked_element_context,resolve_marked_llm_context
+    e: has_ui_marks,effective_delete_ids,_css_id_selector,marked_css_selectors,_fragment_class_names,_collect_keep_selectors,resolve_marked_selectors,marked_scope_colors_css,restrict_scope_css_to_marks,_id_candidates,_parse_attrs,_logical_id,_extract_balanced_html,_collect_match_candidates,_collect_button_candidates,_extract_and_format_fragment,_find_marked_subtrees,_selector_tokens,_filter_css_for_tokens,_collect_css_sources,_scope_semantics,_cap_text,_client_fragment_html,_assemble_marked_subtrees,_get_relevant_css,_format_context_body,build_marked_element_context,resolve_marked_llm_context
     has_ui_marks(keep_els;delete_els)
     effective_delete_ids(delete_els;keep_els)
     _css_id_selector(token)
     marked_css_selectors(element_ids)
+    _fragment_class_names(fragment)
+    _collect_keep_selectors(html;keep_ids)
     resolve_marked_selectors(html;element_ids)
     marked_scope_colors_css(selectors;variant)
     restrict_scope_css_to_marks(css;delete_ids)
@@ -79,6 +83,13 @@ D:
     _format_context_body(keep;delete;marked_ids;subtrees;css;scope;ui_profile)
     build_marked_element_context(html)
     resolve_marked_llm_context(html)
+  repatch/options.py:
+    e: replace_html_title,normalize_html_body,html_files_distinct,sync_option_previews_from_workspace,enforce_deletes_on_option_previews
+    replace_html_title(html;title)
+    normalize_html_body(html)
+    html_files_distinct(base_dir;names)
+    sync_option_previews_from_workspace(cinema_dir)
+    enforce_deletes_on_option_previews(cinema_dir;delete_ids)
   repatch/project_ir.py:
     e: _clean_text,build_project_ir,summarize_project_ir,_ProjectIRParser
     _ProjectIRParser: __init__(0),handle_starttag(2),_classify_node(4),handle_endtag(1),handle_data(1)
@@ -133,7 +144,7 @@ D:
     test_function_patch_context_is_compact_ir()
     test_supports_function_patch_only_for_web_like_projects()
   tests/test_marked_context.py:
-    e: test_build_marked_element_context_extracts_subtree_and_css,test_build_marked_element_context_uses_client_fragment_fallback,test_build_marked_element_context_returns_none_without_marks,test_build_marked_element_context_patch_mode_note,test_ui_patch_prompt_uses_marked_context_fragment,test_has_ui_marks,test_restrict_scope_css_to_marks_targets_delete_only,test_inject_scope_style_skips_global_css_for_keep_only_marks,test_inject_scope_style_scopes_css_to_delete_marks,test_resolve_marked_selectors_includes_classes,test_marked_scope_colors_css_differs_by_variant,test_should_block_full_html_for_imported_marks,test_marked_css_selectors_includes_btn_prefix
+    e: test_build_marked_element_context_extracts_subtree_and_css,test_build_marked_element_context_uses_client_fragment_fallback,test_build_marked_element_context_returns_none_without_marks,test_build_marked_element_context_patch_mode_note,test_ui_patch_prompt_uses_marked_context_fragment,test_has_ui_marks,test_restrict_scope_css_to_marks_targets_delete_only,test_inject_scope_style_skips_global_css_for_keep_only_marks,test_inject_scope_style_scopes_css_to_delete_marks,test_resolve_marked_selectors_includes_classes,test_resolve_marked_selectors_narrow_excludes_keep_and_generic_classes,test_inject_scope_style_colors_mixed_keep_delete,test_marked_scope_colors_css_differs_by_variant,test_should_block_full_html_for_imported_marks,test_marked_css_selectors_includes_btn_prefix
     test_build_marked_element_context_extracts_subtree_and_css()
     test_build_marked_element_context_uses_client_fragment_fallback()
     test_build_marked_element_context_returns_none_without_marks()
@@ -144,9 +155,18 @@ D:
     test_inject_scope_style_skips_global_css_for_keep_only_marks()
     test_inject_scope_style_scopes_css_to_delete_marks()
     test_resolve_marked_selectors_includes_classes()
+    test_resolve_marked_selectors_narrow_excludes_keep_and_generic_classes()
+    test_inject_scope_style_colors_mixed_keep_delete()
     test_marked_scope_colors_css_differs_by_variant()
     test_should_block_full_html_for_imported_marks()
     test_marked_css_selectors_includes_btn_prefix()
+  tests/test_options.py:
+    e: test_replace_html_title_preserves_body,test_sync_option_previews_from_workspace_applies_delete_ids,test_sync_option_previews_uses_delete_resolver_only_for_none,test_enforce_deletes_on_option_previews,test_html_files_distinct_ignores_title
+    test_replace_html_title_preserves_body()
+    test_sync_option_previews_from_workspace_applies_delete_ids(tmp_path)
+    test_sync_option_previews_uses_delete_resolver_only_for_none(tmp_path)
+    test_enforce_deletes_on_option_previews(tmp_path)
+    test_html_files_distinct_ignores_title(tmp_path)
   tests/test_service.py:
     e: RepatchServiceTests
     RepatchServiceTests: test_rejects_invalid_scope(0),test_returns_three_variants_from_completion(0)

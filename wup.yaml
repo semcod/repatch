@@ -1,0 +1,134 @@
+# WUP (What's Up) Configuration
+# Version: 0.2.64
+# Generated: 2026-06-01T11:23:40.263115
+#
+# Documentation:
+#   PyPI: https://pypi.org/project/wup/
+#   GitHub: https://github.com/semcod/wup
+#   Docs: https://github.com/semcod/wup/blob/main/README.md
+#
+# Dependencies:
+#   wup==0.2.64
+#   wupbro (optional dashboard): pip install wupbro
+#
+# Quick Start:
+#   1. wup watch .                    # TestQL + live probes every 60s
+#   2. wup watch . --dashboard        # With live dashboard
+#   3. wup map-deps .                 # Build dependency map
+#
+project:
+  name: repatch
+  description: Auto-generated config for repatch
+watch:
+  paths:
+  - app/**
+  - src/**
+  - routes/**
+  exclude_patterns:
+  - '*.md'
+  - '*.txt'
+  - tests/**
+  - node_modules/**
+services: []
+test_strategy:
+  quick:
+    debounce_s: 2
+    max_queue: 5
+    timeout_s: 10
+  detail:
+    debounce_s: 10
+    max_queue: 1
+    timeout_s: 30
+testql:
+  scenario_dir: scenarios/tests
+  smoke_scenario: smoke.testql.toon.yaml
+  output_format: json
+  extra_args:
+  - --timeout
+  - '10'
+  endpoint_discovery: true
+  probe_interval_s: 0
+  health_scenario: ''
+  health_scenario_strict: false
+  service_map_globs: []
+  base_url: ''
+  api_base_url: ''
+  base_url_env: WUP_BASE_URL
+  service_base_urls: {}
+  explicit_endpoints: []
+  endpoints_by_service: {}
+  hardware_usb_modules: {}
+visual_diff:
+  enabled: false
+  base_url: ''
+  base_url_env: WUP_BASE_URL
+  delay_seconds: 5.0
+  max_depth: 10
+  snapshot_dir: .wup/visual-snapshots
+  diff_dir: .wup/visual-diffs
+  pages: []
+  pages_from_endpoints: true
+  max_pages: 5
+  threshold_added: 3
+  threshold_removed: 3
+  threshold_changed: 5
+  min_text_length: 200
+  min_dom_nodes: 20
+  error_selectors:
+  - '#error-container'
+  - .error-container
+  - '[data-testid=''error-container'']'
+  - '[class*=''error''][class*=''container'']'
+  headless: true
+# wupbro dashboard integration - optional web UI for viewing events
+# Install: pip install wupbro
+# Run: wupbro --reload --port 8000
+# Docs: https://github.com/semcod/wup/tree/main/wupbro
+web:
+  enabled: false
+  endpoint: ''
+  endpoint_env: WUPBRO_ENDPOINT
+  timeout_s: 2.0
+  api_key: ''
+planfile:
+  enabled: false
+  command: planfile
+  sprint: current
+  priority: normal
+  source: wup
+  dedupe_file: .wup/planfile-tickets.json
+  labels:
+  - koru
+  - llm-ready
+  - wup
+  - auto-diag
+semcod_tools:
+  enabled: false
+  tools: {}
+
+# BEGIN WUP MONITORING MANIFEST (auto-generated — do not edit; run: wup sync-testql --write)
+monitoring:
+  generated_at: '2026-06-01T09:23:40Z'
+  generated_by: wup sync-testql --write (or wup watch startup)
+  how_to_refresh: wup sync-testql . --write
+  probe_interval_s: 60
+  health_scenario: ''
+  base_url: (set testql.base_url or WUP_BASE_URL)
+  endpoint_discovery: true
+  scenario_dir: scenarios/tests
+  service_map_globs: []
+  docker_compose_files: []
+  semcod_tools:
+    enabled: false
+    tools: {}
+  wup_services: {}
+  docker_not_mapped_to_wup: []
+  troubleshooting:
+    probe_failed_check:
+    - Czy kontener z sekcji docker jest uruchomiony (docker ps)?
+    - Czy host_ports mapuje na URL w live_probes (np. 8100 vs 8202)?
+    - Czy błąd dotyczy proxy frontendu (/firmware na :8100) vs bezpośredniego :8202?
+    - 'Czy endpoint jest w live_probes — jeśli nie, uruchom: wup sync-testql . --write'
+    config_vs_runtime: Pole live_probes to faktyczne żądania HTTP WUP. Jeśli endpointu
+      tu nie ma, WUP go nie sprawdza — to błąd konfiguracji, nie aplikacji.
+# END WUP MONITORING MANIFEST

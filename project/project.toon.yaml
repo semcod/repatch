@@ -1,50 +1,54 @@
-# repatch | 95 func | 8f | 2713L | python | 2026-06-01
+# repatch | 102 func | 9f | 2940L | python | 2026-06-01
 # generated in 0.00s
 
 HEALTH:
-  CC̄=5.8  critical=15 (limit:10)  dup=0  cycles=0
+  CC̄=5.8  critical=17 (limit:10)  dup=0  cycles=0
 
-ALERTS[15]:
+ALERTS[19]:
   !!! cc_exceeded      _bind_annotations_to_html = 29 (limit:15)
   !!! cc_exceeded      apply_ui_patch_options = 25 (limit:15)
   !!! high_fan_out     apply_ui_patch_options = 21 (limit:10)
   !!! high_fan_out     _bind_annotations_to_html = 20 (limit:10)
   !!  high_fan_out     _patch_function_targets = 18 (limit:10)
   !!  high_fan_out     validate_css_safety = 18 (limit:10)
+  !!  high_fan_out     sync_option_previews_from_workspace = 16 (limit:10)
+  !!  high_fan_out     resolve_marked_selectors = 15 (limit:10)
   !!  high_fan_out     _extract_balanced_html = 15 (limit:10)
   !!  high_fan_out     apply_spatial_deletes_to_html = 15 (limit:10)
-  !   cc_exceeded      _find_marked_subtrees = 17 (limit:15)
-  !   high_fan_out     resolve_marked_selectors = 14 (limit:10)
 
-MODULES[13] (top by size):
-  M[repatch/marked_context.py] 519L C:0 F:26 CC↑17 D:3 (python)
+MODULES[15] (top by size):
+  M[repatch/marked_context.py] 575L C:0 F:28 CC↑17 D:3 (python)
   M[goal.yaml] 511L C:0 F:0 CC↑0 D:0 (yaml)
-  M[repatch/scope.py] 494L C:0 F:17 CC↑29 D:2 (python)
+  M[repatch/scope.py] 506L C:0 F:17 CC↑29 D:2 (python)
   M[repatch/dom_patch.py] 314L C:0 F:19 CC↑10 D:0 (python)
   M[repatch/ui_patch.py] 267L C:0 F:10 CC↑25 D:0 (python)
+  M[repatch/options.py] 140L C:0 F:5 CC↑10 D:0 (python)
   M[repatch/project_ir.py] 132L C:1 F:8 CC↑12 D:1 (python)
-  M[repatch/spatial.py] 108L C:0 F:4 CC↑6 D:0 (python)
+  M[repatch/spatial.py] 108L C:0 F:4 CC↑6 D:1 (python)
   M[repatch/service.py] 105L C:2 F:7 CC↑6 D:0 (python)
-  M[repatch/__init__.py] 87L C:0 F:0 CC↑0 D:0 (python)
+  M[tree.txt] 77L C:0 F:0 CC↑0 D:0 (txt)
   M[repatch/css.py] 70L C:0 F:4 CC↑14 D:2 (python)
   M[pyproject.toml] 55L C:0 F:0 CC↑0 D:0 (toml)
   M[project.sh] 50L C:0 F:0 CC↑0 D:0 (shell)
-  M[tree.sh] 1L C:0 F:0 CC↑0 D:0 (shell)
-  LANGS: python:9/shell:2/yaml:1/toml:1
+  M[testql-scenarios/generated-cli-tests.testql.toon.yaml] 20L C:0 F:0 CC↑0 D:0 (yaml)
+  M[testql-scenarios/generated-from-pytests.testql.toon.yaml] 10L C:0 F:0 CC↑0 D:0 (yaml)
+  LANGS: python:9/yaml:3/shell:1/toml:1/txt:1
 
 HOTSPOTS[10]:
   ★ apply_ui_patch_options fan=21  // Apply validated CSS patches to one baseline HTML document.
   ★ _bind_annotations_to_html fan=20  // Orchestrates 20 calls
   ★ _patch_function_targets fan=18  // Orchestrates 18 calls
   ★ validate_css_safety fan=18  // Reject CSS patterns that commonly break HTML/CSS patch previews.
-  ★ _extract_balanced_html fan=15  // Return outerHTML starting at ``start`` and the index after it.
+  ★ sync_option_previews_from_workspace fan=16  // Refresh Options A-C from the active workspace HTML.
 
-REFACTOR[8]:
+``delete_ids=None`` means r
+
+REFACTOR[10]:
   [1] H/L Split _bind_annotations_to_html (CC=29)
   [2] H/L Split apply_ui_patch_options (CC=25)
-  [3] H/H Split god module repatch/marked_context.py (519L, 0 classes)
-  [4] H/H Split god module goal.yaml (511L, 0 classes)
-  [5] M/L Split _find_marked_subtrees (CC=17)
+  [3] H/H Split god module repatch/scope.py (506L, 0 classes)
+  [4] H/H Split god module repatch/marked_context.py (575L, 0 classes)
+  [5] H/H Split god module goal.yaml (511L, 0 classes)
 
 EVOLUTION:
-  2026-06-01 CC̄=5.8 crit=15 2713L // Automated analysis
+  2026-06-01 CC̄=5.8 crit=17 2940L // Automated analysis

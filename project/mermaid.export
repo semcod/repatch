@@ -32,7 +32,9 @@ flowchart TD
         repatch__marked_context__effective_delete_ids("effective_delete_ids CC=9")
         repatch__marked_context___css_id_selector["_css_id_selector"]
         repatch__marked_context__marked_css_selectors["marked_css_selectors"]
-        repatch__marked_context__resolve_marked_selectors("resolve_marked_selectors CC=14")
+        repatch__marked_context___fragment_class_names["_fragment_class_names"]
+        repatch__marked_context___collect_keep_selectors("_collect_keep_selectors CC=11")
+        repatch__marked_context__resolve_marked_selectors{{resolve_marked_selectors CC=16}}
         repatch__marked_context__marked_scope_colors_css["marked_scope_colors_css"]
         repatch__marked_context__restrict_scope_css_to_marks("restrict_scope_css_to_marks CC=14")
         repatch__marked_context___id_candidates["_id_candidates"]
@@ -54,6 +56,13 @@ flowchart TD
         repatch__marked_context___format_context_body("_format_context_body CC=14")
         repatch__marked_context__build_marked_element_context("build_marked_element_context CC=11")
         repatch__marked_context__resolve_marked_llm_context["resolve_marked_llm_context"]
+    end
+    subgraph repatch__options
+        repatch__options__replace_html_title["replace_html_title"]
+        repatch__options__normalize_html_body["normalize_html_body"]
+        repatch__options__html_files_distinct["html_files_distinct"]
+        repatch__options__sync_option_previews_from_workspace("sync_option_previews_from_workspace CC=10")
+        repatch__options__enforce_deletes_on_option_previews("enforce_deletes_on_option_previews CC=9")
     end
     subgraph repatch__project_ir
         repatch__project_ir___ProjectIRParser____init__["__init__"]
@@ -128,6 +137,7 @@ flowchart TD
     repatch__scope__inject_scope_style --> repatch__scope___bind_annotations_to_html
     repatch__scope__inject_scope_style --> repatch__scope___resolve_scope_kind
     repatch__scope__inject_scope_style --> repatch__scope__normalize_focus_scope
+    repatch__scope__inject_scope_style --> repatch__marked_context__effective_delete_ids
     repatch__scope__inject_scope_style --> repatch__scope___get_scope_css
     repatch__scope__inject_scope_style --> repatch__scope__strip_scope_style
     repatch__scope__inject_scope_style --> repatch__scope___inject_css_block
@@ -157,8 +167,14 @@ flowchart TD
     repatch__dom_patch__build_function_option_patches --> repatch__dom_patch___variant_section
     repatch__marked_context__marked_css_selectors --> repatch__marked_context___id_candidates
     repatch__marked_context__marked_css_selectors --> repatch__marked_context___css_id_selector
+    repatch__marked_context___collect_keep_selectors --> repatch__marked_context___fragment_class_names
+    repatch__marked_context___collect_keep_selectors --> repatch__marked_context__marked_css_selectors
+    repatch__marked_context___collect_keep_selectors --> repatch__marked_context___find_marked_subtrees
+    repatch__marked_context___collect_keep_selectors --> repatch__marked_context___css_id_selector
     repatch__marked_context__resolve_marked_selectors --> repatch__marked_context___find_marked_subtrees
+    repatch__marked_context__resolve_marked_selectors --> repatch__marked_context___collect_keep_selectors
     repatch__marked_context__resolve_marked_selectors --> repatch__marked_context__marked_css_selectors
+    repatch__marked_context__resolve_marked_selectors --> repatch__marked_context___fragment_class_names
     repatch__marked_context__restrict_scope_css_to_marks --> repatch__css__split_css_rules
     repatch__marked_context__restrict_scope_css_to_marks --> repatch__marked_context__resolve_marked_selectors
     repatch__marked_context__restrict_scope_css_to_marks --> repatch__marked_context__marked_css_selectors
@@ -202,8 +218,12 @@ flowchart TD
     repatch__spatial___element_delete_candidates --> repatch__spatial___delete_match_keys
     repatch__spatial__apply_spatial_deletes_to_html --> repatch__spatial___delete_match_keys
     repatch__spatial__apply_spatial_deletes_to_html --> repatch__spatial___element_delete_candidates
+    repatch__options__html_files_distinct --> repatch__options__normalize_html_body
+    repatch__options__sync_option_previews_from_workspace --> repatch__spatial__apply_spatial_deletes_to_html
+    repatch__options__sync_option_previews_from_workspace --> repatch__options__replace_html_title
+    repatch__options__enforce_deletes_on_option_previews --> repatch__spatial__apply_spatial_deletes_to_html
 
     classDef highCC fill:#ff6b6b,stroke:#c92a2a,color:#fff
     classDef medCC fill:#ffd43b,stroke:#f08c00,color:#000
-    class repatch__scope___bind_annotations_to_html,repatch__marked_context___find_marked_subtrees,repatch__ui_patch__apply_ui_patch_options highCC
-    class repatch__project_ir___ProjectIRParser___classify_node,repatch__project_ir___ProjectIRParser__handle_endtag,repatch__project_ir__summarize_project_ir,repatch__scope__ui_type_for_kind,repatch__scope___resolve_scope_kind,repatch__scope__inject_scope_style,repatch__dom_patch__build_function_option_patches,repatch__marked_context__has_ui_marks,repatch__marked_context__effective_delete_ids,repatch__marked_context__resolve_marked_selectors,repatch__marked_context__restrict_scope_css_to_marks,repatch__marked_context___logical_id,repatch__marked_context___extract_balanced_html,repatch__marked_context___selector_tokens,repatch__marked_context___client_fragment_html,repatch__marked_context___format_context_body,repatch__marked_context__build_marked_element_context,repatch__ui_patch__build_ui_patch_prompt,repatch__ui_patch___safe_css,repatch__css__split_css_rules,repatch__css__validate_css_safety medCC
+    class repatch__scope___bind_annotations_to_html,repatch__marked_context__resolve_marked_selectors,repatch__marked_context___find_marked_subtrees,repatch__ui_patch__apply_ui_patch_options highCC
+    class repatch__project_ir___ProjectIRParser___classify_node,repatch__project_ir___ProjectIRParser__handle_endtag,repatch__project_ir__summarize_project_ir,repatch__scope__ui_type_for_kind,repatch__scope___resolve_scope_kind,repatch__scope__inject_scope_style,repatch__dom_patch__build_function_option_patches,repatch__marked_context__has_ui_marks,repatch__marked_context__effective_delete_ids,repatch__marked_context___collect_keep_selectors,repatch__marked_context__restrict_scope_css_to_marks,repatch__marked_context___logical_id,repatch__marked_context___extract_balanced_html,repatch__marked_context___selector_tokens,repatch__marked_context___client_fragment_html,repatch__marked_context___format_context_body,repatch__marked_context__build_marked_element_context,repatch__ui_patch__build_ui_patch_prompt,repatch__ui_patch___safe_css,repatch__css__split_css_rules,repatch__css__validate_css_safety,repatch__options__sync_option_previews_from_workspace,repatch__options__enforce_deletes_on_option_previews medCC

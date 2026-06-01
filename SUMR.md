@@ -16,12 +16,12 @@ SUMD - Structured Unified Markdown Descriptor for AI-aware project refactorizati
 ## Metadata
 
 - **name**: `repatch`
-- **version**: `0.2.1`
+- **version**: `0.2.2`
 - **python_requires**: `>=3.10`
 - **license**: Apache-2.0
 - **ai_model**: `openrouter/qwen/qwen3-coder-next`
 - **ecosystem**: SUMD + DOQL + testql + taskfile
-- **generated_from**: pyproject.toml, testql(2), app.doql.less, goal.yaml, .env.example, src(8 mod), project/(5 analysis files)
+- **generated_from**: pyproject.toml, testql(2), app.doql.less, goal.yaml, .env.example, src(9 mod), project/(5 analysis files)
 
 ## Architecture
 
@@ -36,7 +36,7 @@ SUMD (description) → DOQL/source (code) → taskfile (automation) → testql (
 
 app {
   name: repatch;
-  version: 0.2.1;
+  version: 0.2.2;
 }
 
 dependencies {
@@ -60,6 +60,7 @@ environment[name="local"] {
 - `repatch.css`
 - `repatch.dom_patch`
 - `repatch.marked_context`
+- `repatch.options`
 - `repatch.project_ir`
 - `repatch.scope`
 - `repatch.service`
@@ -94,7 +95,9 @@ def has_ui_marks(keep_els, delete_els)  # CC=8, fan=3
 def effective_delete_ids(delete_els, keep_els)  # CC=9, fan=6
 def _css_id_selector(token)  # CC=4, fan=3
 def marked_css_selectors(element_ids)  # CC=6, fan=5
-def resolve_marked_selectors(html, element_ids)  # CC=14, fan=13 ⚠
+def _fragment_class_names(fragment)  # CC=5, fan=7
+def _collect_keep_selectors(html, keep_ids)  # CC=11, fan=12 ⚠
+def resolve_marked_selectors(html, element_ids)  # CC=16, fan=14 ⚠
 def marked_scope_colors_css(selectors, variant)  # CC=4, fan=2
 def restrict_scope_css_to_marks(css, delete_ids)  # CC=14, fan=11 ⚠
 def _id_candidates(element_id)  # CC=4, fan=6
@@ -160,7 +163,7 @@ def should_block_full_html_iterate(project_kind, keep_els, delete_els)  # CC=3, 
 def _bind_annotations_to_html(html, keep_ids, delete_ids)  # CC=29, fan=18 ⚠
 def _get_scope_css(inferred, html, scope, variant)  # CC=7, fan=5
 def _inject_css_block(html, css)  # CC=5, fan=4
-def inject_scope_style(html, scope, variant)  # CC=14, fan=11 ⚠
+def inject_scope_style(html, scope, variant)  # CC=14, fan=12 ⚠
 def scoped_html_fragment(html, focus_scope, project_kind)  # CC=6, fan=6
 ```
 
@@ -195,68 +198,68 @@ class _ProjectIRParser:
 
 ## Call Graph
 
-*76 nodes · 82 edges · 7 modules · CC̄=5.8*
+*82 nodes · 89 edges · 8 modules · CC̄=5.8*
 
 ### Hubs (by degree)
 
 | Function | CC | in | out | total |
 |----------|----|----|-----|-------|
 | `_bind_annotations_to_html` *(in repatch.scope)* | 29 ⚠ | 1 | 45 | **46** |
+| `apply_spatial_deletes_to_html` *(in repatch.spatial)* | 4 | 2 | 29 | **31** |
 | `apply_ui_patch_options` *(in repatch.ui_patch)* | 25 ⚠ | 0 | 31 | **31** |
-| `apply_spatial_deletes_to_html` *(in repatch.spatial)* | 4 | 0 | 29 | **29** |
-| `resolve_marked_selectors` *(in repatch.marked_context)* | 14 ⚠ | 3 | 24 | **27** |
 | `validate_css_safety` *(in repatch.css)* | 14 ⚠ | 1 | 26 | **27** |
+| `_find_marked_subtrees` *(in repatch.marked_context)* | 17 ⚠ | 3 | 23 | **26** |
+| `resolve_marked_selectors` *(in repatch.marked_context)* | 16 ⚠ | 3 | 23 | **26** |
 | `_patch_function_targets` *(in repatch.dom_patch)* | 6 | 1 | 24 | **25** |
-| `_find_marked_subtrees` *(in repatch.marked_context)* | 17 ⚠ | 2 | 23 | **25** |
 | `summarize_project_ir` *(in repatch.project_ir)* | 12 ⚠ | 1 | 21 | **22** |
 
 ```toon markpact:analysis path=project/calls.toon.yaml
 # code2llm call graph | /home/tom/github/semcod/repatch
-# generated in 0.04s
-# nodes: 76 | edges: 82 | modules: 7
+# generated in 0.03s
+# nodes: 82 | edges: 89 | modules: 8
 # CC̄=5.8
 
 HUBS[20]:
   repatch.scope._bind_annotations_to_html
     CC=29  in:1  out:45  total:46
+  repatch.spatial.apply_spatial_deletes_to_html
+    CC=4  in:2  out:29  total:31
   repatch.ui_patch.apply_ui_patch_options
     CC=25  in:0  out:31  total:31
-  repatch.spatial.apply_spatial_deletes_to_html
-    CC=4  in:0  out:29  total:29
-  repatch.marked_context.resolve_marked_selectors
-    CC=14  in:3  out:24  total:27
   repatch.css.validate_css_safety
     CC=14  in:1  out:26  total:27
+  repatch.marked_context._find_marked_subtrees
+    CC=17  in:3  out:23  total:26
+  repatch.marked_context.resolve_marked_selectors
+    CC=16  in:3  out:23  total:26
   repatch.dom_patch._patch_function_targets
     CC=6  in:1  out:24  total:25
-  repatch.marked_context._find_marked_subtrees
-    CC=17  in:2  out:23  total:25
   repatch.project_ir.summarize_project_ir
     CC=12  in:1  out:21  total:22
   repatch.marked_context._id_candidates
     CC=4  in:10  out:11  total:21
+  repatch.marked_context._collect_keep_selectors
+    CC=11  in:1  out:19  total:20
   repatch.marked_context.restrict_scope_css_to_marks
     CC=14  in:2  out:17  total:19
+  repatch.scope.inject_scope_style
+    CC=14  in:0  out:19  total:19
   repatch.marked_context._extract_balanced_html
     CC=10  in:1  out:18  total:19
-  repatch.scope.inject_scope_style
-    CC=14  in:0  out:18  total:18
+  repatch.options.sync_option_previews_from_workspace
+    CC=10  in:0  out:17  total:17
   repatch.marked_context._format_context_body
     CC=14  in:1  out:15  total:16
   repatch.marked_context._selector_tokens
     CC=9  in:1  out:14  total:15
-  repatch.marked_context._logical_id
-    CC=8  in:4  out:10  total:14
   repatch.marked_context.build_marked_element_context
     CC=11  in:1  out:13  total:14
   repatch.dom_patch.build_function_option_patches
     CC=10  in:0  out:14  total:14
-  repatch.spatial._delete_match_keys
-    CC=4  in:2  out:11  total:13
-  repatch.ui_patch._safe_css
-    CC=9  in:2  out:11  total:13
-  repatch.marked_context._collect_match_candidates
-    CC=6  in:1  out:11  total:12
+  repatch.marked_context._logical_id
+    CC=8  in:4  out:10  total:14
+  repatch.options.enforce_deletes_on_option_previews
+    CC=9  in:0  out:14  total:14
 
 MODULES:
   repatch.css  [4 funcs]
@@ -275,17 +278,22 @@ MODULES:
     _strip_tags  CC=2  out:3
     _target_candidates  CC=4  out:9
     _variant_section  CC=3  out:11
-  repatch.marked_context  [24 funcs]
+  repatch.marked_context  [26 funcs]
     _assemble_marked_subtrees  CC=4  out:3
     _cap_text  CC=2  out:4
     _client_fragment_html  CC=9  out:10
     _collect_button_candidates  CC=3  out:8
     _collect_css_sources  CC=7  out:10
+    _collect_keep_selectors  CC=11  out:19
     _collect_match_candidates  CC=6  out:11
     _css_id_selector  CC=4  out:3
     _extract_and_format_fragment  CC=3  out:6
     _extract_balanced_html  CC=10  out:18
-    _filter_css_for_tokens  CC=6  out:7
+  repatch.options  [4 funcs]
+    enforce_deletes_on_option_previews  CC=9  out:14
+    html_files_distinct  CC=3  out:7
+    normalize_html_body  CC=2  out:3
+    sync_option_previews_from_workspace  CC=10  out:17
   repatch.project_ir  [6 funcs]
     _classify_node  CC=12  out:10
     handle_data  CC=4  out:2
@@ -303,7 +311,7 @@ MODULES:
     _web_scope_css  CC=6  out:0
     allowed_scope_ids  CC=2  out:3
     default_scope_for_kind  CC=3  out:4
-    inject_scope_style  CC=14  out:18
+    inject_scope_style  CC=14  out:19
   repatch.spatial  [3 funcs]
     _delete_match_keys  CC=4  out:11
     _element_delete_candidates  CC=6  out:8
@@ -335,10 +343,10 @@ EDGES:
   repatch.scope.inject_scope_style → repatch.scope._bind_annotations_to_html
   repatch.scope.inject_scope_style → repatch.scope._resolve_scope_kind
   repatch.scope.inject_scope_style → repatch.scope.normalize_focus_scope
+  repatch.scope.inject_scope_style → repatch.marked_context.effective_delete_ids
   repatch.scope.inject_scope_style → repatch.scope._get_scope_css
   repatch.scope.inject_scope_style → repatch.scope.strip_scope_style
   repatch.scope.inject_scope_style → repatch.scope._inject_css_block
-  repatch.scope.inject_scope_style → repatch.marked_context.resolve_marked_selectors
   repatch.scope.scoped_html_fragment → repatch.scope.normalize_focus_scope
   repatch.scope.scoped_html_fragment → repatch.scope.scope_supports_offline_fast_path
   repatch.dom_patch.build_function_patch_context → repatch.project_ir.build_project_ir
@@ -359,17 +367,17 @@ EDGES:
   repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_body
   repatch.marked_context.marked_css_selectors → repatch.marked_context._id_candidates
   repatch.marked_context.marked_css_selectors → repatch.marked_context._css_id_selector
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._fragment_class_names
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context.marked_css_selectors
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._find_marked_subtrees
   repatch.marked_context.resolve_marked_selectors → repatch.marked_context._find_marked_subtrees
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._collect_keep_selectors
   repatch.marked_context.resolve_marked_selectors → repatch.marked_context.marked_css_selectors
   repatch.marked_context.restrict_scope_css_to_marks → repatch.css.split_css_rules
   repatch.marked_context.restrict_scope_css_to_marks → repatch.marked_context.resolve_marked_selectors
   repatch.marked_context.restrict_scope_css_to_marks → repatch.marked_context.marked_css_selectors
   repatch.marked_context._collect_match_candidates → repatch.marked_context._logical_id
   repatch.marked_context._collect_match_candidates → repatch.marked_context._id_candidates
-  repatch.marked_context._collect_button_candidates → repatch.marked_context._logical_id
-  repatch.marked_context._collect_button_candidates → repatch.marked_context._id_candidates
-  repatch.marked_context._extract_and_format_fragment → repatch.marked_context._extract_balanced_html
-  repatch.marked_context._find_marked_subtrees → repatch.marked_context._parse_attrs
 ```
 
 ## Test Contracts
@@ -392,51 +400,51 @@ EDGES:
 
 ```toon markpact:analysis path=project/calls.toon.yaml
 # code2llm call graph | /home/tom/github/semcod/repatch
-# generated in 0.04s
-# nodes: 76 | edges: 82 | modules: 7
+# generated in 0.03s
+# nodes: 82 | edges: 89 | modules: 8
 # CC̄=5.8
 
 HUBS[20]:
   repatch.scope._bind_annotations_to_html
     CC=29  in:1  out:45  total:46
+  repatch.spatial.apply_spatial_deletes_to_html
+    CC=4  in:2  out:29  total:31
   repatch.ui_patch.apply_ui_patch_options
     CC=25  in:0  out:31  total:31
-  repatch.spatial.apply_spatial_deletes_to_html
-    CC=4  in:0  out:29  total:29
-  repatch.marked_context.resolve_marked_selectors
-    CC=14  in:3  out:24  total:27
   repatch.css.validate_css_safety
     CC=14  in:1  out:26  total:27
+  repatch.marked_context._find_marked_subtrees
+    CC=17  in:3  out:23  total:26
+  repatch.marked_context.resolve_marked_selectors
+    CC=16  in:3  out:23  total:26
   repatch.dom_patch._patch_function_targets
     CC=6  in:1  out:24  total:25
-  repatch.marked_context._find_marked_subtrees
-    CC=17  in:2  out:23  total:25
   repatch.project_ir.summarize_project_ir
     CC=12  in:1  out:21  total:22
   repatch.marked_context._id_candidates
     CC=4  in:10  out:11  total:21
+  repatch.marked_context._collect_keep_selectors
+    CC=11  in:1  out:19  total:20
   repatch.marked_context.restrict_scope_css_to_marks
     CC=14  in:2  out:17  total:19
+  repatch.scope.inject_scope_style
+    CC=14  in:0  out:19  total:19
   repatch.marked_context._extract_balanced_html
     CC=10  in:1  out:18  total:19
-  repatch.scope.inject_scope_style
-    CC=14  in:0  out:18  total:18
+  repatch.options.sync_option_previews_from_workspace
+    CC=10  in:0  out:17  total:17
   repatch.marked_context._format_context_body
     CC=14  in:1  out:15  total:16
   repatch.marked_context._selector_tokens
     CC=9  in:1  out:14  total:15
-  repatch.marked_context._logical_id
-    CC=8  in:4  out:10  total:14
   repatch.marked_context.build_marked_element_context
     CC=11  in:1  out:13  total:14
   repatch.dom_patch.build_function_option_patches
     CC=10  in:0  out:14  total:14
-  repatch.spatial._delete_match_keys
-    CC=4  in:2  out:11  total:13
-  repatch.ui_patch._safe_css
-    CC=9  in:2  out:11  total:13
-  repatch.marked_context._collect_match_candidates
-    CC=6  in:1  out:11  total:12
+  repatch.marked_context._logical_id
+    CC=8  in:4  out:10  total:14
+  repatch.options.enforce_deletes_on_option_previews
+    CC=9  in:0  out:14  total:14
 
 MODULES:
   repatch.css  [4 funcs]
@@ -455,17 +463,22 @@ MODULES:
     _strip_tags  CC=2  out:3
     _target_candidates  CC=4  out:9
     _variant_section  CC=3  out:11
-  repatch.marked_context  [24 funcs]
+  repatch.marked_context  [26 funcs]
     _assemble_marked_subtrees  CC=4  out:3
     _cap_text  CC=2  out:4
     _client_fragment_html  CC=9  out:10
     _collect_button_candidates  CC=3  out:8
     _collect_css_sources  CC=7  out:10
+    _collect_keep_selectors  CC=11  out:19
     _collect_match_candidates  CC=6  out:11
     _css_id_selector  CC=4  out:3
     _extract_and_format_fragment  CC=3  out:6
     _extract_balanced_html  CC=10  out:18
-    _filter_css_for_tokens  CC=6  out:7
+  repatch.options  [4 funcs]
+    enforce_deletes_on_option_previews  CC=9  out:14
+    html_files_distinct  CC=3  out:7
+    normalize_html_body  CC=2  out:3
+    sync_option_previews_from_workspace  CC=10  out:17
   repatch.project_ir  [6 funcs]
     _classify_node  CC=12  out:10
     handle_data  CC=4  out:2
@@ -483,7 +496,7 @@ MODULES:
     _web_scope_css  CC=6  out:0
     allowed_scope_ids  CC=2  out:3
     default_scope_for_kind  CC=3  out:4
-    inject_scope_style  CC=14  out:18
+    inject_scope_style  CC=14  out:19
   repatch.spatial  [3 funcs]
     _delete_match_keys  CC=4  out:11
     _element_delete_candidates  CC=6  out:8
@@ -515,10 +528,10 @@ EDGES:
   repatch.scope.inject_scope_style → repatch.scope._bind_annotations_to_html
   repatch.scope.inject_scope_style → repatch.scope._resolve_scope_kind
   repatch.scope.inject_scope_style → repatch.scope.normalize_focus_scope
+  repatch.scope.inject_scope_style → repatch.marked_context.effective_delete_ids
   repatch.scope.inject_scope_style → repatch.scope._get_scope_css
   repatch.scope.inject_scope_style → repatch.scope.strip_scope_style
   repatch.scope.inject_scope_style → repatch.scope._inject_css_block
-  repatch.scope.inject_scope_style → repatch.marked_context.resolve_marked_selectors
   repatch.scope.scoped_html_fragment → repatch.scope.normalize_focus_scope
   repatch.scope.scoped_html_fragment → repatch.scope.scope_supports_offline_fast_path
   repatch.dom_patch.build_function_patch_context → repatch.project_ir.build_project_ir
@@ -539,35 +552,36 @@ EDGES:
   repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_body
   repatch.marked_context.marked_css_selectors → repatch.marked_context._id_candidates
   repatch.marked_context.marked_css_selectors → repatch.marked_context._css_id_selector
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._fragment_class_names
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context.marked_css_selectors
+  repatch.marked_context._collect_keep_selectors → repatch.marked_context._find_marked_subtrees
   repatch.marked_context.resolve_marked_selectors → repatch.marked_context._find_marked_subtrees
+  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._collect_keep_selectors
   repatch.marked_context.resolve_marked_selectors → repatch.marked_context.marked_css_selectors
   repatch.marked_context.restrict_scope_css_to_marks → repatch.css.split_css_rules
   repatch.marked_context.restrict_scope_css_to_marks → repatch.marked_context.resolve_marked_selectors
   repatch.marked_context.restrict_scope_css_to_marks → repatch.marked_context.marked_css_selectors
   repatch.marked_context._collect_match_candidates → repatch.marked_context._logical_id
   repatch.marked_context._collect_match_candidates → repatch.marked_context._id_candidates
-  repatch.marked_context._collect_button_candidates → repatch.marked_context._logical_id
-  repatch.marked_context._collect_button_candidates → repatch.marked_context._id_candidates
-  repatch.marked_context._extract_and_format_fragment → repatch.marked_context._extract_balanced_html
-  repatch.marked_context._find_marked_subtrees → repatch.marked_context._parse_attrs
 ```
 
 ### Code Analysis (`project/analysis.toon.yaml`)
 
 ```toon markpact:analysis path=project/analysis.toon.yaml
-# code2llm | 13f 2713L | python:9,shell:2,yaml:1,toml:1 | 2026-06-01
-# generated in 0.01s
-# CC̅=5.8 | critical:3/95 | dups:0 | cycles:0
+# code2llm | 15f 2940L | python:9,yaml:3,txt:1,shell:1,toml:1 | 2026-06-01
+# generated in 0.00s
+# CC̅=5.8 | critical:4/102 | dups:0 | cycles:0
 
-HEALTH[3]:
+HEALTH[4]:
   🟡 CC    _bind_annotations_to_html CC=29 (limit:15)
+  🟡 CC    resolve_marked_selectors CC=16 (limit:15)
   🟡 CC    _find_marked_subtrees CC=17 (limit:15)
   🟡 CC    apply_ui_patch_options CC=25 (limit:15)
 
 REFACTOR[1]:
-  1. split 3 high-CC methods  (CC>15)
+  1. split 4 high-CC methods  (CC>15)
 
-PIPELINES[23]:
+PIPELINES[25]:
   [1] Src [__init__]: __init__
       PURITY: 100% pure
   [2] Src [handle_starttag]: handle_starttag
@@ -600,38 +614,46 @@ PIPELINES[23]:
       PURITY: 100% pure
   [16] Src [apply_ui_patch_options]: apply_ui_patch_options → strip_scope_style
       PURITY: 100% pure
-  [17] Src [apply_spatial_deletes_to_html]: apply_spatial_deletes_to_html → _delete_match_keys
+  [17] Src [generate_patch_suggestions]: generate_patch_suggestions
       PURITY: 100% pure
-  [18] Src [generate_patch_suggestions]: generate_patch_suggestions
+  [18] Src [_normalize_scopes]: _normalize_scopes
       PURITY: 100% pure
-  [19] Src [_normalize_scopes]: _normalize_scopes
+  [19] Src [_build_user_prompt]: _build_user_prompt
       PURITY: 100% pure
-  [20] Src [_build_user_prompt]: _build_user_prompt
+  [20] Src [_parse_choice]: _parse_choice
       PURITY: 100% pure
-  [21] Src [_parse_choice]: _parse_choice
+  [21] Src [_choice_content]: _choice_content
       PURITY: 100% pure
-  [22] Src [_choice_content]: _choice_content
+  [22] Src [_default_completion]: _default_completion
       PURITY: 100% pure
-  [23] Src [_default_completion]: _default_completion
+  [23] Src [html_files_distinct]: html_files_distinct → normalize_html_body
+      PURITY: 100% pure
+  [24] Src [sync_option_previews_from_workspace]: sync_option_previews_from_workspace → apply_spatial_deletes_to_html → _delete_match_keys
+      PURITY: 100% pure
+  [25] Src [enforce_deletes_on_option_previews]: enforce_deletes_on_option_previews → apply_spatial_deletes_to_html → _delete_match_keys
       PURITY: 100% pure
 
 LAYERS:
   repatch/                        CC̄=5.8    ←in:0  →out:0
-  │ !! marked_context             519L  0C   26m  CC=17     ←3
-  │ !! scope                      494L  0C   17m  CC=29     ←2
+  │ !! marked_context             575L  0C   28m  CC=17     ←3
+  │ !! scope                      506L  0C   17m  CC=29     ←2
   │ dom_patch                  314L  0C   19m  CC=10     ←0
   │ !! ui_patch                   267L  0C   10m  CC=25     ←0
+  │ options                    140L  0C    5m  CC=10     ←0
   │ project_ir                 132L  1C    8m  CC=12     ←1
-  │ spatial                    108L  0C    4m  CC=6      ←0
+  │ spatial                    108L  0C    4m  CC=6      ←1
   │ service                    105L  2C    7m  CC=6      ←0
-  │ __init__                    87L  0C    0m  CC=0.0    ←0
   │ css                         70L  0C    4m  CC=14     ←2
   │
   ./                              CC̄=0.0    ←in:0  →out:0
   │ !! goal.yaml                  511L  0C    0m  CC=0.0    ←0
+  │ tree.txt                    77L  0C    0m  CC=0.0    ←0
   │ pyproject.toml              55L  0C    0m  CC=0.0    ←0
   │ project.sh                  50L  0C    0m  CC=0.0    ←0
-  │ tree.sh                      1L  0C    0m  CC=0.0    ←0
+  │
+  testql-scenarios/               CC̄=0.0    ←in:0  →out:0
+  │ generated-cli-tests.testql.toon.yaml    20L  0C    0m  CC=0.0    ←0
+  │ generated-from-pytests.testql.toon.yaml    10L  0C    0m  CC=0.0    ←0
   │
 
 COUPLING: no cross-package imports detected
@@ -644,23 +666,23 @@ EXTERNAL:
 ### Duplication (`project/duplication.toon.yaml`)
 
 ```toon markpact:analysis path=project/duplication.toon.yaml
-# redup/duplication | 1 groups | 9f 2096L | 2026-06-01
+# redup/duplication | 1 groups | 10f 2318L | 2026-06-01
 
 SUMMARY:
-  files_scanned: 9
-  total_lines:   2096
+  files_scanned: 10
+  total_lines:   2318
   dup_groups:    1
   dup_fragments: 2
   saved_lines:   56
-  scan_ms:       2747
+  scan_ms:       2099
 
 HOTSPOTS[1] (files with most duplication):
-  repatch/scope.py  dup=103L  groups=1  frags=2  (4.9%)
+  repatch/scope.py  dup=103L  groups=1  frags=2  (4.4%)
 
 DUPLICATES[1] (ranked by impact):
   [ee82f654639dd9b7] ! STRU  _scope_css  L=56 N=2 saved=56 sim=1.00
-      repatch/scope.py:141-196  (_scope_css)
-      repatch/scope.py:273-319  (_web_scope_css)
+      repatch/scope.py:142-197  (_scope_css)
+      repatch/scope.py:274-320  (_web_scope_css)
 
 REFACTOR[1] (ranked by priority):
   [1] ○ extract_module     → repatch/utils/_scope_css.py
@@ -682,40 +704,49 @@ METRICS-TARGET:
 ### Evolution / Churn (`project/evolution.toon.yaml`)
 
 ```toon markpact:analysis path=project/evolution.toon.yaml
-# code2llm/evolution | 95 func | 8f | 2026-06-01
+# code2llm/evolution | 102 func | 9f | 2026-06-01
 # generated in 0.00s
 
-NEXT[5] (ranked by impact):
-  [1] !! SPLIT           repatch/marked_context.py
-      WHY: 519L, 0 classes, max CC=17
-      EFFORT: ~4h  IMPACT: 8823
+NEXT[7] (ranked by impact):
+  [1] !! SPLIT           repatch/scope.py
+      WHY: 506L, 0 classes, max CC=29
+      EFFORT: ~4h  IMPACT: 14674
 
-  [2] !! SPLIT-FUNC      _bind_annotations_to_html  CC=29  fan=20
+  [2] !! SPLIT           repatch/marked_context.py
+      WHY: 575L, 0 classes, max CC=17
+      EFFORT: ~4h  IMPACT: 9775
+
+  [3] !! SPLIT-FUNC      _bind_annotations_to_html  CC=29  fan=20
       WHY: CC=29 exceeds 15
       EFFORT: ~1h  IMPACT: 580
 
-  [3] !! SPLIT-FUNC      apply_ui_patch_options  CC=25  fan=21
+  [4] !! SPLIT-FUNC      apply_ui_patch_options  CC=25  fan=21
       WHY: CC=25 exceeds 15
       EFFORT: ~1h  IMPACT: 525
 
-  [4] !  SPLIT-FUNC      _find_marked_subtrees  CC=17  fan=13
+  [5] !  SPLIT-FUNC      resolve_marked_selectors  CC=16  fan=15
+      WHY: CC=16 exceeds 15
+      EFFORT: ~1h  IMPACT: 240
+
+  [6] !  SPLIT-FUNC      _find_marked_subtrees  CC=17  fan=13
       WHY: CC=17 exceeds 15
       EFFORT: ~1h  IMPACT: 221
 
-  [5] !! SPLIT           goal.yaml
+  [7] !! SPLIT           goal.yaml
       WHY: 511L, 0 classes, max CC=0
       EFFORT: ~4h  IMPACT: 0
 
 
-RISKS[2]:
-  ⚠ Splitting repatch/marked_context.py may break 26 import paths
+RISKS[3]:
+  ⚠ Splitting repatch/marked_context.py may break 28 import paths
   ⚠ Splitting goal.yaml may break 0 import paths
+  ⚠ Splitting repatch/scope.py may break 17 import paths
 
 METRICS-TARGET:
   CC̄:          5.8 → ≤4.1
   max-CC:      29 → ≤14
-  god-modules: 2 → 0
-  high-CC(≥15): 3 → ≤1
+  god-modules: 3 → 0
+  high-CC(≥15): 4 → ≤2
   hub-types:   0 → ≤0
 
 PATTERNS (language parser shared logic):
@@ -743,7 +774,7 @@ PATTERNS (language parser shared logic):
     - Standardized FunctionInfo/ClassInfo models
 
 HISTORY:
-  (first run — no previous data)
+  prev CC̄=5.8 → now CC̄=5.8
 ```
 
 ## Intent
