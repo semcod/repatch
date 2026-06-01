@@ -1,29 +1,41 @@
 # repatch
 
-First simple Python package for scope-based HTML/CSS/JS patch suggestions via LiteLLM.
+Reusable HTML/CSS/DOM patch utilities extracted from Nexu Cinema: marked-element context,
+scope-restricted CSS, spatial deletes, LLM UI patch prompts, and local function DOM patches.
 
-Pierwsza, prosta wersja pakietu Python do generowania propozycji patchy fragmentów
-HTML/CSS/JS na podstawie scope i odpowiedzi LLM przez `litellm`.
+Also includes the original `RepatchService` for scope-based LLM fragment suggestions.
 
-## Zakres v0
-
-- obsługa scope:
-  - `functions`
-  - `display`
-  - `colors`
-  - `shapes`
-  - `orientation`
-- wybór wielu scope naraz
-- generowanie **3 wariantów** odpowiedzi z LLM
-- dla każdego wariantu: co zachować (`keep`), co zmienić (`change`) i patchowany fragment (`patched_fragment`)
-
-## Instalacja (lokalnie)
+## Install
 
 ```bash
 pip install -e .
+# Nexu: repatch @ file:///path/to/repatch in pyproject.toml
 ```
 
-## Szybkie użycie
+## Public API (`repatch`)
+
+| Module | Key symbols |
+|--------|-------------|
+| `marked_context` | `build_marked_element_context`, `resolve_marked_llm_context`, `restrict_scope_css_to_marks`, `marked_css_selectors`, `has_ui_marks` |
+| `scope` | `inject_scope_style`, `strip_scope_style`, `normalize_focus_scope`, `should_block_full_html_iterate`, `scoped_html_fragment` |
+| `ui_patch` | `build_ui_patch_prompt`, `parse_ui_patch_response`, `apply_ui_patch_options`, `supports_llm_patch_scope` |
+| `spatial` | `apply_spatial_deletes_to_html` |
+| `dom_patch` | `build_function_option_patches`, `build_function_patch_context`, `supports_function_patch` |
+| `css` | `split_css_rules`, `validate_css_safety` |
+| `project_ir` | `build_project_ir`, `summarize_project_ir` |
+| `service` | `RepatchService`, `PatchSuggestion` |
+
+## Example: marked context + UI patch prompt
+
+```python
+from repatch import build_marked_element_context
+from repatch.ui_patch import build_ui_patch_prompt
+
+ctx = build_marked_element_context(html, keep_ids=["7"], delete_ids=["tan"], focus_scope="colors", project_kind="calculator")
+prompt = build_ui_patch_prompt(html, focus_scope="colors", project_kind="calculator", option_variants=variants, context_fragment=ctx)
+```
+
+## Original RepatchService (v0)
 
 ```python
 from repatch import RepatchService
@@ -37,16 +49,15 @@ fragment = """
 
 ## AI Cost Tracking
 
-![PyPI](https://img.shields.io/badge/pypi-costs-blue) ![Version](https://img.shields.io/badge/version-0.1.1-blue) ![Python](https://img.shields.io/badge/python-3.9+-blue) ![License](https://img.shields.io/badge/license-Apache--2.0-green)
-![AI Cost](https://img.shields.io/badge/AI%20Cost-$0.02-orange) ![Human Time](https://img.shields.io/badge/Human%20Time-2.0h-blue) ![Model](https://img.shields.io/badge/Model-openrouter%2Fqwen%2Fqwen3--coder--next-lightgrey)
+![PyPI](https://img.shields.io/badge/pypi-costs-blue) ![Version](https://img.shields.io/badge/version-0.2.1-blue) ![Python](https://img.shields.io/badge/python-3.9+-blue) ![License](https://img.shields.io/badge/license-Apache--2.0-green)
+![AI Cost](https://img.shields.io/badge/AI%20Cost-$0.43-orange) ![Human Time](https://img.shields.io/badge/Human%20Time-3.0h-blue) ![Model](https://img.shields.io/badge/Model-openrouter%2Fqwen%2Fqwen3--coder--next-lightgrey)
 
-- 🤖 **LLM usage:** $0.0228 (4 commits)
-- 👤 **Human dev:** ~$200 (2.0h @ $100/h, 30min dedup)
+- 🤖 **LLM usage:** $0.4341 (5 commits)
+- 👤 **Human dev:** ~$300 (3.0h @ $100/h, 30min dedup)
 
 Generated on 2026-06-01 using [openrouter/qwen/qwen3-coder-next](https://openrouter.ai/qwen/qwen3-coder-next)
 
 ---
-
 
   <button>Zapisz dziecko</button>
 </section>
