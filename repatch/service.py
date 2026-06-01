@@ -6,6 +6,7 @@ from typing import Callable, Iterable, List
 
 SUPPORTED_SCOPES = {"functions", "display", "colors", "shapes", "orientation"}
 NUM_SUGGESTIONS = 3
+MAX_ERROR_PREVIEW_LENGTH = 120
 
 
 @dataclass(frozen=True)
@@ -84,7 +85,7 @@ class RepatchService:
             payload = json.loads(content)
         except json.JSONDecodeError as exc:
             raise ValueError(
-                f"Invalid JSON in LLM suggestion: {content[:120]}"
+                f"Invalid JSON in LLM suggestion: {content[:MAX_ERROR_PREVIEW_LENGTH]}"
             ) from exc
         return PatchSuggestion(
             keep=list(payload.get("keep", [])),
@@ -100,6 +101,7 @@ class RepatchService:
 
     @staticmethod
     def _default_completion(**kwargs):
+        """Lazily import litellm completion to avoid hard dependency at import time."""
         from litellm import completion
 
         return completion(**kwargs)
