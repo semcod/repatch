@@ -2684,7 +2684,7 @@ wheels = [
 
 [[package]]
 name = "repatch"
-version = "0.2.17"
+version = "0.2.19"
 source = { editable = "." }
 dependencies = [
     { name = "litellm" },

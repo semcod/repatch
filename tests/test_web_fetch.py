@@ -56,7 +56,7 @@ def test_fetch_complete_web_page_mirrors_stylesheets_and_images(tmp_path):
             return FakeResp(png, url=target, content_type="image/png")
         return FakeResp(html, url="https://example.com/demo", content_type="text/html; charset=utf-8")
 
-    with patch("repatch.web_fetch.urlopen", side_effect=fake_urlopen):
+    with patch("repatch.web_fetch._SAFE_OPENER.open", side_effect=fake_urlopen):
         result = fetch_complete_web_page(
             "https://example.com/demo",
             source_dir=tmp_path,
@@ -91,7 +91,7 @@ def test_fetch_complete_web_page_uses_rendered_dom_and_mirrors_assets(tmp_path):
             "repatch.web_fetch._render_with_playwright",
             return_value=(rendered_html, "https://example.com/app"),
         ),
-        patch("repatch.web_fetch.urlopen", side_effect=fake_urlopen),
+        patch("repatch.web_fetch._SAFE_OPENER.open", side_effect=fake_urlopen),
     ):
         result = fetch_complete_web_page("https://example.com/app", source_dir=tmp_path)
 
@@ -110,7 +110,7 @@ def test_fetch_complete_web_page_falls_back_when_rendering_fails(tmp_path):
 
     with (
         patch("repatch.web_fetch._render_with_playwright", side_effect=RuntimeError("browser missing")),
-        patch("repatch.web_fetch.urlopen", side_effect=fake_urlopen),
+        patch("repatch.web_fetch._SAFE_OPENER.open", side_effect=fake_urlopen),
     ):
         result = fetch_complete_web_page("https://example.com/fallback", source_dir=tmp_path)
 
@@ -141,7 +141,7 @@ def test_fetch_complete_web_page_deduplicates_and_skips_external_assets(tmp_path
             return FakeResp(b"\x89PNG\r\n", url=target, content_type="image/png")
         return FakeResp(html, url="https://example.com/", content_type="text/html")
 
-    with patch("repatch.web_fetch.urlopen", side_effect=fake_urlopen):
+    with patch("repatch.web_fetch._SAFE_OPENER.open", side_effect=fake_urlopen):
         result = fetch_complete_web_page(
             "https://example.com/",
             source_dir=tmp_path,
@@ -158,6 +158,37 @@ def test_fetch_complete_web_page_deduplicates_and_skips_external_assets(tmp_path
 def test_fetch_complete_web_page_rejects_non_http_urls(tmp_path):
     with pytest.raises(ValueError, match="URL must be http or https"):
         fetch_complete_web_page("file:///tmp/page.html", source_dir=tmp_path, render_js=False)
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://127.0.0.1/",
+        "http://localhost/",
+        "http://169.254.169.254/latest/meta-data/",  # cloud metadata endpoint
+        "http://10.0.0.5/",
+        "http://192.168.1.1/",
+    ],
+)
+def test_fetch_complete_web_page_rejects_private_and_link_local_hosts(tmp_path, url):
+    """SSRF guard: an attacker-supplied URL must never reach internal/loopback
+    addresses, including the cloud metadata service."""
+    with pytest.raises(ValueError, match="non-public address"):
+        fetch_complete_web_page(url, source_dir=tmp_path, render_js=False)
+
+
+def test_ssrf_redirect_handler_blocks_redirect_to_private_address():
+    """A public URL that redirects to a private address must not be followed."""
+    from repatch.web_fetch import _SSRFSafeRedirectHandler
+    from urllib.error import URLError
+    from urllib.request import Request
+
+    handler = _SSRFSafeRedirectHandler()
+    req = Request("https://example.com/")
+    with pytest.raises(URLError, match="non-public address"):
+        handler.redirect_request(
+            req, None, 302, "Found", {}, "http://169.254.169.254/latest/meta-data/"
+        )
 
 
 def test_fetch_complete_web_page_against_local_http_server(tmp_path):
@@ -186,7 +217,12 @@ def test_fetch_complete_web_page_against_local_http_server(tmp_path):
     thread.start()
     try:
         url = f"http://127.0.0.1:{server.server_port}/"
-        result = fetch_complete_web_page(url, source_dir=tmp_path, render_js=False)
+        # This test's target is a same-machine test server, not an
+        # attacker-supplied URL — bypass the SSRF private-address guard
+        # (see _validate_http_url) that would otherwise (correctly) reject
+        # loopback addresses for real fetch requests.
+        with patch("repatch.web_fetch._non_public_ip_reason", return_value=None):
+            result = fetch_complete_web_page(url, source_dir=tmp_path, render_js=False)
     finally:
         server.shutdown()
         thread.join(timeout=2)
@@ -208,7 +244,7 @@ def test_fetch_complete_web_page_records_asset_errors_without_breaking_page(tmp_
             raise TimeoutError("asset timeout")
         return FakeResp(html, url="https://example.com/", content_type="text/html")
 
-    with patch("repatch.web_fetch.urlopen", side_effect=fake_urlopen):
+    with patch("repatch.web_fetch._SAFE_OPENER.open", side_effect=fake_urlopen):
         result = fetch_complete_web_page(
             "https://example.com/",
             source_dir=tmp_path,

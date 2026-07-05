@@ -7,6 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `apply_spatial_deletes_to_html`: the selectable-block matcher used a non-greedy
+  `.*?</tag>` regex with a same-tag backreference, so a deletable block containing a
+  nested tag of the *same* name (e.g. a plain `<div>` icon wrapper inside a
+  `<div class="kpi-card">`) matched only up to the *inner* closing tag — a "successful"
+  delete left the outer tag's remaining content and an orphaned closing tag behind,
+  corrupting the option preview HTML. Replaced with a nesting-depth-tracking scanner
+  (`_find_matching_close`) that finds the true matching closing tag regardless of
+  same-name nesting.
+- `_selectable_block_attrs` only recognized `id="btn-..."` for button-like elements, so
+  a `.btn` div with nested markup (e.g. `<div class="btn" id="save"><span>Save</span></div>`)
+  — which also never matches the plain-button regex, since that requires no nested tags —
+  silently produced zero delete candidates: a delete request for such an element did
+  nothing, with no error surfaced. Now also recognizes a `class="...btn..."` token.
+- `replace_html_title` interpolated the title directly into a `re.sub` *replacement
+  string*, so a title containing `\1`, `\g<name>`, or similar raised `re.error` (the
+  pattern has no capturing groups) instead of being inserted literally. Fixed by using a
+  replacement function, which is not subject to backslash-sequence interpretation.
+- `sync_option_previews_from_workspace` mirrored options B/C into `stage1.html`/
+  `stage2.html` by hardcoded `alt_b.html`/`alt_c.html` filenames regardless of the
+  caller-supplied `option_files` tuple — a caller passing custom filenames would read
+  stale/nonexistent default files instead of the ones just written. Now mirrors by
+  position in `option_files`.
+- **SSRF**: `_validate_http_url` only checked the URL scheme and a non-empty host —
+  no check against loopback/link-local/private/reserved address ranges (including the
+  `169.254.169.254` cloud metadata endpoint), and `urlopen` followed redirects
+  transparently with no re-validation of the redirect target. Since Cinema fetches
+  externally-supplied URLs server-side into the workspace, this was a real SSRF
+  exposure. Fixed with hostname resolution + `ipaddress`-based private/reserved-range
+  rejection, plus a custom `HTTPRedirectHandler` that re-validates every redirect hop
+  before following it.
+  Verified: full test suite (71 tests, +10 new/updated) passes, including new
+  regression tests for nested-same-tag blocks, nested-markup buttons, custom
+  `option_files`, and rejection of loopback/private/link-local/metadata URLs plus
+  a redirect-to-private-address attempt.
+
+## [0.2.19] - 2026-07-05
+
+### Docs
+- Update CHANGELOG.md
+- Update README.md
+
+### Test
+- Update tests/test_options.py
+- Update tests/test_spatial.py
+- Update tests/test_web_fetch.py
+
+### Other
+- Update local.dev.txt
+- Update repatch/options.py
+- Update repatch/spatial.py
+- Update repatch/web_fetch.py
+- Update uv.lock
+
 ## [0.2.18] - 2026-06-29
 
 ### Docs

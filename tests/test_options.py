@@ -35,6 +35,34 @@ def test_sync_option_previews_from_workspace_applies_delete_ids(tmp_path: Path) 
     assert (tmp_path / "stage2.html").exists()
 
 
+def test_sync_option_previews_mirrors_custom_option_files_into_stages(tmp_path: Path) -> None:
+    """stage1/stage2 must mirror whichever files `option_files` actually names,
+    not a hardcoded alt_b.html/alt_c.html that a custom tuple wouldn't write."""
+    html = "<!DOCTYPE html><html><head><title>Base</title></head><body></body></html>"
+    (tmp_path / "stage0.html").write_text(html, encoding="utf-8")
+    custom_files = (
+        ("custom_a.html", "Custom A"),
+        ("custom_b.html", "Custom B"),
+        ("custom_c.html", "Custom C"),
+    )
+
+    result = sync_option_previews_from_workspace(
+        tmp_path,
+        stage=0,
+        delete_ids=[],
+        finalize_html=lambda value: value,
+        option_files=custom_files,
+    )
+
+    assert result["files"] == ["custom_a.html", "custom_b.html", "custom_c.html"]
+    assert (tmp_path / "stage1.html").read_text(encoding="utf-8") == (
+        tmp_path / "custom_b.html"
+    ).read_text(encoding="utf-8")
+    assert (tmp_path / "stage2.html").read_text(encoding="utf-8") == (
+        tmp_path / "custom_c.html"
+    ).read_text(encoding="utf-8")
+
+
 def test_sync_option_previews_uses_delete_resolver_only_for_none(tmp_path: Path) -> None:
     html = """<!DOCTYPE html><html><body>
     <div class="btn" id="btn-a">a</div><div class="btn" id="btn-b">b</div>

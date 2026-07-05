@@ -2,14 +2,16 @@
 
 from __future__ import annotations
 
+import ipaddress
 import mimetypes
 import re
+import socket
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 HTTP_TIMEOUT = 30
 HTTP_USER_AGENT = "Mozilla/5.0 (compatible; repatch-web-fetch/1.0)"
@@ -54,13 +56,63 @@ class WebFetchResult:
     render_error: str = ""
 
 
+def _non_public_ip_reason(ip_str: str) -> str | None:
+    try:
+        ip = ipaddress.ip_address(ip_str)
+    except ValueError:
+        return None
+    if (
+        ip.is_private
+        or ip.is_loopback
+        or ip.is_link_local  # covers cloud metadata endpoints (169.254.169.254)
+        or ip.is_reserved
+        or ip.is_multicast
+        or ip.is_unspecified
+    ):
+        return f"resolves to a non-public address ({ip_str})"
+    return None
+
+
 def _validate_http_url(url: str) -> str | None:
+    """Reject non-http(s) URLs and hosts that resolve to private/internal
+    addresses (SSRF guard) — Cinema fetches externally supplied URLs
+    server-side, so a loopback/link-local/RFC1918 target (including cloud
+    metadata services at 169.254.169.254) must never be reachable this way.
+    """
     parsed = urlparse(url.strip())
     if parsed.scheme not in {"http", "https"}:
         return "URL must be http or https"
     if not parsed.netloc:
         return "invalid URL"
+    hostname = parsed.hostname
+    if not hostname:
+        return "invalid URL"
+    try:
+        infos = socket.getaddrinfo(hostname, None)
+    except socket.gaierror as exc:
+        return f"could not resolve host: {exc}"
+    for info in infos:
+        reason = _non_public_ip_reason(info[4][0])
+        if reason:
+            return f"refusing to fetch {hostname}: {reason}"
     return None
+
+
+class _SSRFSafeRedirectHandler(HTTPRedirectHandler):
+    """Re-validate each redirect target before following it.
+
+    Without this, an initially-valid public URL could redirect to an
+    internal address and urllib would follow it transparently.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        err = _validate_http_url(newurl)
+        if err:
+            raise URLError(f"blocked redirect to {newurl}: {err}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_SAFE_OPENER = build_opener(_SSRFSafeRedirectHandler)
 
 
 def _charset_from_content_type(content_type: str) -> str | None:
@@ -89,7 +141,7 @@ def _read_http_body(url: str, *, max_bytes: int = MAX_HTTP_BYTES) -> tuple[bytes
     if err:
         raise ValueError(err)
     req = Request(url.strip(), headers={"User-Agent": HTTP_USER_AGENT})
-    with urlopen(req, timeout=HTTP_TIMEOUT) as resp:
+    with _SAFE_OPENER.open(req, timeout=HTTP_TIMEOUT) as resp:
         final_url = str(getattr(resp, "url", None) or url.strip())
         content_type = str(resp.headers.get("Content-Type") or "text/html")
         charset = _charset_from_content_type(content_type)

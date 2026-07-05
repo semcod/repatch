@@ -22,9 +22,13 @@ DeleteResolverFn = Callable[[], list[str]]
 def replace_html_title(html: str, title: str) -> str:
     """Replace an existing document title without otherwise changing the document."""
     if re.search(r"<title[^>]*>", html, flags=re.I):
+        # Use a replacement function, not an f-string: re.sub interprets
+        # backslash sequences (\1, \g<name>, ...) in a string replacement,
+        # so a title containing e.g. "\1" would raise re.error (this pattern
+        # has no capturing groups) instead of being inserted literally.
         return re.sub(
             r"<title[^>]*>.*?</title>",
-            f"<title>{title}</title>",
+            lambda _match: f"<title>{title}</title>",
             str(html or ""),
             count=1,
             flags=re.I | re.S,
@@ -85,14 +89,18 @@ def sync_option_previews_from_workspace(
         (root / filename).write_text(replace_html_title(base, title), encoding="utf-8")
         written.append(filename)
 
-    stage1 = root / "stage1.html"
-    stage2 = root / "stage2.html"
-    alt_b = root / "alt_b.html"
-    alt_c = root / "alt_c.html"
-    if alt_b.exists():
-        stage1.write_text(alt_b.read_text(encoding="utf-8"), encoding="utf-8")
-    if alt_c.exists():
-        stage2.write_text(alt_c.read_text(encoding="utf-8"), encoding="utf-8")
+    # Mirror options B/C into stage1/stage2, by position in `option_files`
+    # rather than a hardcoded "alt_b.html"/"alt_c.html" — a caller passing a
+    # custom option_files tuple would otherwise silently read stale/nonexistent
+    # default filenames here instead of the files actually just written above.
+    if len(option_files) > 1:
+        second = root / option_files[1][0]
+        if second.exists():
+            (root / "stage1.html").write_text(second.read_text(encoding="utf-8"), encoding="utf-8")
+    if len(option_files) > 2:
+        third = root / option_files[2][0]
+        if third.exists():
+            (root / "stage2.html").write_text(third.read_text(encoding="utf-8"), encoding="utf-8")
 
     return {
         "status": "options_synced_from_workspace",
