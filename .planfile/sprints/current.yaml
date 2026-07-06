@@ -74,11 +74,12 @@ sprint:
       execution:
         assigned_to: koru-shell
         attempt: 0
+        finished_at: '2026-07-05T23:55:21.934495Z'
         lease_expires_at: '2026-06-01T15:17:15.786192Z'
         max_attempts: 1
         queue: operator
         started_at: '2026-06-01T14:17:16.299321Z'
-        state: running
+        state: done
       executor:
         kind: shell
         mode: noninteractive
@@ -115,6 +116,16 @@ sprint:
         source: planfile.store
         status: blocked
         timestamp: '2026-06-01T14:17:16.951663+00:00'
+      - action: update
+        changes:
+        - execution
+        - status
+        execution_state: done
+        previous_execution_state: running
+        previous_status: blocked
+        source: planfile.store
+        status: done
+        timestamp: '2026-07-05T23:55:21.935072+00:00'
       id: PLF-002
       inputs:
         api_headers: {}
@@ -155,9 +166,9 @@ sprint:
         timestamp: '2026-06-01T14:17:12.924303+00:00'
         tool: koru-operator-pipeline
       sprint: current
-      status: blocked
+      status: done
       sync: {}
-      updated_at: '2026-06-01T14:17:16.951611+00:00'
+      updated_at: '2026-07-05T23:55:21.935038+00:00'
     PLF-003:
       blocked_by: []
       blocks: []
@@ -166,11 +177,12 @@ sprint:
       execution:
         assigned_to: koru-shell
         attempt: 0
+        finished_at: '2026-07-05T23:55:22.836627Z'
         lease_expires_at: '2026-06-01T15:17:18.086461Z'
         max_attempts: 1
         queue: operator
         started_at: '2026-06-01T14:17:18.591226Z'
-        state: running
+        state: done
       executor:
         kind: shell
         mode: noninteractive
@@ -210,6 +222,16 @@ sprint:
         source: planfile.store
         status: blocked
         timestamp: '2026-06-01T14:17:21.916272+00:00'
+      - action: update
+        changes:
+        - execution
+        - status
+        execution_state: done
+        previous_execution_state: running
+        previous_status: blocked
+        source: planfile.store
+        status: done
+        timestamp: '2026-07-05T23:55:22.837204+00:00'
       id: PLF-003
       inputs:
         api_headers: {}
@@ -259,9 +281,9 @@ sprint:
         timestamp: '2026-06-01T14:17:12.941915+00:00'
         tool: koru-operator-pipeline
       sprint: current
-      status: blocked
+      status: done
       sync: {}
-      updated_at: '2026-06-01T14:17:21.916242+00:00'
+      updated_at: '2026-07-05T23:55:22.837170+00:00'
     PLF-004:
       blocked_by: []
       blocks: []
@@ -612,3 +634,191 @@ sprint:
       status: open
       sync: {}
       updated_at: '2026-06-01T14:17:14.751850+00:00'
+    PLF-009:
+      blocked_by: []
+      blocks: []
+      created_at: '2026-07-05T23:55:23.299669+00:00'
+      description: '[OPERATOR] Kalibracja czatu OS injectora (auto)
+
+
+        brak kalibracji chatu dla auto — task koru:ide-os:calibrate IDE=auto
+
+
+        Wykonaj w IDE, potem zamknij ticket: `task tickets:done -- <id>` lub planfile
+        ticket done.
+
+
+        Weryfikacja (opcjonalnie): `task koru:ide-os:calibrate IDE=auto`'
+      execution:
+        attempt: 0
+        finished_at: '2026-07-06T08:04:45.381390Z'
+        max_attempts: 1
+        queue: operator
+        state: done
+      executor:
+        kind: human
+        mode: interactive
+      files: []
+      history:
+      - action: created
+        message: '[OPERATOR] Kalibracja czatu OS injectora (auto)
+
+
+          brak kalibracji chatu dla auto — task koru:ide-os:calibrate IDE=auto
+
+
+          Wykonaj w IDE, potem zamknij ticket: `task tickets:done -- <id>` lub planfile
+          ticket done.
+
+
+          Weryfikacja (opcjonalnie): `task koru:ide-os:calibrate IDE=auto`'
+        source: koru task
+        timestamp: '2026-07-05T23:55:23.299669+00:00'
+      - action: update
+        changes:
+        - execution
+        - status
+        execution_state: done
+        previous_execution_state: ready
+        previous_status: open
+        source: planfile.store
+        status: done
+        timestamp: '2026-07-06T08:04:45.382011+00:00'
+      id: PLF-009
+      inputs:
+        api_headers: {}
+        api_method: GET
+        api_timeout_seconds: 30.0
+        env_keys: []
+        prompt: '[OPERATOR] Kalibracja czatu OS injectora (auto)
+
+
+          brak kalibracji chatu dla auto — task koru:ide-os:calibrate IDE=auto
+
+
+          Wykonaj w IDE, potem zamknij ticket: `task tickets:done -- <id>` lub planfile
+          ticket done.
+
+
+          Weryfikacja (opcjonalnie): `task koru:ide-os:calibrate IDE=auto`'
+      labels:
+      - koru
+      - nl-task
+      - llm-ready
+      - operator
+      - auto-pipeline
+      - step:os_calibrate
+      name: '[OPERATOR] Kalibracja czatu OS injectora (auto) brak kalibracji chatu
+        dla auto — task koru:ide-os:calibrate IDE=auto ...'
+      outputs:
+        artifacts: []
+        notes: []
+      priority: high
+      source:
+        context:
+          dedupe_key: koru-operator-pipeline:operator-kalibracja-czatu-os-injectora-auto-brak-kalibracji-chatu-dla-auto-task-koru-ide-os-calibrate-ide-auto-...
+          detail: brak kalibracji chatu dla auto — task koru:ide-os:calibrate IDE=auto
+          input: '[OPERATOR] Kalibracja czatu OS injectora (auto)
+
+
+            brak kalibracji chatu dla auto — task koru:ide-os:calibrate IDE=auto
+
+
+            Wykonaj w IDE, potem zamknij ticket: `task tickets:done -- <id>` lub planfile
+            ticket done.
+
+
+            Weryfikacja (opcjonalnie): `task koru:ide-os:calibrate IDE=auto`'
+          step_id: os_calibrate
+          task_command: task koru:ide-os:calibrate IDE=auto
+        timestamp: '2026-07-05T23:55:23.299669+00:00'
+        tool: koru-operator-pipeline
+      sprint: current
+      status: done
+      sync: {}
+      updated_at: '2026-07-06T08:04:45.381978+00:00'
+    PLF-010:
+      blocked_by: []
+      blocks: []
+      created_at: '2026-07-06T08:04:44.639240+00:00'
+      description: '[OPERATOR] Koru self-control (paczka / VSIX / runtime): self-control
+        auto-repair ran (install_plugin); autopilot_install_manager: ide=jetbrains;
+        socket=/run/user/1000/koru-autopilot-jetbrains.sock; package=0.1.389; source=0.1.390;
+        connected=False; installed=-; expected=-; repairable=koru_version_mismatch:warning
+
+
+        Shell: `koru self --project /home/tom/github/semcod/repatch --ide jetbrains
+        repair --yes`'
+      execution:
+        attempt: 0
+        max_attempts: 1
+        queue: operator
+        state: ready
+      executor:
+        kind: shell
+        mode: noninteractive
+      files: []
+      history:
+      - action: created
+        message: '[OPERATOR] Koru self-control (paczka / VSIX / runtime): self-control
+          auto-repair ran (install_plugin); autopilot_install_manager: ide=jetbrains;
+          socket=/run/user/1000/koru-autopilot-jetbrains.sock; package=0.1.389; source=0.1.390;
+          connected=False; installed=-; expected=-; repairable=koru_version_mismatch:warning
+
+
+          Shell: `koru self --project /home/tom/github/semcod/repatch --ide jetbrains
+          repair --yes`'
+        source: koru task
+        timestamp: '2026-07-06T08:04:44.639240+00:00'
+      id: PLF-010
+      inputs:
+        api_headers: {}
+        api_method: GET
+        api_timeout_seconds: 30.0
+        env_keys: []
+        prompt: '[OPERATOR] Koru self-control (paczka / VSIX / runtime): self-control
+          auto-repair ran (install_plugin); autopilot_install_manager: ide=jetbrains;
+          socket=/run/user/1000/koru-autopilot-jetbrains.sock; package=0.1.389; source=0.1.390;
+          connected=False; installed=-; expected=-; repairable=koru_version_mismatch:warning
+
+
+          Shell: `koru self --project /home/tom/github/semcod/repatch --ide jetbrains
+          repair --yes`'
+        script: koru self --project /home/tom/github/semcod/repatch --ide jetbrains
+          repair --yes
+      labels:
+      - koru
+      - nl-task
+      - llm-ready
+      - operator
+      - auto-pipeline
+      - step:self_control
+      name: '[OPERATOR] Koru self-control (paczka / VSIX / runtime): self-control
+        auto-repair ran (install_plugin); autopilot_inst...'
+      outputs:
+        artifacts: []
+        notes: []
+      priority: high
+      source:
+        context:
+          dedupe_key: koru-operator-pipeline:operator-koru-self-control-paczka-/-vsix-/-runtime-self-control-auto-repair-ran-install_plugin-autopilot_inst...
+          detail: 'self-control auto-repair ran (install_plugin); autopilot_install_manager:
+            ide=jetbrains; socket=/run/user/1000/koru-autopilot-jetbrains.sock; package=0.1.389;
+            source=0.1.390; connected=False; installed=-; expected=-; repairable=koru_version_mismatch:warning'
+          input: '[OPERATOR] Koru self-control (paczka / VSIX / runtime): self-control
+            auto-repair ran (install_plugin); autopilot_install_manager: ide=jetbrains;
+            socket=/run/user/1000/koru-autopilot-jetbrains.sock; package=0.1.389;
+            source=0.1.390; connected=False; installed=-; expected=-; repairable=koru_version_mismatch:warning
+
+
+            Shell: `koru self --project /home/tom/github/semcod/repatch --ide jetbrains
+            repair --yes`'
+          step_id: self_control
+          task_command: koru self --project /home/tom/github/semcod/repatch --ide
+            jetbrains repair --yes
+        timestamp: '2026-07-06T08:04:44.639240+00:00'
+        tool: koru-operator-pipeline
+      sprint: current
+      status: open
+      sync: {}
+      updated_at: '2026-07-06T08:04:44.639240+00:00'

@@ -285,3 +285,8 @@ site/public/artifacts/*.deb
 site/public/artifacts/*.AppImage
 site/public/artifacts/*.msi
 site/public/artifacts/*.exe
+
+# koru runtime artefacts (generated)
+.planfile/.koru/
+.koru/
+.planfile/sprints/*.bak-*

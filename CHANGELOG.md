@@ -43,6 +43,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `option_files`, and rejection of loopback/private/link-local/metadata URLs plus
   a redirect-to-private-address attempt.
 
+## [0.2.20] - 2026-07-06
+
+### Docs
+- Update README.md
+
+### Test
+- Update tests/test_marked_context_regression.py
+
+### Other
+- Update .cursor/mcp.json
+- Update .gitignore
+- Update .koru/event-store.jsonl
+- Update .koru/events/observability.jsonl
+- Update .nlp2dsl/environment.doql.less
+- Update .nlp2dsl/registry/environment.doql.less
+- Update .planfile/.koru/operator-steps/mcp_koru.ticket
+- Update .planfile/.koru/operator-steps/self_control.ticket
+- Update .planfile/config.yaml
+- Update .planfile/sprints/current.yaml
+- ... and 9 more files
+
 ## [0.2.19] - 2026-07-05
 
 ### Docs
