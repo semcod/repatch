@@ -290,3 +290,8 @@ site/public/artifacts/*.exe
 .planfile/.koru/
 .koru/
 .planfile/sprints/*.bak-*
+.cursor/
+.github/
+.nlp2dsl/
+.planfile/
+.wup/
