@@ -12,6 +12,28 @@ pip install -e .
 # Nexu: repatch @ file:///path/to/repatch in pyproject.toml
 ```
 
+## Local development (DevX)
+
+Run the whole dev stack in one command — seed fixtures, hot-reload and
+interactive OpenAPI docs:
+
+```bash
+pip install -e ".[server]"   # once, to install fastapi + uvicorn
+make dev                     # http://localhost:8000/docs
+```
+
+or via Docker Compose:
+
+```bash
+docker compose up --build   # or: make up
+```
+
+Both start a FastAPI dev server that exposes the patch utilities as HTTP
+endpoints, auto-generates OpenAPI docs at `/docs` (Swagger UI) and `/redoc`,
+and pre-loads the bundled seed fixtures (`GET /seeds`). `make seed` (or
+`python -m repatch.seeds`) lists the seed fixtures standalone. The server is
+started with `--reload`, so edits to `repatch/` are picked up automatically.
+
 ## Public API (`repatch`)
 
 | Module | Key symbols |

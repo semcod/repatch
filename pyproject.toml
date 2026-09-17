@@ -16,6 +16,9 @@ web = ["playwright>=1.40"]
 dev = ["pytest>=7.0",
     "costs>=0.1.20",
 ]
+server = ["fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
+]
 
 [tool.setuptools]
 packages = ["repatch", "repatch.marked_context"]
