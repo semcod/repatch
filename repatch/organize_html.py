@@ -133,48 +133,42 @@ def _add_markable_targets(html: str) -> tuple[str, int]:
     return _MARKABLE_OPEN_RE.sub(_replace, html), added
 
 
-def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
-    """
-    Extract substantial inline CSS/JS, strip preview scripts and lazy imgs, tag markable nodes.
+def _write_asset(base_dir: Path | None, filename: str, content: str) -> bool:
+    if base_dir is None:
+        return True
+    try:
+        (base_dir / filename).write_text(
+            content + ("\n" if content else ""),
+            encoding="utf-8",
+        )
+        return True
+    except OSError:
+        return False
 
-    When ``base_dir`` is set, writes ``nexu-extracted.css`` / ``nexu-extracted.js`` beside index.
-    """
-    source = str(html or "")
-    meta: dict[str, Any] = {
-        "styles_extracted": False,
-        "styles_inline_blocks": 0,
-        "scripts_removed": 0,
-        "scripts_extracted": False,
-        "lazy_imgs_removed": 0,
-        "targets_added": 0,
-    }
-    if not source.strip():
-        return OrganizeResult(html=source, meta=meta)
 
-    out = source
+def _apply_extracted_styles(
+    out: str, base_dir: Path | None, meta: dict[str, Any]
+) -> str:
     style_text, style_blocks = _extract_inline_styles(out)
     meta["styles_inline_blocks"] = style_blocks
-    if len(style_text) >= MIN_STYLE_EXTRACT_CHARS:
-        wrote_css = False
-        if base_dir is not None:
-            try:
-                (base_dir / EXTRACTED_CSS_NAME).write_text(
-                    style_text + ("\n" if style_text else ""),
-                    encoding="utf-8",
-                )
-                wrote_css = True
-            except OSError:
-                wrote_css = False
-        else:
-            wrote_css = True
-            meta["extracted_css_inline"] = style_text
-        if wrote_css:
-            out = _STYLE_BLOCK_FULL_RE.sub("", out)
-            meta["styles_extracted"] = True
-            if base_dir is not None:
-                meta["extracted_css_path"] = EXTRACTED_CSS_NAME
-                out = _inject_head_link(out, href=EXTRACTED_CSS_NAME)
+    if len(style_text) < MIN_STYLE_EXTRACT_CHARS:
+        return out
+    if base_dir is not None:
+        wrote_css = _write_asset(base_dir, EXTRACTED_CSS_NAME, style_text)
+    else:
+        wrote_css = True
+        meta["extracted_css_inline"] = style_text
+    if not wrote_css:
+        return out
+    out = _STYLE_BLOCK_FULL_RE.sub("", out)
+    meta["styles_extracted"] = True
+    if base_dir is not None:
+        meta["extracted_css_path"] = EXTRACTED_CSS_NAME
+        out = _inject_head_link(out, href=EXTRACTED_CSS_NAME)
+    return out
 
+
+def _collect_script_edits(out: str) -> tuple[list[str], int, list[tuple[str, str]]]:
     script_chunks: list[str] = []
     scripts_removed = 0
     script_edits: list[tuple[str, str]] = []
@@ -193,20 +187,23 @@ def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
             continue
         scripts_removed += 1
         script_edits.append((block, "<!-- repatch: inline script removed -->"))
+    return script_chunks, scripts_removed, script_edits
 
+
+def _apply_extracted_scripts(
+    out: str,
+    script_chunks: list[str],
+    script_edits: list[tuple[str, str]],
+    scripts_removed: int,
+    base_dir: Path | None,
+    meta: dict[str, Any],
+) -> str:
     meta["scripts_removed"] = scripts_removed
     wrote_js = False
     if script_chunks:
         combined_js = "\n\n".join(script_chunks)
         if base_dir is not None:
-            try:
-                (base_dir / EXTRACTED_JS_NAME).write_text(
-                    combined_js + ("\n" if combined_js else ""),
-                    encoding="utf-8",
-                )
-                wrote_js = True
-            except OSError:
-                wrote_js = False
+            wrote_js = _write_asset(base_dir, EXTRACTED_JS_NAME, combined_js)
         else:
             wrote_js = True
             meta["extracted_js_inline"] = combined_js
@@ -223,6 +220,32 @@ def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
         out = out.replace(original, replacement, 1)
     if wrote_js and base_dir is not None:
         out = _inject_head_script(out, src=EXTRACTED_JS_NAME)
+    return out
+
+
+def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
+    """
+    Extract substantial inline CSS/JS, strip preview scripts and lazy imgs, tag markable nodes.
+
+    When ``base_dir`` is set, writes ``nexu-extracted.css`` / ``nexu-extracted.js`` beside index.
+    """
+    source = str(html or "")
+    meta: dict[str, Any] = {
+        "styles_extracted": False,
+        "styles_inline_blocks": 0,
+        "scripts_removed": 0,
+        "scripts_extracted": False,
+        "lazy_imgs_removed": 0,
+        "targets_added": 0,
+    }
+    if not source.strip():
+        return OrganizeResult(html=source, meta=meta)
+
+    out = _apply_extracted_styles(source, base_dir, meta)
+    script_chunks, scripts_removed, script_edits = _collect_script_edits(out)
+    out = _apply_extracted_scripts(
+        out, script_chunks, script_edits, scripts_removed, base_dir, meta
+    )
 
     out, lazy_removed = _strip_lazy_placeholder_imgs(out)
     meta["lazy_imgs_removed"] = lazy_removed

@@ -70,6 +70,32 @@ def _collect_keep_selectors(html: str, keep_ids: list[str]) -> set[str]:
     return blocked
 
 
+def _append_unique_selector(
+    selectors: list[str],
+    seen: set[str],
+    blocked: set[str],
+    sel: str | None,
+) -> None:
+    if sel and sel not in seen and sel not in blocked:
+        seen.add(sel)
+        selectors.append(sel)
+
+
+def _collect_fragment_selectors(
+    fragment: str,
+    narrow: bool,
+    selectors: list[str],
+    seen: set[str],
+    blocked: set[str],
+) -> None:
+    for match in re.finditer(r"""\bid\s*=\s*(['"])(.*?)\1""", fragment, re.IGNORECASE):
+        _append_unique_selector(selectors, seen, blocked, _css_id_selector(match.group(2).strip()))
+    for cls in _fragment_class_names(fragment):
+        if narrow and cls.lower() in _GENERIC_SHARED_CLASSES:
+            continue
+        _append_unique_selector(selectors, seen, blocked, f".{cls}")
+
+
 def resolve_marked_selectors(
     html: str,
     element_ids: list[str],
@@ -85,23 +111,13 @@ def resolve_marked_selectors(
     seen: set[str] = set()
     blocked = _collect_keep_selectors(html, keep_ids or []) if (keep_ids or narrow) else set()
 
-    def add(sel: str | None) -> None:
-        if sel and sel not in seen and sel not in blocked:
-            seen.add(sel)
-            selectors.append(sel)
-
     for element_id in delete:
         for sel in marked_css_selectors([element_id]):
-            add(sel)
+            _append_unique_selector(selectors, seen, blocked, sel)
 
     subtrees = _find_marked_subtrees(str(html or ""), set(delete))
     for fragment in subtrees.values():
-        for match in re.finditer(r"""\bid\s*=\s*(['"])(.*?)\1""", fragment, re.IGNORECASE):
-            add(_css_id_selector(match.group(2).strip()))
-        for cls in _fragment_class_names(fragment):
-            if narrow and cls.lower() in _GENERIC_SHARED_CLASSES:
-                continue
-            add(f".{cls}")
+        _collect_fragment_selectors(fragment, narrow, selectors, seen, blocked)
     return selectors
 
 

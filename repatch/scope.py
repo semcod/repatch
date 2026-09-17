@@ -27,6 +27,9 @@ DASHBOARD_KINDS = frozenset(
 
 SCOPE_STYLE_ID = "nexu-scope-variant"
 
+# Tags that never carry data-nexu-target annotations during binding.
+_SKIP_TAGS = frozenset({"html", "head", "body", "style", "script", "link", "meta"})
+
 # kind -> ordered scope ids shown in Cinema player
 IMPORTED_KINDS = frozenset({"imported", "web"})
 
@@ -463,70 +466,54 @@ def should_block_full_html_iterate(
     return kind in MARKED_PATCH_KINDS
 
 
-def _bind_annotations_to_html(
-    html: str,
+def _annotation_hit(
+    text: str, match: re.Match[str], wanted: set[str]
+) -> tuple[str, dict[str, str]] | None:
+    """Return the matched id and attrs for a tag match, or None when unmarked."""
+    tag = match.group(1).lower()
+    if tag in _SKIP_TAGS:
+        return None
+    attrs = _parse_attrs(match.group(2))
+    raw_id = str(attrs.get("id") or "").strip()
+    candidates = _id_candidates(raw_id) if raw_id else set()
+    target = str(attrs.get("data-nexu-target") or "").strip()
+    if target:
+        candidates |= _id_candidates(target)
+    logical = _logical_id(tag, attrs)
+    if logical:
+        candidates |= _id_candidates(logical)
+
+    hit = wanted & candidates
+    if not hit:
+        if raw_id or target:
+            return None
+        inner_start = match.end()
+        inner_end = text.lower().find(f"</{tag}>", inner_start)
+        if inner_end >= 0:
+            inner_content = text[inner_start:inner_end]
+            label = _normalize_label_text(re.sub(r"<[^>]+>", "", inner_content))
+            logical = _logical_id(tag, attrs, text=label)
+            if logical:
+                hit = wanted & _id_candidates(logical)
+
+    if not hit:
+        return None
+    return list(hit)[0], attrs
+
+
+def _marked_ids_set(
     keep_ids: list[str] | None,
     delete_ids: list[str] | None,
-) -> str:
+) -> set[str] | None:
     keep = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
     delete = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
     marked_ids = keep + [x for x in delete if x not in keep]
     if not marked_ids:
-        return html
+        return None
+    return set(marked_ids)
 
-    wanted = set(marked_ids)
-    text = str(html or "")
-    
-    matches = list(_TAG_OPEN_RE.finditer(text))
-    matched_ranges: list[tuple[int, int, str]] = []
-    seen_elements = set()
-    
-    for match in matches:
-        tag = match.group(1).lower()
-        if tag in ("html", "head", "body", "style", "script", "link", "meta"):
-            continue
-        attrs_text = match.group(2)
-        attrs = _parse_attrs(attrs_text)
-        
-        raw_id = str(attrs.get("id") or "").strip()
-        candidates = _id_candidates(raw_id) if raw_id else set()
-        target = str(attrs.get("data-nexu-target") or "").strip()
-        if target:
-            candidates |= _id_candidates(target)
-        logical = _logical_id(tag, attrs)
-        if logical:
-            candidates |= _id_candidates(logical)
-            
-        hit = wanted & candidates
-        if not hit and tag not in ("html", "head", "body", "style", "script", "link", "meta"):
-            if raw_id or target:
-                continue
-            inner_start = match.end()
-            inner_end = text.lower().find(f"</{tag}>", inner_start)
-            if inner_end >= 0:
-                inner_content = text[inner_start:inner_end]
-                label = _normalize_label_text(re.sub(r"<[^>]+>", "", inner_content))
-                logical = _logical_id(tag, attrs, text=label)
-                if logical:
-                    hit = wanted & _id_candidates(logical)
-                    
-        if not hit:
-            continue
-            
-        matched_id = list(hit)[0]
-        if matched_id in seen_elements:
-            continue
-        seen_elements.add(matched_id)
-        
-        if "data-nexu-target" in attrs:
-            continue
-            
-        new_tag = f"<{tag} data-nexu-target=\"{matched_id}\" {attrs_text}>"
-        matched_ranges.append((match.start(), match.end(), new_tag))
-        
-    if not matched_ranges:
-        return html
-        
+
+def _apply_replacements(text: str, matched_ranges: list[tuple[int, int, str]]) -> str:
     parts: list[str] = []
     last_idx = 0
     for start, end, replacement in matched_ranges:
@@ -535,6 +522,37 @@ def _bind_annotations_to_html(
         last_idx = end
     parts.append(text[last_idx:])
     return "".join(parts)
+
+
+def _bind_annotations_to_html(
+    html: str,
+    keep_ids: list[str] | None,
+    delete_ids: list[str] | None,
+) -> str:
+    wanted = _marked_ids_set(keep_ids, delete_ids)
+    if not wanted:
+        return html
+
+    text = str(html or "")
+    matched_ranges: list[tuple[int, int, str]] = []
+    seen_elements: set[str] = set()
+    for match in _TAG_OPEN_RE.finditer(text):
+        result = _annotation_hit(text, match, wanted)
+        if result is None:
+            continue
+        matched_id, attrs = result
+        if matched_id in seen_elements:
+            continue
+        seen_elements.add(matched_id)
+        if "data-nexu-target" in attrs:
+            continue
+        tag = match.group(1).lower()
+        new_tag = f'<{tag} data-nexu-target="{matched_id}" {match.group(2)}>'
+        matched_ranges.append((match.start(), match.end(), new_tag))
+
+    if not matched_ranges:
+        return html
+    return _apply_replacements(text, matched_ranges)
 
 
 def _get_scope_css(
@@ -570,6 +588,65 @@ def _inject_css_block(html: str, css: str) -> str:
     return block + html
 
 
+def _orientation_delete_css(
+    inferred: str,
+    cleaned: str,
+    selectors: list[str],
+    variant: str,
+    user_goal: str,
+) -> str:
+    css = marked_scope_orientation_css(selectors, variant)
+    if _uses_web_scope_css(inferred, cleaned) and goal_requests_column_layout(user_goal):
+        page_css = _web_orientation_scope_css(variant, user_goal=user_goal)
+        if page_css:
+            css = f"{page_css}\n{css}"
+    return css
+
+
+def _with_marked_extra(base_css: str, extra_css: str) -> str:
+    if extra_css:
+        return f"{base_css}\n{extra_css}"
+    return base_css
+
+
+def _delete_scope_css(
+    scope: str,
+    inferred: str,
+    cleaned: str,
+    effective_delete: list[str],
+    keep_list: list[str],
+    variant: str,
+    user_goal: str,
+    fallback_css: str,
+) -> str:
+    selectors = resolve_marked_selectors(
+        cleaned,
+        effective_delete,
+        keep_ids=keep_list,
+        narrow=(scope == "colors"),
+    )
+    if scope == "colors" and selectors:
+        return marked_scope_colors_css(selectors, variant)
+    if scope == "orientation" and selectors:
+        return _orientation_delete_css(inferred, cleaned, selectors, variant, user_goal)
+    if scope == "display" and selectors and _uses_web_scope_css(inferred, cleaned):
+        return _with_marked_extra(
+            _web_display_scope_css(variant),
+            marked_scope_display_css(selectors, variant),
+        )
+    if scope == "shapes" and selectors and _uses_web_scope_css(inferred, cleaned):
+        return _with_marked_extra(
+            _web_shapes_scope_css(variant),
+            marked_scope_shapes_css(selectors, variant),
+        )
+    return restrict_scope_css_to_marks(
+        fallback_css,
+        effective_delete,
+        html=cleaned,
+        keep_ids=keep_list,
+    )
+
+
 def inject_scope_style(
     html: str,
     scope: str,
@@ -591,39 +668,16 @@ def inject_scope_style(
     css = _get_scope_css(inferred, html, scope, variant, user_goal=user_goal)
     cleaned = strip_scope_style(html)
     if scope in VISUAL_REDESIGN_SCOPES and effective_delete:
-        selectors = resolve_marked_selectors(
+        css = _delete_scope_css(
+            scope,
+            inferred,
             cleaned,
             effective_delete,
-            keep_ids=keep_list,
-            narrow=(scope == "colors"),
+            keep_list,
+            variant,
+            user_goal,
+            css,
         )
-        if scope == "colors" and selectors:
-            css = marked_scope_colors_css(selectors, variant)
-        elif scope == "orientation" and selectors:
-            css = marked_scope_orientation_css(selectors, variant)
-            if _uses_web_scope_css(inferred, cleaned) and goal_requests_column_layout(
-                user_goal
-            ):
-                page_css = _web_orientation_scope_css(variant, user_goal=user_goal)
-                if page_css:
-                    css = f"{page_css}\n{css}"
-        elif scope == "display" and selectors and _uses_web_scope_css(inferred, cleaned):
-            css = _web_display_scope_css(variant)
-            extra = marked_scope_display_css(selectors, variant)
-            if extra:
-                css = f"{css}\n{extra}"
-        elif scope == "shapes" and selectors and _uses_web_scope_css(inferred, cleaned):
-            css = _web_shapes_scope_css(variant)
-            extra = marked_scope_shapes_css(selectors, variant)
-            if extra:
-                css = f"{css}\n{extra}"
-        else:
-            css = restrict_scope_css_to_marks(
-                css,
-                effective_delete,
-                html=cleaned,
-                keep_ids=keep_list,
-            )
     return _inject_css_block(cleaned, css)
 
 

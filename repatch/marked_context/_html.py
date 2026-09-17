@@ -39,6 +39,8 @@ _VOID_TAGS = frozenset(
 )
 _TAG_OPEN_RE = re.compile(r"<\s*([a-zA-Z][\w:-]*)\b([^>]*)>", re.DOTALL)
 
+_SKIP_TAGS = frozenset({"html", "head", "body", "style", "script", "link", "meta"})
+
 __all__ = [
     "MAX_FRAGMENT_BYTES",
     "_TAG_OPEN_RE",
@@ -119,6 +121,24 @@ def _extract_and_format_fragment(text: str, start: int) -> str | None:
     return compact
 
 
+def _match_marked_ids(
+    text: str, match: re.Match[str], wanted: set[str]
+) -> set[str]:
+    """Return the wanted ids matched by a single tag match (empty when unmarked)."""
+    tag = match.group(1).lower()
+    attrs = _parse_attrs(match.group(2))
+    raw_id = str(attrs.get("id") or "").strip()
+    target = str(attrs.get("data-nexu-target") or "").strip()
+    hit = wanted & _collect_match_candidates(tag, attrs)
+    if hit:
+        return hit
+    if tag in _VOID_TAGS or tag in _SKIP_TAGS:
+        return hit
+    if raw_id or target:
+        return hit
+    return wanted & _collect_button_candidates(tag, attrs, match, text)
+
+
 def _find_marked_subtrees(html: str, marked_ids: set[str]) -> dict[str, str]:
     """Map logical element id → compact outerHTML fragment."""
     if not marked_ids:
@@ -127,24 +147,7 @@ def _find_marked_subtrees(html: str, marked_ids: set[str]) -> dict[str, str]:
     found: dict[str, str] = {}
     text = str(html or "")
     for match in _TAG_OPEN_RE.finditer(text):
-        tag = match.group(1).lower()
-        attrs = _parse_attrs(match.group(2))
-        raw_id = str(attrs.get("id") or "").strip()
-        target = str(attrs.get("data-nexu-target") or "").strip()
-        candidates = _collect_match_candidates(tag, attrs)
-        hit = wanted & candidates
-        if not hit and tag not in _VOID_TAGS and tag not in (
-            "html",
-            "head",
-            "body",
-            "style",
-            "script",
-            "link",
-            "meta",
-        ):
-            if not raw_id and not target:
-                btn_candidates = _collect_button_candidates(tag, attrs, match, text)
-                hit = wanted & btn_candidates
+        hit = _match_marked_ids(text, match, wanted)
         if not hit:
             continue
         compact = _extract_and_format_fragment(text, match.start())

@@ -379,6 +379,51 @@ def _cap_patch_text(text: str, max_bytes: int, *, label: str) -> str:
     return truncated + f"\n/* repatch: {label} truncated */"
 
 
+def _organize_manifest_lines(organize: dict[str, Any]) -> list[str]:
+    lines: list[str] = []
+    extracted_files = organize.get("extracted_files")
+    if isinstance(extracted_files, list) and extracted_files:
+        lines.append(
+            "Extracted inline assets: "
+            + ", ".join(str(item) for item in extracted_files if item)
+        )
+    tagged = organize.get("tagged_targets_count")
+    if tagged:
+        lines.append(
+            f"Markable nodes tagged with data-nexu-target: {int(tagged)} "
+            "(use these selectors when referencing unlabelled elements)."
+        )
+    lazy = organize.get("stripped_lazy_img_count")
+    if lazy:
+        lines.append(f"Lazy placeholder images removed at import: {int(lazy)}")
+    return lines
+
+
+def _manifest_section(organize: dict[str, Any], source_paths: dict[str, Any]) -> list[str]:
+    section: list[str] = []
+    manifest_lines = _organize_manifest_lines(organize)
+    if manifest_lines:
+        section.append("Import organize manifest:\n" + "\n".join(manifest_lines))
+    paths = "\n".join(
+        f"- {key}: {value}" for key, value in source_paths.items() if str(value).strip()
+    )
+    if paths:
+        section.append(
+            "Editable source files (prefer patching these over full stage0.html):\n" + paths
+        )
+    return section
+
+
+def _has_llm_content(
+    css: str,
+    outline: str,
+    organize: dict[str, Any],
+    extracted_css: str,
+    extracted_js: str,
+) -> bool:
+    return bool(css or outline or organize or extracted_css or extracted_js)
+
+
 def build_http_llm_context(artifacts: dict[str, Any]) -> str:
     """Combine visual CSS + HTML outline (+ organize manifest) for compact LLM patch prompts."""
     css = str(artifacts.get("visual_css") or "").strip()
@@ -397,38 +442,14 @@ def build_http_llm_context(artifacts: dict[str, Any]) -> str:
     source_paths = (
         artifacts.get("source_paths") if isinstance(artifacts.get("source_paths"), dict) else {}
     )
-    if not css and not outline and not organize and not extracted_css and not extracted_js:
+    if not _has_llm_content(css, outline, organize, extracted_css, extracted_js):
         return ""
     parts = [
         "IMPORTED WEB PAGE (patch mode — change CSS property values and minimal HTML attributes only; "
         "do not replace the entire document).",
     ]
     if organize or source_paths:
-        manifest_lines: list[str] = []
-        extracted_files = organize.get("extracted_files")
-        if isinstance(extracted_files, list) and extracted_files:
-            manifest_lines.append(
-                "Extracted inline assets: " + ", ".join(str(item) for item in extracted_files if item)
-            )
-        tagged = organize.get("tagged_targets_count")
-        if tagged:
-            manifest_lines.append(
-                f"Markable nodes tagged with data-nexu-target: {int(tagged)} "
-                "(use these selectors when referencing unlabelled elements)."
-            )
-        lazy = organize.get("stripped_lazy_img_count")
-        if lazy:
-            manifest_lines.append(f"Lazy placeholder images removed at import: {int(lazy)}")
-        if manifest_lines:
-            parts.append("Import organize manifest:\n" + "\n".join(manifest_lines))
-        if source_paths:
-            paths = "\n".join(
-                f"- {key}: {value}" for key, value in source_paths.items() if str(value).strip()
-            )
-            if paths:
-                parts.append(
-                    "Editable source files (prefer patching these over full stage0.html):\n" + paths
-                )
+        parts.extend(_manifest_section(organize, source_paths))
     if extracted_css:
         parts.append(
             "Extracted inline CSS (from source/index.html):\n```css\n" + extracted_css + "\n```"
