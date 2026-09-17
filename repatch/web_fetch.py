@@ -363,14 +363,14 @@ def _mirror_images(
     return _IMG_TAG_RE.sub(replace_img, html), assets, errors
 
 
-def fetch_complete_web_page(
+def _fetch_page_source(
     url: str,
-    *,
-    source_dir: Path,
-    render_js: bool = True,
-    mirror_assets: bool = True,
-) -> WebFetchResult:
-    """Fetch one page, optionally render JS with Playwright, and mirror core assets locally."""
+    render_js: bool,
+) -> tuple[str, str, str, str | None, str, str]:
+    """Fetch page HTML via Playwright render or raw HTTP fallback.
+
+    Returns (html, final_url, content_type, charset, method, render_error).
+    """
     render_error = ""
     method = "urllib"
     html = ""
@@ -391,24 +391,49 @@ def fetch_complete_web_page(
         body, content_type, final_url, charset = _read_http_body(url.strip())
         html = _decode_http_bytes(body, content_type=content_type, charset=charset)
 
+    return html, final_url, content_type, charset, method, render_error
+
+
+def _mirror_page_assets(
+    html: str,
+    final_url: str,
+    source_dir: Path,
+) -> tuple[str, list[WebAsset], list[str]]:
+    """Mirror stylesheets and images into source_dir/assets."""
+    assets: list[WebAsset] = []
+    errors: list[str] = []
+    assets_dir = source_dir / "assets"
+    html, css_assets, css_errors = _mirror_stylesheets(
+        html,
+        page_url=final_url,
+        assets_dir=assets_dir,
+    )
+    html, image_assets, image_errors = _mirror_images(
+        html,
+        page_url=final_url,
+        assets_dir=assets_dir,
+    )
+    assets.extend(css_assets)
+    assets.extend(image_assets)
+    errors.extend(css_errors)
+    errors.extend(image_errors)
+    return html, assets, errors
+
+
+def fetch_complete_web_page(
+    url: str,
+    *,
+    source_dir: Path,
+    render_js: bool = True,
+    mirror_assets: bool = True,
+) -> WebFetchResult:
+    """Fetch one page, optionally render JS with Playwright, and mirror core assets locally."""
+    html, final_url, content_type, charset, method, render_error = _fetch_page_source(url, render_js)
+
     assets: list[WebAsset] = []
     errors: list[str] = []
     if mirror_assets and "html" in content_type.lower():
-        assets_dir = source_dir / "assets"
-        html, css_assets, css_errors = _mirror_stylesheets(
-            html,
-            page_url=final_url,
-            assets_dir=assets_dir,
-        )
-        html, image_assets, image_errors = _mirror_images(
-            html,
-            page_url=final_url,
-            assets_dir=assets_dir,
-        )
-        assets.extend(css_assets)
-        assets.extend(image_assets)
-        errors.extend(css_errors)
-        errors.extend(image_errors)
+        html, assets, errors = _mirror_page_assets(html, final_url, source_dir)
 
     return WebFetchResult(
         html=html,
