@@ -379,6 +379,33 @@ def _cap_patch_text(text: str, max_bytes: int, *, label: str) -> str:
     return truncated + f"\n/* repatch: {label} truncated */"
 
 
+def _organize_manifest_lines(organize: dict[str, Any]) -> list[str]:
+    """Build human-readable manifest lines from the organize metadata."""
+    lines: list[str] = []
+    extracted_files = organize.get("extracted_files")
+    if isinstance(extracted_files, list) and extracted_files:
+        lines.append(
+            "Extracted inline assets: " + ", ".join(str(item) for item in extracted_files if item)
+        )
+    if tagged := organize.get("tagged_targets_count"):
+        lines.append(
+            f"Markable nodes tagged with data-nexu-target: {int(tagged)} "
+            "(use these selectors when referencing unlabelled elements)."
+        )
+    if lazy := organize.get("stripped_lazy_img_count"):
+        lines.append(f"Lazy placeholder images removed at import: {int(lazy)}")
+    return lines
+
+
+def _source_paths_part(source_paths: dict[str, Any]) -> str | None:
+    paths = "\n".join(
+        f"- {key}: {value}" for key, value in source_paths.items() if str(value).strip()
+    )
+    if not paths:
+        return None
+    return "Editable source files (prefer patching these over full stage0.html):\n" + paths
+
+
 def build_http_llm_context(artifacts: dict[str, Any]) -> str:
     """Combine visual CSS + HTML outline (+ organize manifest) for compact LLM patch prompts."""
     css = str(artifacts.get("visual_css") or "").strip()
@@ -399,36 +426,29 @@ def build_http_llm_context(artifacts: dict[str, Any]) -> str:
     )
     if not css and not outline and not organize and not extracted_css and not extracted_js:
         return ""
+    parts = _context_parts(organize, source_paths, extracted_css, extracted_js, css, outline)
+    return "\n\n".join(parts)
+
+
+def _context_parts(
+    organize: dict[str, Any],
+    source_paths: dict[str, Any],
+    extracted_css: str,
+    extracted_js: str,
+    css: str,
+    outline: str,
+) -> list[str]:
     parts = [
         "IMPORTED WEB PAGE (patch mode — change CSS property values and minimal HTML attributes only; "
         "do not replace the entire document).",
     ]
     if organize or source_paths:
-        manifest_lines: list[str] = []
-        extracted_files = organize.get("extracted_files")
-        if isinstance(extracted_files, list) and extracted_files:
-            manifest_lines.append(
-                "Extracted inline assets: " + ", ".join(str(item) for item in extracted_files if item)
-            )
-        tagged = organize.get("tagged_targets_count")
-        if tagged:
-            manifest_lines.append(
-                f"Markable nodes tagged with data-nexu-target: {int(tagged)} "
-                "(use these selectors when referencing unlabelled elements)."
-            )
-        lazy = organize.get("stripped_lazy_img_count")
-        if lazy:
-            manifest_lines.append(f"Lazy placeholder images removed at import: {int(lazy)}")
+        manifest_lines = _organize_manifest_lines(organize)
         if manifest_lines:
             parts.append("Import organize manifest:\n" + "\n".join(manifest_lines))
-        if source_paths:
-            paths = "\n".join(
-                f"- {key}: {value}" for key, value in source_paths.items() if str(value).strip()
-            )
-            if paths:
-                parts.append(
-                    "Editable source files (prefer patching these over full stage0.html):\n" + paths
-                )
+        source_part = _source_paths_part(source_paths)
+        if source_part:
+            parts.append(source_part)
     if extracted_css:
         parts.append(
             "Extracted inline CSS (from source/index.html):\n```css\n" + extracted_css + "\n```"
@@ -443,7 +463,7 @@ def build_http_llm_context(artifacts: dict[str, Any]) -> str:
         parts.append("Visual CSS (colors, shapes, layout tokens):\n```css\n" + css + "\n```")
     if outline:
         parts.append("HTML structure outline:\n```html\n" + outline + "\n```")
-    return "\n\n".join(parts)
+    return parts
 
 
 def http_patch_llm_rules() -> str:
