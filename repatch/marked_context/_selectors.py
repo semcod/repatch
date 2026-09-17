@@ -8,6 +8,7 @@ CSS to DELETE-marked nodes without touching KEEP nodes or page-wide rules.
 from __future__ import annotations
 
 import re
+from typing import Callable
 
 from ..css import split_css_rules
 from ._html import _find_marked_subtrees
@@ -94,15 +95,24 @@ def resolve_marked_selectors(
         for sel in marked_css_selectors([element_id]):
             add(sel)
 
-    subtrees = _find_marked_subtrees(str(html or ""), set(delete))
-    for fragment in subtrees.values():
+    _add_fragment_selectors(add, str(html or ""), delete, narrow)
+    return selectors
+
+
+def _add_fragment_selectors(
+    add: "Callable[[str | None], None]",
+    html: str,
+    delete: list[str],
+    narrow: bool,
+) -> None:
+    """Add selectors harvested from id/class tokens in marked HTML fragments."""
+    for fragment in _find_marked_subtrees(html, set(delete)).values():
         for match in re.finditer(r"""\bid\s*=\s*(['"])(.*?)\1""", fragment, re.IGNORECASE):
             add(_css_id_selector(match.group(2).strip()))
         for cls in _fragment_class_names(fragment):
             if narrow and cls.lower() in _GENERIC_SHARED_CLASSES:
                 continue
             add(f".{cls}")
-    return selectors
 
 
 def restrict_scope_css_to_marks(

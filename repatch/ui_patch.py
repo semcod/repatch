@@ -209,6 +209,45 @@ def _css_for(item: Any) -> str:
     return _safe_css(item)
 
 
+def _resolve_patch_css(
+    item: Any,
+    filename: str,
+    scope: str,
+    delete: list[str],
+    keep: list[str],
+    base: str,
+) -> str:
+    """Resolve the CSS payload for one variant, honoring marked scopes."""
+    css = _css_for(item)
+    if scope in VISUAL_REDESIGN_SCOPES and delete:
+        restricted = restrict_scope_css_to_marks(css, delete, html=base).strip()
+        if not restricted and scope == "colors":
+            variant_key = filename.removeprefix("alt_").removesuffix(".html")
+            restricted = marked_scope_colors_css(
+                resolve_marked_selectors(base, delete),
+                variant_key,
+            )
+        css = restricted or css
+    elif scope in VISUAL_REDESIGN_SCOPES and keep and not delete:
+        css = ""
+    if not css.strip():
+        css = "/* xpatch noop: only KEEP marks were provided */"
+    return css
+
+
+def _inject_style_block(base: str, block: str) -> str:
+    """Inject a style block before </head> or at <body>, else prepend."""
+    lower = base.lower()
+    if "</head>" in lower:
+        idx = lower.rfind("</head>")
+        return base[:idx] + block + base[idx:]
+    if "<body" in lower:
+        match = re.search(r"<body[^>]*>", base, flags=re.I)
+        if match:
+            return base[: match.start()] + block + base[match.start() :]
+    return block + base
+
+
 def apply_ui_patch_options(
     html: str,
     patch: dict[str, Any],
@@ -234,34 +273,9 @@ def apply_ui_patch_options(
         item = variants.get(filename)
         if item is None:
             raise ValueError(f"missing {filename} in LLM patch response")
-        css = _css_for(item)
-        if scope in VISUAL_REDESIGN_SCOPES and delete:
-            restricted = restrict_scope_css_to_marks(css, delete, html=base).strip()
-            if not restricted and scope == "colors":
-                variant_key = filename.removeprefix("alt_").removesuffix(".html")
-                restricted = marked_scope_colors_css(
-                    resolve_marked_selectors(base, delete),
-                    variant_key,
-                )
-            css = restricted or css
-        elif scope in VISUAL_REDESIGN_SCOPES and keep and not delete:
-            css = ""
-        if not css.strip():
-            css = "/* xpatch noop: only KEEP marks were provided */"
+        css = _resolve_patch_css(item, filename, scope, delete, keep, base)
         label = _label_for(filename, item, fallback_labels)
         block = f'<style id="{SCOPE_STYLE_ID}">\n/* llm patch: {label} */\n{css}\n</style>\n'
-        lower = base.lower()
-        if "</head>" in lower:
-            idx = lower.rfind("</head>")
-            out = base[:idx] + block + base[idx:]
-        elif "<body" in lower:
-            match = re.search(r"<body[^>]*>", base, flags=re.I)
-            if match:
-                out = base[: match.start()] + block + base[match.start() :]
-            else:
-                out = block + base
-        else:
-            out = block + base
-        files[filename] = out
+        files[filename] = _inject_style_block(base, block)
         labels.append(label)
     return files, labels

@@ -119,6 +119,23 @@ def _extract_and_format_fragment(text: str, start: int) -> str | None:
     return compact
 
 
+_STRUCT_TAGS = ("html", "head", "body", "style", "script", "link", "meta")
+
+
+def _match_subtree_ids(text: str, match: "re.Match[str]", wanted: set[str]) -> set[str]:
+    """Return wanted ids hit by this tag match (attrs, then button label probe)."""
+    tag = match.group(1).lower()
+    attrs = _parse_attrs(match.group(2))
+    hit = wanted & _collect_match_candidates(tag, attrs)
+    if hit:
+        return hit
+    if tag in _VOID_TAGS or tag in _STRUCT_TAGS:
+        return set()
+    if str(attrs.get("id") or "").strip() or str(attrs.get("data-nexu-target") or "").strip():
+        return set()
+    return wanted & _collect_button_candidates(tag, attrs, match, text)
+
+
 def _find_marked_subtrees(html: str, marked_ids: set[str]) -> dict[str, str]:
     """Map logical element id → compact outerHTML fragment."""
     if not marked_ids:
@@ -127,24 +144,7 @@ def _find_marked_subtrees(html: str, marked_ids: set[str]) -> dict[str, str]:
     found: dict[str, str] = {}
     text = str(html or "")
     for match in _TAG_OPEN_RE.finditer(text):
-        tag = match.group(1).lower()
-        attrs = _parse_attrs(match.group(2))
-        raw_id = str(attrs.get("id") or "").strip()
-        target = str(attrs.get("data-nexu-target") or "").strip()
-        candidates = _collect_match_candidates(tag, attrs)
-        hit = wanted & candidates
-        if not hit and tag not in _VOID_TAGS and tag not in (
-            "html",
-            "head",
-            "body",
-            "style",
-            "script",
-            "link",
-            "meta",
-        ):
-            if not raw_id and not target:
-                btn_candidates = _collect_button_candidates(tag, attrs, match, text)
-                hit = wanted & btn_candidates
+        hit = _match_subtree_ids(text, match, wanted)
         if not hit:
             continue
         compact = _extract_and_format_fragment(text, match.start())
