@@ -3,8 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from repatch import organize_html, organize_html_project_dir
-from repatch.organize_html import is_lazy_placeholder_img_tag, organize_result_manifest
-
+from repatch._images import is_lazy_placeholder_img_tag
+from repatch.organize_html import organize_result_manifest
 
 INLINE_STYLE_HTML = """<!DOCTYPE html>
 <html><head>
