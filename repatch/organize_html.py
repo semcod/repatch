@@ -28,6 +28,60 @@ class OrganizeResult:
     meta: dict[str, Any] = field(default_factory=dict)
 
 
+def _write_extracted(base_dir: Path | None, name: str, content: str) -> bool:
+    """Write extracted asset beside index; returns True when content is persisted."""
+    if base_dir is None:
+        return True
+    try:
+        (base_dir / name).write_text(content + ("\n" if content else ""), encoding="utf-8")
+        return True
+    except OSError:
+        return False
+
+
+def _extract_styles(out: str, meta: dict[str, Any], base_dir: Path | None) -> str:
+    style_text, style_blocks = _extract_inline_styles(out)
+    meta["styles_inline_blocks"] = style_blocks
+    if len(style_text) < MIN_STYLE_EXTRACT_CHARS:
+        return out
+    wrote_css = _write_extracted(base_dir, EXTRACTED_CSS_NAME, style_text)
+    if base_dir is None:
+        meta["extracted_css_inline"] = style_text
+    if not wrote_css:
+        return out
+    out = _STYLE_BLOCK_FULL_RE.sub("", out)
+    meta["styles_extracted"] = True
+    if base_dir is not None:
+        meta["extracted_css_path"] = EXTRACTED_CSS_NAME
+        out = _inject_head_link(out, href=EXTRACTED_CSS_NAME)
+    return out
+
+
+def _extract_scripts(out: str, meta: dict[str, Any], base_dir: Path | None) -> str:
+    script_chunks, scripts_removed, script_edits = analyze_inline_scripts(out)
+    meta["scripts_removed"] = scripts_removed
+    wrote_js = False
+    if script_chunks:
+        combined_js = "\n\n".join(script_chunks)
+        wrote_js = _write_extracted(base_dir, EXTRACTED_JS_NAME, combined_js)
+        if base_dir is None:
+            meta["extracted_js_inline"] = combined_js
+        if wrote_js:
+            meta["scripts_extracted"] = True
+            if base_dir is not None:
+                meta["extracted_js_path"] = EXTRACTED_JS_NAME
+
+    for original, replacement in script_edits:
+        if replacement == "" and not wrote_js:
+            continue
+        if original not in out:
+            continue
+        out = out.replace(original, replacement, 1)
+    if wrote_js and base_dir is not None:
+        out = _inject_head_script(out, src=EXTRACTED_JS_NAME)
+    return out
+
+
 def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
     """
     Extract substantial inline CSS/JS, strip preview scripts and lazy imgs, tag markable nodes.
@@ -46,60 +100,8 @@ def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
     if not source.strip():
         return OrganizeResult(html=source, meta=meta)
 
-    out = source
-    style_text, style_blocks = _extract_inline_styles(out)
-    meta["styles_inline_blocks"] = style_blocks
-    if len(style_text) >= MIN_STYLE_EXTRACT_CHARS:
-        wrote_css = False
-        if base_dir is not None:
-            try:
-                (base_dir / EXTRACTED_CSS_NAME).write_text(
-                    style_text + ("\n" if style_text else ""),
-                    encoding="utf-8",
-                )
-                wrote_css = True
-            except OSError:
-                wrote_css = False
-        else:
-            wrote_css = True
-            meta["extracted_css_inline"] = style_text
-        if wrote_css:
-            out = _STYLE_BLOCK_FULL_RE.sub("", out)
-            meta["styles_extracted"] = True
-            if base_dir is not None:
-                meta["extracted_css_path"] = EXTRACTED_CSS_NAME
-                out = _inject_head_link(out, href=EXTRACTED_CSS_NAME)
-
-    script_chunks, scripts_removed, script_edits = analyze_inline_scripts(out)
-    meta["scripts_removed"] = scripts_removed
-    wrote_js = False
-    if script_chunks:
-        combined_js = "\n\n".join(script_chunks)
-        if base_dir is not None:
-            try:
-                (base_dir / EXTRACTED_JS_NAME).write_text(
-                    combined_js + ("\n" if combined_js else ""),
-                    encoding="utf-8",
-                )
-                wrote_js = True
-            except OSError:
-                wrote_js = False
-        else:
-            wrote_js = True
-            meta["extracted_js_inline"] = combined_js
-        if wrote_js:
-            meta["scripts_extracted"] = True
-            if base_dir is not None:
-                meta["extracted_js_path"] = EXTRACTED_JS_NAME
-
-    for original, replacement in script_edits:
-        if replacement == "" and not wrote_js:
-            continue
-        if original not in out:
-            continue
-        out = out.replace(original, replacement, 1)
-    if wrote_js and base_dir is not None:
-        out = _inject_head_script(out, src=EXTRACTED_JS_NAME)
+    out = _extract_styles(source, meta, base_dir)
+    out = _extract_scripts(out, meta, base_dir)
 
     out, lazy_removed = _strip_lazy_placeholder_imgs(out)
     meta["lazy_imgs_removed"] = lazy_removed
