@@ -266,19 +266,50 @@ def _replace_attr(tag: str, pattern: re.Pattern[str], value: str) -> str:
     return pattern.sub(lambda match: f'{match.group(0).split("=", 1)[0]}="{value}"', tag, count=1)
 
 
+class _AssetMirror:
+    """Own mirrored-asset bookkeeping: dedup, attempt cap, naming, errors."""
+
+    def __init__(self, *, assets_dir: Path, max_assets: int) -> None:
+        self._assets_dir = assets_dir
+        self._max_assets = max_assets
+        self._seen: dict[str, WebAsset] = {}
+        self._attempts = 0
+        self.assets: list[WebAsset] = []
+        self.errors: list[str] = []
+
+    def mirror(self, *, absolute: str, original: str, kind: str) -> str | None:
+        """Return the local URL for one asset, or None to keep the original."""
+        if absolute in self._seen:
+            return self._seen[absolute].local
+        if self._attempts >= self._max_assets:
+            return None
+        asset, err = _save_asset(
+            absolute=absolute,
+            original=original,
+            kind=kind,
+            assets_dir=self._assets_dir,
+            index=self._attempts,
+        )
+        self._attempts += 1
+        if err:
+            self.errors.append(err)
+            return None
+        if not asset:
+            return None
+        self._seen[absolute] = asset
+        self.assets.append(asset)
+        return asset.local
+
+
 def _mirror_stylesheets(
     html: str,
     *,
     page_url: str,
     assets_dir: Path,
 ) -> tuple[str, list[WebAsset], list[str]]:
-    assets: list[WebAsset] = []
-    stylesheet_errors: list[str] = []
-    seen: dict[str, WebAsset] = {}
-    counter = 0
+    mirror = _AssetMirror(assets_dir=assets_dir, max_assets=MAX_STYLESHEETS)
 
     def replace_link(match: re.Match[str]) -> str:
-        nonlocal counter
         tag = match.group(0)
         if not _is_stylesheet_link(tag):
             return tag
@@ -289,28 +320,12 @@ def _mirror_stylesheets(
         absolute = urljoin(page_url, href)
         if not _same_origin(absolute, page_url):
             return tag
-        if absolute in seen:
-            return _replace_attr(tag, _HREF_ATTR_RE, seen[absolute].local)
-        if counter >= MAX_STYLESHEETS:
+        local = mirror.mirror(absolute=absolute, original=href, kind="stylesheet")
+        if not local:
             return tag
-        asset, err = _save_asset(
-            absolute=absolute,
-            original=href,
-            kind="stylesheet",
-            assets_dir=assets_dir,
-            index=counter,
-        )
-        counter += 1
-        if err:
-            stylesheet_errors.append(err)
-            return tag
-        if not asset:
-            return tag
-        seen[absolute] = asset
-        assets.append(asset)
-        return _replace_attr(tag, _HREF_ATTR_RE, asset.local)
+        return _replace_attr(tag, _HREF_ATTR_RE, local)
 
-    return _LINK_TAG_RE.sub(replace_link, html), assets, stylesheet_errors
+    return _LINK_TAG_RE.sub(replace_link, html), mirror.assets, mirror.errors
 
 
 def _parse_srcset(value: str) -> list[tuple[str, str]]:
@@ -339,39 +354,17 @@ def _mirror_images(
     page_url: str,
     assets_dir: Path,
 ) -> tuple[str, list[WebAsset], list[str]]:
-    assets: list[WebAsset] = []
-    image_errors: list[str] = []
-    seen: dict[str, WebAsset] = {}
-    counter = 0
+    mirror = _AssetMirror(assets_dir=assets_dir, max_assets=MAX_IMAGES)
 
     def mirror_url(raw: str) -> str:
-        nonlocal counter
         value = raw.strip()
         if not value or value.startswith(("data:", "blob:", "javascript:")):
             return raw
         absolute = urljoin(page_url, value)
         if not _same_origin(absolute, page_url):
             return raw
-        if absolute in seen:
-            return seen[absolute].local
-        if counter >= MAX_IMAGES:
-            return raw
-        asset, err = _save_asset(
-            absolute=absolute,
-            original=value,
-            kind="image",
-            assets_dir=assets_dir,
-            index=counter,
-        )
-        counter += 1
-        if err:
-            image_errors.append(err)
-            return raw
-        if not asset:
-            return raw
-        seen[absolute] = asset
-        assets.append(asset)
-        return asset.local
+        local = mirror.mirror(absolute=absolute, original=value, kind="image")
+        return local or raw
 
     def replace_img(match: re.Match[str]) -> str:
         tag = match.group(0)
@@ -392,7 +385,7 @@ def _mirror_images(
             tag = _replace_attr(tag, pattern, _format_srcset(mirrored))
         return tag
 
-    return _IMG_TAG_RE.sub(replace_img, html), assets, image_errors
+    return _IMG_TAG_RE.sub(replace_img, html), mirror.assets, mirror.errors
 
 
 def _fetch_page_source(url: str, render_js: bool) -> _PageSource:
