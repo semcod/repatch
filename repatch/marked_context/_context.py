@@ -137,8 +137,8 @@ def build_marked_element_context(
 ) -> str | None:
     """Extract HTML subtrees + relevant CSS for marked ids; None when no matches."""
     keep = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
-    delete = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
-    marked_ids = keep + [x for x in delete if x not in keep]
+    marked_delete_ids = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
+    marked_ids = keep + [x for x in marked_delete_ids if x not in keep]
     if not marked_ids:
         return None
 
@@ -150,7 +150,9 @@ def build_marked_element_context(
 
     scope = normalize_focus_scope(focus_scope, project_kind)
     css = _get_relevant_css(html, subtrees, ui_profile)
-    body = _format_context_body(keep, delete, marked_ids, subtrees, css, scope, ui_profile)
+    body = _format_context_body(
+        keep, marked_delete_ids, marked_ids, subtrees, css, scope, ui_profile
+    )
     return _cap_text(body, MAX_MARKED_CONTEXT_BYTES)
 
 
@@ -166,13 +168,13 @@ def resolve_marked_llm_context(
 ) -> str | None:
     """Preferred LLM context when session marks exist."""
     keep = list(keep_els or [])
-    delete = list(delete_els or [])
-    if not keep and not delete:
+    delete_id_list = list(delete_els or [])
+    if not keep and not delete_id_list:
         return None
     return build_marked_element_context(
         html,
         keep_ids=keep,
-        delete_ids=delete,
+        delete_ids=delete_id_list,
         focus_scope=focus_scope,
         project_kind=project_kind,
         ui_profile=ui_profile,

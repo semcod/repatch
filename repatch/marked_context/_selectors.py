@@ -79,8 +79,8 @@ def resolve_marked_selectors(
     narrow: bool = False,
 ) -> list[str]:
     """Marked selectors from ids plus class/id tokens found in matching HTML fragments."""
-    delete = [str(x).strip() for x in (element_ids or []) if str(x).strip()]
-    if not delete:
+    marked_delete_ids = [str(x).strip() for x in (element_ids or []) if str(x).strip()]
+    if not marked_delete_ids:
         return []
     selectors: list[str] = []
     seen: set[str] = set()
@@ -91,11 +91,11 @@ def resolve_marked_selectors(
             seen.add(sel)
             selectors.append(sel)
 
-    for element_id in delete:
+    for element_id in marked_delete_ids:
         for sel in marked_css_selectors([element_id]):
             add(sel)
 
-    _add_fragment_selectors(add, str(html or ""), delete, narrow)
+    _add_fragment_selectors(add, str(html or ""), marked_delete_ids, narrow)
     return selectors
 
 
@@ -123,15 +123,15 @@ def restrict_scope_css_to_marks(
     keep_ids: list[str] | None = None,
 ) -> str:
     """Limit offline/LLM scope CSS to DELETE-marked selectors; drop page-wide rules."""
-    delete = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
-    if not css or not delete:
+    marked_delete_ids = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
+    if not css or not marked_delete_ids:
         return css
     if html:
         prefix_list = resolve_marked_selectors(
-            html, delete, keep_ids=keep_ids, narrow=True
+            html, marked_delete_ids, keep_ids=keep_ids, narrow=True
         )
     else:
-        prefix_list = marked_css_selectors(delete)
+        prefix_list = marked_css_selectors(marked_delete_ids)
     if not prefix_list:
         return css
     prefix = ", ".join(prefix_list)
