@@ -583,20 +583,21 @@ def _get_scope_css(
     return _web_scope_css(scope, variant, user_goal=user_goal) or _scope_css(scope, variant)
 
 
-def _inject_css_block(html: str, css: str) -> str:
+def inject_css_block(html: str, css: str) -> str:
+    """Inject a `<style>` block before `</head>` or at `<body>`, else prepend."""
     if not css:
         return html
-    block = f'<style id="{SCOPE_STYLE_ID}">\n{css}\n</style>'
+    style_tag = f'<style id="{SCOPE_STYLE_ID}">\n{css}\n</style>'
     lower = html.lower()
     if "</head>" in lower:
         idx = lower.rfind("</head>")
-        return html[:idx] + block + html[idx:]
+        return html[:idx] + style_tag + html[idx:]
     if "<body" in lower:
         match = re.search(r"<body[^>]*>", html, flags=re.I)
         if match:
             pos = match.start()
-            return html[:pos] + block + html[pos:]
-    return block + html
+            return html[:pos] + style_tag + html[pos:]
+    return style_tag + html
 
 
 def _marked_scope_css(
@@ -676,7 +677,7 @@ def inject_scope_style(
             scope, variant, css, cleaned, inferred,
             effective_delete, keep_list, user_goal,
         )
-    return _inject_css_block(cleaned, css)
+    return inject_css_block(cleaned, css)
 
 
 def scoped_html_fragment(html: str, focus_scope: str, project_kind: str) -> str | None:

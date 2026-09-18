@@ -13,8 +13,8 @@ from .marked_context import (
     restrict_scope_css_to_marks,
 )
 from .scope import (
-    SCOPE_STYLE_ID,
     VISUAL_REDESIGN_SCOPES,
+    inject_css_block,
     normalize_focus_scope,
     scoped_html_fragment,
     strip_scope_style,
@@ -235,19 +235,6 @@ def _resolve_patch_css(
     return css
 
 
-def _inject_style_block(base: str, block: str) -> str:
-    """Inject a style block before </head> or at <body>, else prepend."""
-    lower = base.lower()
-    if "</head>" in lower:
-        idx = lower.rfind("</head>")
-        return base[:idx] + block + base[idx:]
-    if "<body" in lower:
-        match = re.search(r"<body[^>]*>", base, flags=re.I)
-        if match:
-            return base[: match.start()] + block + base[match.start() :]
-    return block + base
-
-
 def apply_ui_patch_options(
     html: str,
     patch: dict[str, Any],
@@ -275,7 +262,7 @@ def apply_ui_patch_options(
             raise ValueError(f"missing {filename} in LLM patch response")
         css = _resolve_patch_css(item, filename, scope, delete, keep, base)
         label = _label_for(filename, item, fallback_labels)
-        block = f'<style id="{SCOPE_STYLE_ID}">\n/* llm patch: {label} */\n{css}\n</style>\n'
-        files[filename] = _inject_style_block(base, block)
+        payload = f"/* llm patch: {label} */\n{css}"
+        files[filename] = inject_css_block(base, payload)
         labels.append(label)
     return files, labels
