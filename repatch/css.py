@@ -50,12 +50,12 @@ def validate_css_safety(css: str, *, source: str = "css") -> tuple[bool, list[st
 
     for match in _RULE_RE.finditer(text):
         selectors = " ".join(match.group("selectors").split())
-        body = match.group("body")
+        rule_body = match.group("body")
         if _selector_is_runtime_only(selectors):
             continue
         declarations = {
             decl.group("name").strip().lower(): decl.group("value").strip().lower()
-            for decl in _DECL_RE.finditer(body)
+            for decl in _DECL_RE.finditer(rule_body)
         }
         position = declarations.get("position", "")
         if position in {"absolute", "fixed"}:

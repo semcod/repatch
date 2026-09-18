@@ -197,7 +197,7 @@ def _save_asset(
     index: int,
 ) -> tuple[WebAsset | None, str | None]:
     try:
-        body, content_type, final_url, _charset = _read_http_body(
+        payload, content_type, final_url, _charset = _read_http_body(
             absolute,
             max_bytes=MAX_ASSET_BYTES,
         )
@@ -210,7 +210,7 @@ def _save_asset(
     )
     filename = f"{kind}-{index}{ext}"
     assets_dir.mkdir(parents=True, exist_ok=True)
-    (assets_dir / filename).write_bytes(body)
+    (assets_dir / filename).write_bytes(payload)
     return (
         WebAsset(
             url=final_url,
@@ -388,8 +388,8 @@ def _fetch_page_source(
             render_error = str(exc)[:500]
 
     if not html:
-        body, content_type, final_url, charset = _read_http_body(url.strip())
-        html = _decode_http_bytes(body, content_type=content_type, charset=charset)
+        payload, content_type, final_url, charset = _read_http_body(url.strip())
+        html = _decode_http_bytes(payload, content_type=content_type, charset=charset)
 
     return html, final_url, content_type, charset, method, render_error
 
