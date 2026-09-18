@@ -301,9 +301,9 @@ class _OutlineParser(HTMLParser):
 
 def build_html_outline(html: str) -> tuple[str, dict[str, Any]]:
     """Build a compact HTML skeleton without scripts or full text content."""
-    cleaned = re.sub(r"<!--[\s\S]*?-->", "", str(html or ""))
+    comment_free_html = re.sub(r"<!--[\s\S]*?-->", "", str(html or ""))
     parser = _OutlineParser()
-    parser.feed(cleaned)
+    parser.feed(comment_free_html)
     parser.close()
     outline = "\n".join(parser.parts).strip()
     if not outline.lower().startswith("<!doctype"):
@@ -313,12 +313,12 @@ def build_html_outline(html: str) -> tuple[str, dict[str, Any]]:
 
 
 def _script_src_allowed_for_preview(src: str) -> bool:
-    cleaned = str(src or "").strip()
-    if not cleaned:
+    src_value = str(src or "").strip()
+    if not src_value:
         return False
-    if cleaned.startswith(("http://", "https://", "//", "data:")):
+    if src_value.startswith(("http://", "https://", "//", "data:")):
         return False
-    return cleaned.lower().startswith("imported_projects/")
+    return src_value.lower().startswith("imported_projects/")
 
 
 def _should_remove_preview_script(tag: str) -> bool:
@@ -340,8 +340,8 @@ def sanitize_http_preview_html(html: str) -> tuple[str, dict[str, Any]]:
             return "<!-- repatch: preview script removed -->"
         return block
 
-    cleaned = _SCRIPT_BLOCK_RE.sub(replace_script, str(html or ""))
-    return cleaned, {"preview_scripts_removed": removed}
+    sanitized_html = _SCRIPT_BLOCK_RE.sub(replace_script, str(html or ""))
+    return sanitized_html, {"preview_scripts_removed": removed}
 
 
 def inject_http_preview_shim(html: str) -> str:
@@ -362,8 +362,8 @@ def inject_http_preview_shim(html: str) -> str:
 
 def prepare_http_preview_html(html: str) -> tuple[str, dict[str, Any]]:
     """Sanitize scripts and inject network isolation shim for preview iframes."""
-    cleaned, meta = sanitize_http_preview_html(html)
-    out = inject_http_preview_shim(cleaned)
+    sanitized_html, meta = sanitize_http_preview_html(html)
+    out = inject_http_preview_shim(sanitized_html)
     meta["preview_shim_injected"] = _NEXU_PREVIEW_SHIM_MARKER in out
     return out, meta
 
