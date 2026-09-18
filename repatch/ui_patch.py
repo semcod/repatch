@@ -218,21 +218,21 @@ def _resolve_patch_css(
     base: str,
 ) -> str:
     """Resolve the CSS payload for one variant, honoring marked scopes."""
-    css = _css_for(item)
+    variant_css = _css_for(item)
     if scope in VISUAL_REDESIGN_SCOPES and delete:
-        restricted = restrict_scope_css_to_marks(css, delete, html=base).strip()
+        restricted = restrict_scope_css_to_marks(variant_css, delete, html=base).strip()
         if not restricted and scope == "colors":
             variant_key = filename.removeprefix("alt_").removesuffix(".html")
             restricted = marked_scope_colors_css(
                 resolve_marked_selectors(base, delete),
                 variant_key,
             )
-        css = restricted or css
+        variant_css = restricted or variant_css
     elif scope in VISUAL_REDESIGN_SCOPES and keep and not delete:
-        css = ""
-    if not css.strip():
-        css = "/* xpatch noop: only KEEP marks were provided */"
-    return css
+        variant_css = ""
+    if not variant_css.strip():
+        variant_css = "/* xpatch noop: only KEEP marks were provided */"
+    return variant_css
 
 
 def apply_ui_patch_options(
@@ -260,9 +260,9 @@ def apply_ui_patch_options(
         item = variants.get(filename)
         if item is None:
             raise ValueError(f"missing {filename} in LLM patch response")
-        css = _resolve_patch_css(item, filename, scope, delete, keep, base)
+        variant_css = _resolve_patch_css(item, filename, scope, delete, keep, base)
         label = _label_for(filename, item, fallback_labels)
-        payload = f"/* llm patch: {label} */\n{css}"
+        payload = f"/* llm patch: {label} */\n{variant_css}"
         files[filename] = inject_css_block(base, payload)
         labels.append(label)
     return files, labels
