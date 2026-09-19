@@ -65,15 +65,15 @@ class _ProjectIRParser(HTMLParser):
             self._stack[-1]["text"].extend(node["text"])
             return
         text = _clean_text(" ".join(node["text"]))
-        attrs = node["attrs"]
+        node_attrs = node["attrs"]
         item = {
             "tag": tag,
-            "id": attrs.get("id", ""),
-            "class": attrs.get("class", ""),
-            "role": attrs.get("role", ""),
+            "id": node_attrs.get("id", ""),
+            "class": node_attrs.get("class", ""),
+            "role": node_attrs.get("role", ""),
             "text": text[:160],
         }
-        self._classify_node(tag, text, attrs, item)
+        self._classify_node(tag, text, node_attrs, item)
         if self._stack and text:
             self._stack[-1]["text"].append(text)
 

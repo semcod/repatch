@@ -28,17 +28,17 @@ def _add_markable_targets(html: str) -> tuple[str, int]:
         if added >= MAX_TARGETS_ADDED:
             return match.group(0)
         tag = match.group(1).lower()
-        attrs = match.group(2) or ""
-        lowered = attrs.lower()
-        if re.search(r"\bid\s*=", attrs, re.IGNORECASE):
+        open_attr_text = match.group(2) or ""
+        lowered = open_attr_text.lower()
+        if re.search(r"\bid\s*=", open_attr_text, re.IGNORECASE):
             return match.group(0)
         if "data-nexu-target" in lowered:
             return match.group(0)
-        attr_map = _attr_map(attrs)
+        attr_map = _attr_map(open_attr_text)
         slug_source = attr_map.get("class") or attr_map.get("role") or tag
         counter += 1
         added += 1
         target = f"nexu-{_slug_piece(slug_source)}-{counter}"
-        return f'<{tag}{attrs} data-nexu-target="{target}">'
+        return f'<{tag}{open_attr_text} data-nexu-target="{target}">'
 
     return _MARKABLE_OPEN_RE.sub(_replace, html), added

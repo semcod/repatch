@@ -172,12 +172,12 @@ def _annotation_target(
     if tag in _SKIP_TAGS:
         return None
     attrs_text = match.group(2)
-    attrs = _parse_attrs(attrs_text)
+    attr_map = _parse_attrs(attrs_text)
 
-    element_keys, raw_id, target = _element_candidates(tag, attrs)
+    element_keys, raw_id, target = _element_candidates(tag, attr_map)
     hit = wanted & element_keys
     if not hit and not raw_id and not target:
-        hit = _label_probe_hit(text, match, tag, attrs, wanted)
+        hit = _label_probe_hit(text, match, tag, attr_map, wanted)
     if not hit:
         return None
 
@@ -186,7 +186,7 @@ def _annotation_target(
         return None
     seen_elements.add(matched_id)
 
-    if "data-nexu-target" in attrs:
+    if "data-nexu-target" in attr_map:
         return None
 
     new_tag = f"<{tag} data-nexu-target=\"{matched_id}\" {attrs_text}>"

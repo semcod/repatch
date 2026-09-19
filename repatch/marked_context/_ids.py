@@ -74,12 +74,12 @@ def _normalize_label_text(text: str) -> str:
 
 
 def _parse_attrs(attr_text: str) -> dict[str, str]:
-    attrs: dict[str, str] = {}
+    parsed_map: dict[str, str] = {}
     for match in _ATTR_RE.finditer(attr_text or ""):
         key = match.group(1).lower()
         value = _normalize_label_text(match.group(3))
-        attrs[key] = value
-    return attrs
+        parsed_map[key] = value
+    return parsed_map
 
 
 def _logical_id(tag: str, attrs: dict[str, str], *, text: str = "") -> str | None:

@@ -17,11 +17,11 @@ def is_lazy_placeholder_img_tag(tag: str) -> bool:
     if not _IMG_TAG_RE.match(str(tag or "").strip()):
         return False
     inner = tag[4:] if tag.lower().startswith("<img") else tag
-    attrs = _attr_map(inner)
-    src = (attrs.get("src") or "").strip().lower()
-    cls = attrs.get("class") or ""
+    img_attrs = _attr_map(inner)
+    src = (img_attrs.get("src") or "").strip().lower()
+    cls = img_attrs.get("class") or ""
     lazy_attr = any(
-        key in attrs
+        key in img_attrs
         for key in ("data-lazyloaded", "data-lazy-src", "data-src")
     ) or re.search(r"\blazy(?:load)?\b", cls, re.IGNORECASE)
     blank = not src or src == "#" or src.startswith("data:image/svg+xml")

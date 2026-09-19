@@ -102,10 +102,10 @@ def apply_spatial_deletes_to_html(html: str, delete_ids: list[str]) -> tuple[str
     deleted_labels: list[str] = []
 
     def _btn_replacer(match: re.Match[str]) -> str:
-        attrs, label = match.group(1), match.group(2).strip()
-        element_keys = _element_delete_candidates(attrs, label)
+        btn_attr_text, label = match.group(1), match.group(2).strip()
+        element_keys = _element_delete_candidates(btn_attr_text, label)
         if delete_keys.intersection(element_keys):
-            id_match = re.search(r'\bid="([^"]*)"', attrs, re.IGNORECASE)
+            id_match = re.search(r'\bid="([^"]*)"', btn_attr_text, re.IGNORECASE)
             el_id = id_match.group(1) if id_match else ""
             deleted_labels.append(label or el_id or "unknown")
             return ""
@@ -128,7 +128,7 @@ def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[
         open_match = _BLOCK_OPEN_TAG_RE.search(html, search_from)
         if not open_match:
             break
-        tag_name, attrs = open_match.group(1), open_match.group(2)
+        tag_name, block_attr_text = open_match.group(1), open_match.group(2)
         close = _find_matching_close(html, tag_name, open_match.end())
         if close is None:
             # Unbalanced/malformed markup for this tag — leave it alone and
@@ -137,9 +137,9 @@ def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[
             continue
         close_start, close_end = close
         inner = html[open_match.end() : close_start]
-        if _is_deletable_block(attrs, inner, delete_keys):
+        if _is_deletable_block(block_attr_text, inner, delete_keys):
             kept_segments.append(html[emitted_to : open_match.start()])
-            deleted_labels.append(_block_label(attrs, inner))
+            deleted_labels.append(_block_label(block_attr_text, inner))
             emitted_to = close_end
             search_from = close_end
         else:

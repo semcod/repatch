@@ -203,11 +203,11 @@ def _attrs_from_open_tag(open_tag: str) -> dict[str, str]:
 
 
 def _matches_target(open_tag: str, inner: str, wanted: set[str]) -> bool:
-    attrs = _attrs_from_open_tag(open_tag)
+    attr_map = _attrs_from_open_tag(open_tag)
     target_keys: set[str] = set()
     for key in ("id", "data-nexu-target", "aria-label", "title"):
-        if attrs.get(key):
-            target_keys |= _target_candidates(attrs[key])
+        if attr_map.get(key):
+            target_keys |= _target_candidates(attr_map[key])
     text = _strip_tags(inner)
     if text:
         target_keys |= _target_candidates(text)

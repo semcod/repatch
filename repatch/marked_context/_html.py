@@ -125,15 +125,15 @@ _STRUCT_TAGS = ("html", "head", "body", "style", "script", "link", "meta")
 def _match_subtree_ids(text: str, match: "re.Match[str]", wanted: set[str]) -> set[str]:
     """Return wanted ids hit by this tag match (attrs, then button label probe)."""
     tag = match.group(1).lower()
-    attrs = _parse_attrs(match.group(2))
-    hit = wanted & _collect_match_candidates(tag, attrs)
+    match_attrs = _parse_attrs(match.group(2))
+    hit = wanted & _collect_match_candidates(tag, match_attrs)
     if hit:
         return hit
     if tag in _VOID_TAGS or tag in _STRUCT_TAGS:
         return set()
-    if str(attrs.get("id") or "").strip() or str(attrs.get("data-nexu-target") or "").strip():
+    if str(match_attrs.get("id") or "").strip() or str(match_attrs.get("data-nexu-target") or "").strip():
         return set()
-    return wanted & _collect_button_candidates(tag, attrs, match, text)
+    return wanted & _collect_button_candidates(tag, match_attrs, match, text)
 
 
 def _find_marked_subtrees(html: str, marked_ids: set[str]) -> dict[str, str]:
