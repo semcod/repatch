@@ -184,8 +184,8 @@ def test_cap_text_multibyte_safe_decode() -> None:
 
 
 def test_filter_css_for_tokens_keeps_matching_only() -> None:
-    css = "#a{color:red}\n.b{x:1}"
-    assert _filter_css_for_tokens(css, {"#a"}) == "#a{color:red}"
+    input_css = "#a{color:red}\n.b{x:1}"
+    assert _filter_css_for_tokens(input_css, {"#a"}) == "#a{color:red}"
 
 
 def test_filter_css_for_tokens_empty_inputs() -> None:
@@ -239,10 +239,10 @@ def test_marked_scope_shapes_css_invalid_variant_defaults_b() -> None:
 
 
 def test_marked_scope_orientation_css_emits_has_selector() -> None:
-    css = marked_scope_orientation_css([".a"], "b")
-    assert "grid-template-columns:1fr 1fr" in css
-    assert ":has(" in css
-    assert "max-width:1180px" in css
+    orientation_css = marked_scope_orientation_css([".a"], "b")
+    assert "grid-template-columns:1fr 1fr" in orientation_css
+    assert ":has(" in orientation_css
+    assert "max-width:1180px" in orientation_css
     assert marked_scope_orientation_css([], "b") == ""
 
 
@@ -282,8 +282,8 @@ def test_restrict_scope_css_no_delete_returns_input_unchanged() -> None:
 
 
 def test_restrict_scope_css_drops_html_body_keeps_marked_decls() -> None:
-    css = "html{a:1}body{b:2}.x{color:blue}"
-    scoped = restrict_scope_css_to_marks(css, ["x"])
+    page_css = "html{a:1}body{b:2}.x{color:blue}"
+    scoped = restrict_scope_css_to_marks(page_css, ["x"])
     assert "color:blue" in scoped
     assert "#x" in scoped
     assert "html{" not in scoped and "body{" not in scoped

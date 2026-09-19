@@ -20,7 +20,7 @@ def _cap_patch_text(text: str, max_bytes: int, *, label: str) -> str:
 
 def build_http_llm_context(artifacts: dict[str, Any]) -> str:
     """Combine visual CSS + HTML outline (+ organize manifest) for compact LLM patch prompts."""
-    css = str(artifacts.get("visual_css") or "").strip()
+    visual_css_text = str(artifacts.get("visual_css") or "").strip()
     outline = str(artifacts.get("html_outline") or "").strip()
     organize = artifacts.get("organize") if isinstance(artifacts.get("organize"), dict) else {}
     extracted_css = _cap_patch_text(
@@ -36,10 +36,16 @@ def build_http_llm_context(artifacts: dict[str, Any]) -> str:
     source_paths = (
         artifacts.get("source_paths") if isinstance(artifacts.get("source_paths"), dict) else {}
     )
-    if not css and not outline and not organize and not extracted_css and not extracted_js:
+    if (
+        not visual_css_text
+        and not outline
+        and not organize
+        and not extracted_css
+        and not extracted_js
+    ):
         return ""
     context_blocks = _context_parts(
-        organize, source_paths, extracted_css, extracted_js, css, outline
+        organize, source_paths, extracted_css, extracted_js, visual_css_text, outline
     )
     return "\n\n".join(context_blocks)
 

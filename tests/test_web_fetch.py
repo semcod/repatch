@@ -43,14 +43,14 @@ def test_fetch_complete_web_page_mirrors_stylesheets_and_images(tmp_path):
         b'<img data-src="/img/lazy.jpg" alt="Lazy">'
         b"</body></html>"
     )
-    css = b"body{color:navy}"
+    stylesheet_bytes = b"body{color:navy}"
     png = b"\x89PNG\r\n"
     jpg = b"\xff\xd8\xff"
 
     def fake_urlopen(req, timeout=0):
         target = req.full_url
         if target.endswith("/styles/main.css"):
-            return FakeResp(css, url=target, content_type="text/css; charset=utf-8")
+            return FakeResp(stylesheet_bytes, url=target, content_type="text/css; charset=utf-8")
         if target.endswith("/img/lazy.jpg"):
             return FakeResp(jpg, url=target, content_type="image/jpeg")
         if target.endswith(".png"):

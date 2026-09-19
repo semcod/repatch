@@ -74,10 +74,10 @@ def _cap_text(text: str, limit: int) -> str:
 
 def _get_relevant_css(html: str, subtrees: dict[str, str], ui_profile: dict[str, Any] | None) -> str:
     tokens = _selector_tokens(subtrees)
-    css = _filter_css_for_tokens(_collect_css_sources(html, ui_profile), tokens)
-    if len(css.encode("utf-8")) > MAX_CSS_BYTES:
-        css = _cap_text(css, MAX_CSS_BYTES)
-    return css
+    relevant_css = _filter_css_for_tokens(_collect_css_sources(html, ui_profile), tokens)
+    if len(relevant_css.encode("utf-8")) > MAX_CSS_BYTES:
+        relevant_css = _cap_text(relevant_css, MAX_CSS_BYTES)
+    return relevant_css
 
 
 def _format_context_body(
@@ -149,9 +149,9 @@ def build_marked_element_context(
     from ..scope import normalize_focus_scope
 
     scope = normalize_focus_scope(focus_scope, project_kind)
-    css = _get_relevant_css(html, subtrees, ui_profile)
+    relevant_css = _get_relevant_css(html, subtrees, ui_profile)
     context_text = _format_context_body(
-        marked_keep_ids, marked_delete_ids, marked_ids, subtrees, css, scope, ui_profile
+        marked_keep_ids, marked_delete_ids, marked_ids, subtrees, relevant_css, scope, ui_profile
     )
     return _cap_text(context_text, MAX_MARKED_CONTEXT_BYTES)
 

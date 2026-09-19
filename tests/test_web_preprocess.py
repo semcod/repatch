@@ -35,11 +35,11 @@ def test_extract_visual_css_keeps_patch_relevant_rules(tmp_path: Path) -> None:
         ".card{background:#fff;padding:12px}.print{page-break-after:always}",
         encoding="utf-8",
     )
-    css, meta = extract_visual_css(SAMPLE_HTML, ["assets/theme.css"], tmp_path)
+    visual_css, meta = extract_visual_css(SAMPLE_HTML, ["assets/theme.css"], tmp_path)
 
-    assert ".hero" in css
-    assert ".card" in css
-    assert "@font-face" not in css
+    assert ".hero" in visual_css
+    assert ".card" in visual_css
+    assert "@font-face" not in visual_css
     assert meta["visual_css_bytes"] > 0
 
 

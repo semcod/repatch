@@ -126,11 +126,11 @@ def test_has_ui_marks() -> None:
 
 
 def test_restrict_scope_css_to_marks_targets_delete_only() -> None:
-    css = (
+    page_css = (
         "html,body{background:#000!important;}"
         ".btn{background:#fff!important;color:#000!important;}"
     )
-    scoped = restrict_scope_css_to_marks(css, ["tan"])
+    scoped = restrict_scope_css_to_marks(page_css, ["tan"])
     assert "html,body" not in scoped
     assert "#btn-tan" in scoped or "#tan" in scoped
     assert "background:#fff" in scoped
@@ -244,10 +244,10 @@ def test_marked_scope_colors_css_differs_by_variant() -> None:
 
 def test_marked_scope_colors_css_overrides_all_descendants() -> None:
     selectors = [f".target-{idx}" for idx in range(12)]
-    css = marked_scope_colors_css(selectors, "c")
-    assert ".target-0 *" in css
-    assert ".target-11 *" in css
-    assert "color:#1e1b4b!important" in css
+    marked_css = marked_scope_colors_css(selectors, "c")
+    assert ".target-0 *" in marked_css
+    assert ".target-11 *" in marked_css
+    assert "color:#1e1b4b!important" in marked_css
 
 
 def test_resolve_marked_selectors_heading_text_id() -> None:

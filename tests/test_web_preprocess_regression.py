@@ -87,8 +87,8 @@ def test_rule_is_visual_filters_at_rules_and_props() -> None:
 
 
 def test_filter_visual_css_keeps_only_patch_relevant_rules() -> None:
-    css = ".card{background:#fff;padding:12px}.hidden{position:absolute}@font-face{font-family:x;src:url(x)}"
-    out = filter_visual_css(css)
+    input_css = ".card{background:#fff;padding:12px}.hidden{position:absolute}@font-face{font-family:x;src:url(x)}"
+    out = filter_visual_css(input_css)
     assert ".card{background:#fff;padding:12px}" in out
     assert "position:absolute" not in out
     assert "@font-face" not in out
@@ -97,11 +97,11 @@ def test_filter_visual_css_keeps_only_patch_relevant_rules() -> None:
 def test_extract_visual_css_truncates_over_limit(tmp_path: Path) -> None:
     big = ".big{background:#" + "a" * (MAX_VISUAL_CSS_BYTES * 2) + ";}"
     html = f"<style>{big}</style>"
-    css, meta = extract_visual_css(html, None, tmp_path)
+    visual_css, meta = extract_visual_css(html, None, tmp_path)
 
     assert meta["visual_css_truncated"] is True
-    assert "truncated at 64KB" in css
-    assert len(css.encode("utf-8")) < len(big.encode("utf-8"))
+    assert "truncated at 64KB" in visual_css
+    assert len(visual_css.encode("utf-8")) < len(big.encode("utf-8"))
 
 
 def test_outline_parser_skips_scripts_and_places_placeholders() -> None:

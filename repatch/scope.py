@@ -301,14 +301,14 @@ def inject_scope_style(
     effective_delete = effective_delete_ids(delete_list, keep_list)
     if scope in VISUAL_REDESIGN_SCOPES and keep_list and not effective_delete:
         return strip_scope_style(bound)
-    css = _get_scope_css(inferred, bound, scope, variant, user_goal=user_goal)
+    scope_css_text = _get_scope_css(inferred, bound, scope, variant, user_goal=user_goal)
     cleaned = strip_scope_style(bound)
     if scope in VISUAL_REDESIGN_SCOPES and effective_delete:
-        css = _marked_scope_css(
-            scope, variant, css, cleaned, inferred,
+        scope_css_text = _marked_scope_css(
+            scope, variant, scope_css_text, cleaned, inferred,
             effective_delete, keep_list, user_goal,
         )
-    return inject_css_block(cleaned, css)
+    return inject_css_block(cleaned, scope_css_text)
 
 
 def scoped_html_fragment(html: str, focus_scope: str, project_kind: str) -> str | None:
