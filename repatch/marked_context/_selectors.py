@@ -135,7 +135,7 @@ def restrict_scope_css_to_marks(
     if not prefix_list:
         return css
     prefix = ", ".join(prefix_list)
-    kept: list[str] = []
+    scoped_rules: list[str] = []
     for rule in split_css_rules(css):
         chunk = rule.strip()
         if not chunk or "{" not in chunk:
@@ -147,8 +147,8 @@ def restrict_scope_css_to_marks(
         decl = rest.rsplit("}", 1)[0].strip()
         if not decl:
             continue
-        kept.append(f"{prefix} {{{decl}}}")
-    return "\n".join(kept)
+        scoped_rules.append(f"{prefix} {{{decl}}}")
+    return "\n".join(scoped_rules)
 
 
 def _selector_tokens(subtrees: dict[str, str]) -> set[str]:
@@ -171,9 +171,9 @@ def _selector_tokens(subtrees: dict[str, str]) -> set[str]:
 def _filter_css_for_tokens(css: str, tokens: set[str]) -> str:
     if not css or not tokens:
         return ""
-    kept: list[str] = []
+    matching_rules: list[str] = []
     for rule in split_css_rules(css):
         selector = rule.split("{", 1)[0].lower()
         if any(token.lower() in selector for token in tokens):
-            kept.append(rule)
-    return "\n\n".join(kept)
+            matching_rules.append(rule)
+    return "\n\n".join(matching_rules)
