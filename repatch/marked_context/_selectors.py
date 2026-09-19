@@ -55,13 +55,13 @@ def _fragment_class_names(fragment: str) -> set[str]:
 
 def _collect_keep_selectors(html: str, keep_ids: list[str]) -> set[str]:
     """Selectors that must not receive DELETE-only scope CSS."""
-    keep = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
-    if not keep:
+    protected_ids = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
+    if not protected_ids:
         return set()
     blocked: set[str] = set()
-    for element_id in keep:
+    for element_id in protected_ids:
         blocked.update(marked_css_selectors([element_id]))
-    for fragment in _find_marked_subtrees(str(html or ""), set(keep)).values():
+    for fragment in _find_marked_subtrees(str(html or ""), set(protected_ids)).values():
         for match in re.finditer(r"""\bid\s*=\s*(['"])(.*?)\1""", fragment, re.IGNORECASE):
             id_sel = _css_id_selector(match.group(2).strip())
             if id_sel:
