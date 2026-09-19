@@ -93,7 +93,7 @@ def _format_context_body(
     patch_mode = str(profile.get("llm_context_mode") or "") == "patch"
     outline = str(profile.get("html_outline") or "").strip()
 
-    parts = [
+    body_blocks = [
         "MARKED ELEMENT CONTEXT (send only marked fragments — not the full page).",
         f"Focus scope: #{scope}",
         f"KEEP: {keep or ['none']}",
@@ -102,27 +102,27 @@ def _format_context_body(
         *[f"- {line}" for line in _scope_semantics(scope)],
     ]
     if patch_mode and outline:
-        parts.append(
+        body_blocks.append(
             "Patch mode: full-page skeleton lives in nexu-outline.html; "
             "change CSS values and minimal attributes for marked fragments only."
         )
-    parts.append("Marked HTML fragments:")
+    body_blocks.append("Marked HTML fragments:")
     for element_id in marked_ids:
         fragment = subtrees.get(element_id)
         if not fragment:
-            parts.append(f"- #{element_id}: (not found in current HTML)")
+            body_blocks.append(f"- #{element_id}: (not found in current HTML)")
             continue
         role = "KEEP" if element_id in keep else "DELETE"
-        parts.append(f"- #{element_id} [{role}]:\n```html\n{fragment}\n```")
+        body_blocks.append(f"- #{element_id} [{role}]:\n```html\n{fragment}\n```")
     if css:
-        parts.append("Relevant CSS for marked elements:\n```css\n" + css + "\n```")
+        body_blocks.append("Relevant CSS for marked elements:\n```css\n" + css + "\n```")
     elif patch_mode:
-        parts.append(
+        body_blocks.append(
             "Relevant CSS: use visual CSS tokens from project preprocess; "
             "target selectors matching marked ids/classes only."
         )
 
-    return "\n\n".join(parts)
+    return "\n\n".join(body_blocks)
 
 
 def build_marked_element_context(

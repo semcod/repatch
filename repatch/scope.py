@@ -124,14 +124,14 @@ def _label_probe_hit(
 
 
 def _splice_replacements(text: str, matched_ranges: list[tuple[int, int, str]]) -> str:
-    parts: list[str] = []
+    spliced_segments: list[str] = []
     last_idx = 0
     for start, end, replacement in matched_ranges:
-        parts.append(text[last_idx:start])
-        parts.append(replacement)
+        spliced_segments.append(text[last_idx:start])
+        spliced_segments.append(replacement)
         last_idx = end
-    parts.append(text[last_idx:])
-    return "".join(parts)
+    spliced_segments.append(text[last_idx:])
+    return "".join(spliced_segments)
 
 
 def _bind_annotations_to_html(

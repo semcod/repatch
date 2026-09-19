@@ -121,7 +121,7 @@ def _apply_block_deletes(html: str, delete_keys: set[str], removed: list[str]) -
     label — using nesting-depth tracking so a block containing a same-named
     nested tag (e.g. a plain ``<div>`` wrapper inside a ``kpi-card`` div) is
     matched to its true closing tag instead of the first inner one."""
-    parts: list[str] = []
+    kept_segments: list[str] = []
     emitted_to = 0
     search_from = 0
     while True:
@@ -138,7 +138,7 @@ def _apply_block_deletes(html: str, delete_keys: set[str], removed: list[str]) -
         close_start, close_end = close
         inner = html[open_match.end() : close_start]
         if _is_deletable_block(attrs, inner, delete_keys):
-            parts.append(html[emitted_to : open_match.start()])
+            kept_segments.append(html[emitted_to : open_match.start()])
             removed.append(_block_label(attrs, inner))
             emitted_to = close_end
             search_from = close_end
@@ -146,8 +146,8 @@ def _apply_block_deletes(html: str, delete_keys: set[str], removed: list[str]) -
             # Not deleted: keep scanning *inside* this block too, so a
             # deletable element nested inside a kept block is still found.
             search_from = open_match.end()
-    parts.append(html[emitted_to:])
-    return "".join(parts)
+    kept_segments.append(html[emitted_to:])
+    return "".join(kept_segments)
 
 
 def _is_deletable_block(attrs: str, inner: str, delete_keys: set[str]) -> bool:

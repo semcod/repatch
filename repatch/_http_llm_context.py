@@ -38,8 +38,10 @@ def build_http_llm_context(artifacts: dict[str, Any]) -> str:
     )
     if not css and not outline and not organize and not extracted_css and not extracted_js:
         return ""
-    parts = _context_parts(organize, source_paths, extracted_css, extracted_js, css, outline)
-    return "\n\n".join(parts)
+    context_blocks = _context_parts(
+        organize, source_paths, extracted_css, extracted_js, css, outline
+    )
+    return "\n\n".join(context_blocks)
 
 
 def _organize_manifest_lines(organize: dict[str, Any]) -> list[str]:
@@ -77,7 +79,7 @@ def _context_parts(
     css: str,
     outline: str,
 ) -> list[str]:
-    parts = [
+    prompt_sections = [
         (
             "IMPORTED WEB PAGE (patch mode — change CSS property values and minimal HTML attributes only; "
             "do not replace the entire document)."
@@ -86,25 +88,25 @@ def _context_parts(
     if organize or source_paths:
         manifest_lines = _organize_manifest_lines(organize)
         if manifest_lines:
-            parts.append("Import organize manifest:\n" + "\n".join(manifest_lines))
+            prompt_sections.append("Import organize manifest:\n" + "\n".join(manifest_lines))
         source_part = _source_paths_part(source_paths)
         if source_part:
-            parts.append(source_part)
+            prompt_sections.append(source_part)
     if extracted_css:
-        parts.append(
+        prompt_sections.append(
             "Extracted inline CSS (from source/index.html):\n```css\n" + extracted_css + "\n```"
         )
     if extracted_js:
-        parts.append(
+        prompt_sections.append(
             "Extracted inline JS (reference only — do not re-add <script> tags):\n```js\n"
             + extracted_js
             + "\n```"
         )
     if css:
-        parts.append("Visual CSS (colors, shapes, layout tokens):\n```css\n" + css + "\n```")
+        prompt_sections.append("Visual CSS (colors, shapes, layout tokens):\n```css\n" + css + "\n```")
     if outline:
-        parts.append("HTML structure outline:\n```html\n" + outline + "\n```")
-    return parts
+        prompt_sections.append("HTML structure outline:\n```html\n" + outline + "\n```")
+    return prompt_sections
 
 
 def http_patch_llm_rules() -> str:

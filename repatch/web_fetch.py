@@ -334,9 +334,9 @@ def _parse_srcset(value: str) -> list[tuple[str, str]]:
         piece = item.strip()
         if not piece:
             continue
-        parts = piece.split()
-        url = parts[0]
-        descriptor = " ".join(parts[1:])
+        entry_fields = piece.split()
+        url = entry_fields[0]
+        descriptor = " ".join(entry_fields[1:])
         pairs.append((url, descriptor))
     return pairs
 
