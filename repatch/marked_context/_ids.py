@@ -55,13 +55,13 @@ def effective_delete_ids(delete_els: list[str], keep_els: list[str]) -> list[str
     kept |= {f"btn-{x}" for x in kept}
     effective_deletes: list[str] = []
     for item in delete_els:
-        raw = str(item).strip()
-        if not raw:
+        delete_value = str(item).strip()
+        if not delete_value:
             continue
-        norm = raw.lower()
+        norm = delete_value.lower()
         alt = norm[4:] if norm.startswith("btn-") else f"btn-{norm}"
         if norm not in kept and alt not in kept:
-            effective_deletes.append(raw)
+            effective_deletes.append(delete_value)
     return effective_deletes
 
 
@@ -97,16 +97,16 @@ def _logical_id(tag: str, attrs: dict[str, str], *, text: str = "") -> str | Non
 
 
 def _id_candidates(element_id: str) -> set[str]:
-    raw = str(element_id or "").strip()
-    if not raw:
+    mark_id = str(element_id or "").strip()
+    if not mark_id:
         return set()
-    normalized_label = _normalize_label_text(raw)
-    aliases = {raw, raw.lower(), normalized_label, normalized_label.lower()}
-    if raw.startswith("btn-"):
-        aliases.add(raw[4:])
-        aliases.add(raw[4:].lower())
+    normalized_label = _normalize_label_text(mark_id)
+    aliases = {mark_id, mark_id.lower(), normalized_label, normalized_label.lower()}
+    if mark_id.startswith("btn-"):
+        aliases.add(mark_id[4:])
+        aliases.add(mark_id[4:].lower())
     else:
-        prefixed = f"btn-{raw}"
+        prefixed = f"btn-{mark_id}"
         aliases.add(prefixed)
         aliases.add(prefixed.lower())
     return aliases
@@ -114,10 +114,10 @@ def _id_candidates(element_id: str) -> set[str]:
 
 def _css_id_selector(token: str) -> str | None:
     """Return a valid ``#id`` selector or None when the token is not a safe id."""
-    raw = str(token or "").strip()
-    if not raw or not _ID_SELECTOR_RE.match(raw):
+    id_token = str(token or "").strip()
+    if not id_token or not _ID_SELECTOR_RE.match(id_token):
         return None
-    return f"#{raw}"
+    return f"#{id_token}"
 
 
 def marked_css_selectors(element_ids: list[str]) -> list[str]:

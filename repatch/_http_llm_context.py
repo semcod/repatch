@@ -8,12 +8,12 @@ MAX_EXTRACTED_PATCH_BYTES = 16_384
 
 
 def _cap_patch_text(text: str, max_bytes: int, *, label: str) -> str:
-    raw = str(text or "").strip()
-    if not raw:
+    uncapped_text = str(text or "").strip()
+    if not uncapped_text:
         return ""
-    encoded = raw.encode("utf-8")
+    encoded = uncapped_text.encode("utf-8")
     if len(encoded) <= max_bytes:
-        return raw
+        return uncapped_text
     truncated = encoded[:max_bytes].decode("utf-8", errors="ignore").rstrip()
     return truncated + f"\n/* repatch: {label} truncated */"
 

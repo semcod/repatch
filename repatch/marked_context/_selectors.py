@@ -157,9 +157,9 @@ def _selector_tokens(subtrees: dict[str, str]) -> set[str]:
         tokens |= {f"#{item}" for item in _id_candidates(element_id)}
     for fragment in subtrees.values():
         for match in re.finditer(r"""\bid\s*=\s*(['"])(.*?)\1""", fragment, re.IGNORECASE):
-            raw = match.group(2).strip()
-            if raw:
-                tokens |= {f"#{raw}", f"#{raw.lower()}"}
+            attr_id = match.group(2).strip()
+            if attr_id:
+                tokens |= {f"#{attr_id}", f"#{attr_id.lower()}"}
         for match in re.finditer(r"""class\s*=\s*(['"])(.*?)\1""", fragment, re.IGNORECASE):
             for cls in re.split(r"\s+", match.group(2).strip()):
                 if cls:

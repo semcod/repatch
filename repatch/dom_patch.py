@@ -170,14 +170,14 @@ def _inject_into_body(text: str, section: str) -> str:
 
 
 def _target_candidates(element_id: str) -> set[str]:
-    raw = str(element_id or "").strip()
-    if not raw:
+    id_text = str(element_id or "").strip()
+    if not id_text:
         return set()
-    aliases = {raw, raw.lower()}
-    if raw.startswith("btn-"):
-        aliases.update({raw[4:], raw[4:].lower()})
+    aliases = {id_text, id_text.lower()}
+    if id_text.startswith("btn-"):
+        aliases.update({id_text[4:], id_text[4:].lower()})
     else:
-        prefixed = f"btn-{raw}"
+        prefixed = f"btn-{id_text}"
         aliases.update({prefixed, prefixed.lower()})
     return aliases
 

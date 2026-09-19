@@ -35,16 +35,16 @@ def _find_matching_close(html: str, tag_name: str, content_start: int) -> tuple[
 
 
 def _delete_match_keys(element_id: str) -> set[str]:
-    raw = (element_id or "").strip()
-    if not raw:
+    delete_id = (element_id or "").strip()
+    if not delete_id:
         return set()
-    keys = {raw, raw.lower()}
-    if raw.lower().startswith("btn-"):
-        keys.add(raw[4:])
-        keys.add(raw[4:].lower())
+    keys = {delete_id, delete_id.lower()}
+    if delete_id.lower().startswith("btn-"):
+        keys.add(delete_id[4:])
+        keys.add(delete_id[4:].lower())
     else:
-        keys.add(f"btn-{raw}")
-        keys.add(f"btn-{raw.lower()}")
+        keys.add(f"btn-{delete_id}")
+        keys.add(f"btn-{delete_id.lower()}")
     return keys
 
 
@@ -79,9 +79,9 @@ def _element_delete_candidates(attrs: str, inner_text: str) -> set[str]:
     target = target_match.group(1) if target_match else ""
     label = re.sub(r"<[^>]+>", "", inner_text or "").strip()
     match_keys: set[str] = set()
-    for raw in (el_id, target, label):
-        if raw:
-            match_keys |= _delete_match_keys(raw)
+    for signal in (el_id, target, label):
+        if signal:
+            match_keys |= _delete_match_keys(signal)
     return match_keys
 
 
