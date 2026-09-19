@@ -29,14 +29,14 @@ def is_lazy_placeholder_img_tag(tag: str) -> bool:
 
 
 def _strip_lazy_placeholder_imgs(html: str) -> tuple[str, int]:
-    removed = 0
+    stripped_count = 0
 
     def _replace(match: re.Match[str]) -> str:
-        nonlocal removed
+        nonlocal stripped_count
         tag = match.group(0)
         if is_lazy_placeholder_img_tag(tag):
-            removed += 1
+            stripped_count += 1
             return "<!-- repatch: lazy placeholder img removed -->"
         return tag
 
-    return _IMG_TAG_RE.sub(_replace, html), removed
+    return _IMG_TAG_RE.sub(_replace, html), stripped_count

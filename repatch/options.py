@@ -80,7 +80,7 @@ def sync_option_previews_from_workspace(
     else:
         to_delete = list(delete_ids or [])
 
-    base, removed = apply_spatial_deletes_to_html(stage_html, to_delete)
+    base, removed_from_stage = apply_spatial_deletes_to_html(stage_html, to_delete)
     if finalize_html is not None:
         base = finalize_html(base)
 
@@ -106,7 +106,7 @@ def sync_option_previews_from_workspace(
         "status": "options_synced_from_workspace",
         "stage": stage,
         "files": written,
-        "spatial_removed": removed,
+        "spatial_removed": removed_from_stage,
         "delete_ids": to_delete,
     }
 
@@ -131,14 +131,14 @@ def enforce_deletes_on_option_previews(
         if not path.exists():
             continue
         preview_html = path.read_text(encoding="utf-8")
-        patched, removed = apply_spatial_deletes_to_html(preview_html, effective_delete)
-        if not removed:
+        patched, removed_from_preview = apply_spatial_deletes_to_html(preview_html, effective_delete)
+        if not removed_from_preview:
             continue
         if finalize_html is not None:
             patched = finalize_html(patched)
         path.write_text(patched, encoding="utf-8")
         touched.append(filename)
-        all_removed.extend(removed)
+        all_removed.extend(removed_from_preview)
 
     return {
         "status": "options_patched",

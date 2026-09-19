@@ -73,19 +73,18 @@ def _should_remove_preview_script(tag: str) -> bool:
 
 def sanitize_http_preview_html(html: str) -> tuple[str, dict[str, Any]]:
     """Strip live-site scripts from HTTP preview HTML; keep CSS/layout markup."""
-    removed = 0
+    stripped_scripts = 0
 
     def replace_script(match: re.Match[str]) -> str:
-        nonlocal removed
+        nonlocal stripped_scripts
         block = match.group(0)
         if _should_remove_preview_script(block):
-            removed += 1
+            stripped_scripts += 1
             return "<!-- repatch: preview script removed -->"
         return block
 
     sanitized_html = _SCRIPT_BLOCK_RE.sub(replace_script, str(html or ""))
-    return sanitized_html, {"preview_scripts_removed": removed}
-
+    return sanitized_html, {"preview_scripts_removed": stripped_scripts}
 
 def inject_http_preview_shim(html: str) -> str:
     """Inject early head shim that blocks cross-origin fetch/XHR in preview iframes."""

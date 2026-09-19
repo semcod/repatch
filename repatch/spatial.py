@@ -99,7 +99,7 @@ def apply_spatial_deletes_to_html(html: str, delete_ids: list[str]) -> tuple[str
     for element_id in delete_ids:
         delete_keys |= _delete_match_keys(str(element_id))
 
-    removed: list[str] = []
+    deleted_labels: list[str] = []
 
     def _btn_replacer(match: re.Match[str]) -> str:
         attrs, label = match.group(1), match.group(2).strip()
@@ -107,16 +107,16 @@ def apply_spatial_deletes_to_html(html: str, delete_ids: list[str]) -> tuple[str
         if delete_keys.intersection(element_keys):
             id_match = re.search(r'\bid="([^"]*)"', attrs, re.IGNORECASE)
             el_id = id_match.group(1) if id_match else ""
-            removed.append(label or el_id or "unknown")
+            deleted_labels.append(label or el_id or "unknown")
             return ""
         return match.group(0)
 
     patched = _BTN_DIV_RE.sub(_btn_replacer, html)
-    patched = _apply_block_deletes(patched, delete_keys, removed)
-    return patched, removed
+    patched = _apply_block_deletes(patched, delete_keys, deleted_labels)
+    return patched, deleted_labels
 
 
-def _apply_block_deletes(html: str, delete_keys: set[str], removed: list[str]) -> str:
+def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[str]) -> str:
     """Remove selectable section/div/aside/nav blocks matched by id, target, or
     label — using nesting-depth tracking so a block containing a same-named
     nested tag (e.g. a plain ``<div>`` wrapper inside a ``kpi-card`` div) is
@@ -139,7 +139,7 @@ def _apply_block_deletes(html: str, delete_keys: set[str], removed: list[str]) -
         inner = html[open_match.end() : close_start]
         if _is_deletable_block(attrs, inner, delete_keys):
             kept_segments.append(html[emitted_to : open_match.start()])
-            removed.append(_block_label(attrs, inner))
+            deleted_labels.append(_block_label(attrs, inner))
             emitted_to = close_end
             search_from = close_end
         else:

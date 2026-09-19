@@ -140,8 +140,8 @@ def css_validate(body: CSSInput) -> dict[str, Any]:
 @app.post("/spatial/deletes")
 def spatial_deletes(body: SpatialDeletesInput) -> dict[str, Any]:
     """Apply spatial deletes to an HTML fragment."""
-    patched_html, removed = apply_spatial_deletes_to_html(body.html, body.delete_ids)
-    return {"html": patched_html, "removed": removed}
+    patched_html, removed_from_fragment = apply_spatial_deletes_to_html(body.html, body.delete_ids)
+    return {"html": patched_html, "removed": removed_from_fragment}
 
 
 @app.post("/scope/strip")
