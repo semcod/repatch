@@ -1,479 +1,61 @@
-"""Prepare imported web pages for fast patching and LLM-safe iteration."""
+"""Prepare imported web pages for fast patching and LLM-safe iteration.
+
+This module is a thin facade over focused submodules split from the original
+single-file implementation:
+
+- ``_web_css``: inline/linked CSS extraction and visual filtering
+- ``_html_outline``: compact HTML skeleton builder
+- ``_http_preview``: preview sanitization and network isolation shim
+- ``_http_llm_context``: LLM patch prompt context assembly
+
+The public surface is re-exported here so existing imports keep working
+unchanged. The private ``_SCRIPT_BLOCK_RE`` / ``_STYLE_BLOCK_RE`` /
+``_should_remove_preview_script`` symbols are also re-exported because
+:mod:`repatch.organize_html` reaches into them directly.
+"""
 
 from __future__ import annotations
 
-import re
-from html.parser import HTMLParser
-from pathlib import Path
-from typing import Any
-
-from .css import split_css_rules
-
-MAX_VISUAL_CSS_BYTES = 65_536
-MAX_EXTRACTED_PATCH_BYTES = 16_384
-OUTLINE_TEXT_PLACEHOLDER = "…"
-
-_STYLE_BLOCK_RE = re.compile(r"<style\b[^>]*>([\s\S]*?)</style>", re.IGNORECASE)
-_LINK_HREF_RE = re.compile(
-    r"""<link\b[^>]*\brel\s*=\s*(['"])[^'"]*stylesheet[^'"]*\1[^>]*\bhref\s*=\s*(['"])(.*?)\2""",
-    re.IGNORECASE,
+from ._html_outline import OUTLINE_TEXT_PLACEHOLDER, build_html_outline
+from ._http_llm_context import (
+    MAX_EXTRACTED_PATCH_BYTES,
+    build_http_llm_context,
+    http_patch_llm_rules,
 )
-_LINK_HREF_ALT_RE = re.compile(
-    r"""<link\b[^>]*\bhref\s*=\s*(['"])(.*?)\1[^>]*\brel\s*=\s*(['"])[^'"]*stylesheet[^'"]*\3""",
-    re.IGNORECASE,
+from ._http_preview import (
+    _SCRIPT_BLOCK_RE,  # noqa: F401
+    HTTP_PREVIEW_NETWORK_SHIM,
+    _should_remove_preview_script,  # noqa: F401
+    inject_http_preview_shim,
+    prepare_http_preview_html,
+    sanitize_http_preview_html,
 )
-_SKIP_AT_RULE_RE = re.compile(r"@(font-face|keyframes)\b", re.IGNORECASE)
-_PRINT_MEDIA_RE = re.compile(r"@media\s+print\b", re.IGNORECASE)
-_SCRIPT_BLOCK_RE = re.compile(r"<script\b[^>]*>[\s\S]*?</script>", re.IGNORECASE)
-_SCRIPT_SRC_ATTR_RE = re.compile(r"""\bsrc\s*=\s*(['"])(.*?)\1""", re.IGNORECASE)
-_NEXU_PREVIEW_SHIM_MARKER = "nexu preview: block cross-origin fetch"
-
-HTTP_PREVIEW_NETWORK_SHIM = f"""<script>/* {_NEXU_PREVIEW_SHIM_MARKER} */
-(function(){{
-  var previewOrigin = location.origin;
-  function nexuCrossOrigin(url) {{
-    try {{
-      var resolved = new URL(String(url || ""), document.baseURI || location.href);
-      return resolved.origin !== previewOrigin;
-    }} catch (_) {{
-      return true;
-    }}
-  }}
-  var nativeFetch = window.fetch;
-  if (typeof nativeFetch === "function") {{
-    window.fetch = function(input, init) {{
-      var url = typeof input === "string" ? input : (input && input.url) || "";
-      if (nexuCrossOrigin(url)) {{
-        return Promise.resolve(new Response("", {{status: 204, statusText: "nexu preview blocked"}}));
-      }}
-      return nativeFetch.apply(this, arguments);
-    }};
-  }}
-  var NativeXHR = window.XMLHttpRequest;
-  if (typeof NativeXHR === "function") {{
-    window.XMLHttpRequest = function() {{
-      var xhr = new NativeXHR();
-      var nativeOpen = xhr.open;
-      xhr.open = function(method, url) {{
-        if (nexuCrossOrigin(url)) {{
-          xhr._nexuBlocked = true;
-          return;
-        }}
-        return nativeOpen.apply(xhr, arguments);
-      }};
-      var nativeSend = xhr.send;
-      xhr.send = function() {{
-        if (xhr._nexuBlocked) return;
-        return nativeSend.apply(xhr, arguments);
-      }};
-      return xhr;
-    }};
-  }}
-  window.kadenceConfig = window.kadenceConfig || {{}};
-}})();
-</script>"""
-
-_VISUAL_PROPS = frozenset(
-    {
-        "color",
-        "background",
-        "background-color",
-        "background-image",
-        "border",
-        "border-color",
-        "border-radius",
-        "border-width",
-        "border-style",
-        "box-shadow",
-        "font",
-        "font-family",
-        "font-size",
-        "font-weight",
-        "fill",
-        "stroke",
-        "width",
-        "height",
-        "min-width",
-        "min-height",
-        "max-width",
-        "max-height",
-        "aspect-ratio",
-        "display",
-        "flex",
-        "flex-direction",
-        "flex-wrap",
-        "grid",
-        "grid-template",
-        "grid-template-columns",
-        "grid-template-rows",
-        "gap",
-        "padding",
-        "margin",
-        "opacity",
-        "transform",
-        "clip-path",
-        "outline",
-        "outline-color",
-        "outline-width",
-    }
+from ._web_css import (
+    _STYLE_BLOCK_RE,  # noqa: F401
+    MAX_VISUAL_CSS_BYTES,
+    extract_inline_css,
+    extract_stylesheet_hrefs,
+    extract_visual_css,
+    filter_visual_css,
+    normalize_linked_paths,
+    safe_read_under,
 )
-_PROP_PATTERN = re.compile(
-    r"(?<![\w-])("
-    + "|".join(re.escape(p) for p in sorted(_VISUAL_PROPS, key=len, reverse=True))
-    + r")\s*:",
-    re.IGNORECASE,
-)
-_VAR_PATTERN = re.compile(r"--[\w-]+\s*:", re.IGNORECASE)
 
-
-def safe_read_under(base_dir: Path, rel_path: str) -> str | None:
-    """Read a file only when it resolves under base_dir."""
-    try:
-        root = base_dir.resolve()
-        candidate = (base_dir / rel_path).resolve()
-        if not str(candidate).startswith(str(root) + "/") and candidate != root:
-            return None
-        if not candidate.is_file():
-            return None
-        return candidate.read_text(encoding="utf-8", errors="replace")
-    except OSError:
-        return None
-
-
-def extract_inline_css(html: str) -> str:
-    blocks = _STYLE_BLOCK_RE.findall(html or "")
-    return "\n\n".join(block.strip() for block in blocks if block.strip())
-
-
-def extract_stylesheet_hrefs(html: str) -> list[str]:
-    hrefs: list[str] = []
-    for pattern in (_LINK_HREF_RE, _LINK_HREF_ALT_RE):
-        for match in pattern.finditer(html or ""):
-            href = match.group(3 if pattern is _LINK_HREF_RE else 2).strip()
-            if href and href not in hrefs:
-                hrefs.append(href)
-    return hrefs
-
-
-def normalize_linked_paths(linked_css_paths: list[str] | None, html: str) -> list[str]:
-    paths: list[str] = []
-    for item in linked_css_paths or []:
-        rel = str(item).strip().lstrip("/")
-        if rel and rel not in paths:
-            paths.append(rel)
-    for href in extract_stylesheet_hrefs(html):
-        rel = href.strip()
-        if rel.startswith(("http://", "https://", "//", "data:")):
-            continue
-        rel = rel.lstrip("/")
-        if rel and rel not in paths:
-            paths.append(rel)
-    return paths
-
-
-def _rule_is_visual(rule: str) -> bool:
-    body = rule.strip()
-    if not body:
-        return False
-    if _SKIP_AT_RULE_RE.search(body):
-        return False
-    if _PRINT_MEDIA_RE.search(body):
-        return False
-    if _VAR_PATTERN.search(body):
-        return True
-    if _PROP_PATTERN.search(body):
-        return True
-    selector = body.split("{", 1)[0].strip().lower()
-    return selector in {":root", "html", "body"}
-
-
-def filter_visual_css(css: str) -> str:
-    kept: list[str] = []
-    for rule in split_css_rules(css):
-        if _rule_is_visual(rule):
-            kept.append(rule)
-    return "\n\n".join(kept)
-
-
-def extract_visual_css(
-    html: str,
-    linked_css_paths: list[str] | None,
-    source_dir: Path,
-) -> tuple[str, dict[str, Any]]:
-    """Extract color/shape/layout CSS from inline styles and linked sheets."""
-    chunks: list[str] = []
-    inline = extract_inline_css(html)
-    if inline:
-        chunks.append(inline)
-    for rel in normalize_linked_paths(linked_css_paths, html):
-        local = rel
-        if local.startswith("assets/"):
-            pass
-        elif local.startswith("source/"):
-            local = local[len("source/") :]
-        text = safe_read_under(source_dir, local)
-        if text:
-            chunks.append(f"/* from {rel} */\n{text}")
-    filtered = filter_visual_css("\n\n".join(chunks))
-    meta: dict[str, Any] = {
-        "visual_css_bytes": len(filtered.encode("utf-8")),
-        "visual_css_truncated": False,
-    }
-    encoded = filtered.encode("utf-8")
-    if len(encoded) > MAX_VISUAL_CSS_BYTES:
-        truncated = encoded[:MAX_VISUAL_CSS_BYTES].decode("utf-8", errors="ignore").rstrip()
-        if not truncated.endswith("}"):
-            truncated += "\n/* repatch: visual CSS truncated at 64KB */"
-        filtered = truncated
-        meta["visual_css_bytes"] = len(filtered.encode("utf-8"))
-        meta["visual_css_truncated"] = True
-    return filtered, meta
-
-
-class _OutlineParser(HTMLParser):
-    _SKIP_TAGS = frozenset({"script", "style", "noscript"})
-    _VOID_TAGS = frozenset(
-        {
-            "area",
-            "base",
-            "br",
-            "col",
-            "embed",
-            "hr",
-            "img",
-            "input",
-            "link",
-            "meta",
-            "param",
-            "source",
-            "track",
-            "wbr",
-        }
-    )
-    _KEEP_ATTR_PREFIXES = ("data-nexu", "aria-")
-
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self.parts: list[str] = []
-        self.node_count = 0
-        self._skip_depth = 0
-        self._indent = 0
-
-    def _keep_attr(self, name: str) -> bool:
-        key = name.lower()
-        return key in {"id", "class", "role"} or key.startswith(self._KEEP_ATTR_PREFIXES)
-
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        if tag in self._SKIP_TAGS:
-            self._skip_depth += 1
-            return
-        if self._skip_depth:
-            return
-        kept = [(k, v) for k, v in attrs if v is not None and self._keep_attr(k)]
-        attr_text = "".join(f' {k}="{v}"' for k, v in kept)
-        indent = "  " * self._indent
-        if tag in self._VOID_TAGS:
-            self.parts.append(f"{indent}<{tag}{attr_text} />")
-        else:
-            self.parts.append(f"{indent}<{tag}{attr_text}>")
-            self._indent += 1
-        self.node_count += 1
-
-    def handle_endtag(self, tag: str) -> None:
-        if tag in self._SKIP_TAGS:
-            self._skip_depth = max(0, self._skip_depth - 1)
-            return
-        if self._skip_depth or tag in self._VOID_TAGS:
-            return
-        self._indent = max(0, self._indent - 1)
-        indent = "  " * self._indent
-        self.parts.append(f"{indent}</{tag}>")
-
-    def handle_data(self, data: str) -> None:
-        if self._skip_depth:
-            return
-        text = re.sub(r"\s+", " ", data or "").strip()
-        if not text:
-            return
-        indent = "  " * self._indent
-        self.parts.append(f"{indent}{OUTLINE_TEXT_PLACEHOLDER}")
-
-
-def build_html_outline(html: str) -> tuple[str, dict[str, Any]]:
-    """Build a compact HTML skeleton without scripts or full text content."""
-    comment_free_html = re.sub(r"<!--[\s\S]*?-->", "", str(html or ""))
-    parser = _OutlineParser()
-    parser.feed(comment_free_html)
-    parser.close()
-    outline = "\n".join(parser.parts).strip()
-    if not outline.lower().startswith("<!doctype"):
-        outline = f"<!DOCTYPE html>\n{outline}"
-    meta = {"outline_node_count": parser.node_count, "outline_bytes": len(outline.encode("utf-8"))}
-    return outline, meta
-
-
-def _script_src_allowed_for_preview(src: str) -> bool:
-    src_value = str(src or "").strip()
-    if not src_value:
-        return False
-    if src_value.startswith(("http://", "https://", "//", "data:")):
-        return False
-    return src_value.lower().startswith("imported_projects/")
-
-
-def _should_remove_preview_script(tag: str) -> bool:
-    src_match = _SCRIPT_SRC_ATTR_RE.search(tag)
-    if src_match:
-        return not _script_src_allowed_for_preview(src_match.group(2))
-    return True
-
-
-def sanitize_http_preview_html(html: str) -> tuple[str, dict[str, Any]]:
-    """Strip live-site scripts from HTTP preview HTML; keep CSS/layout markup."""
-    removed = 0
-
-    def replace_script(match: re.Match[str]) -> str:
-        nonlocal removed
-        block = match.group(0)
-        if _should_remove_preview_script(block):
-            removed += 1
-            return "<!-- repatch: preview script removed -->"
-        return block
-
-    sanitized_html = _SCRIPT_BLOCK_RE.sub(replace_script, str(html or ""))
-    return sanitized_html, {"preview_scripts_removed": removed}
-
-
-def inject_http_preview_shim(html: str) -> str:
-    """Inject early head shim that blocks cross-origin fetch/XHR in preview iframes."""
-    if _NEXU_PREVIEW_SHIM_MARKER in html:
-        return html
-    head_match = re.search(r"(<head\b[^>]*>)", html, re.IGNORECASE)
-    if head_match:
-        insert_at = head_match.end()
-        return html[:insert_at] + "\n" + HTTP_PREVIEW_NETWORK_SHIM + html[insert_at:]
-    html_match = re.search(r"(<html\b[^>]*>)", html, re.IGNORECASE)
-    if html_match:
-        insert_at = html_match.end()
-        wrapped = f"<head>{HTTP_PREVIEW_NETWORK_SHIM}</head>{html[insert_at:]}"
-        return html[:insert_at] + wrapped
-    return HTTP_PREVIEW_NETWORK_SHIM + html
-
-
-def prepare_http_preview_html(html: str) -> tuple[str, dict[str, Any]]:
-    """Sanitize scripts and inject network isolation shim for preview iframes."""
-    sanitized_html, meta = sanitize_http_preview_html(html)
-    out = inject_http_preview_shim(sanitized_html)
-    meta["preview_shim_injected"] = _NEXU_PREVIEW_SHIM_MARKER in out
-    return out, meta
-
-
-def _cap_patch_text(text: str, max_bytes: int, *, label: str) -> str:
-    raw = str(text or "").strip()
-    if not raw:
-        return ""
-    encoded = raw.encode("utf-8")
-    if len(encoded) <= max_bytes:
-        return raw
-    truncated = encoded[:max_bytes].decode("utf-8", errors="ignore").rstrip()
-    return truncated + f"\n/* repatch: {label} truncated */"
-
-
-def _organize_manifest_lines(organize: dict[str, Any]) -> list[str]:
-    """Build human-readable manifest lines from the organize metadata."""
-    lines: list[str] = []
-    extracted_files = organize.get("extracted_files")
-    if isinstance(extracted_files, list) and extracted_files:
-        lines.append(
-            "Extracted inline assets: " + ", ".join(str(item) for item in extracted_files if item)
-        )
-    if tagged := organize.get("tagged_targets_count"):
-        lines.append(
-            f"Markable nodes tagged with data-nexu-target: {int(tagged)} "
-            "(use these selectors when referencing unlabelled elements)."
-        )
-    if lazy := organize.get("stripped_lazy_img_count"):
-        lines.append(f"Lazy placeholder images removed at import: {int(lazy)}")
-    return lines
-
-
-def _source_paths_part(source_paths: dict[str, Any]) -> str | None:
-    paths = "\n".join(
-        f"- {key}: {value}" for key, value in source_paths.items() if str(value).strip()
-    )
-    if not paths:
-        return None
-    return "Editable source files (prefer patching these over full stage0.html):\n" + paths
-
-
-def build_http_llm_context(artifacts: dict[str, Any]) -> str:
-    """Combine visual CSS + HTML outline (+ organize manifest) for compact LLM patch prompts."""
-    css = str(artifacts.get("visual_css") or "").strip()
-    outline = str(artifacts.get("html_outline") or "").strip()
-    organize = artifacts.get("organize") if isinstance(artifacts.get("organize"), dict) else {}
-    extracted_css = _cap_patch_text(
-        str(artifacts.get("extracted_css") or ""),
-        MAX_EXTRACTED_PATCH_BYTES,
-        label="extracted CSS",
-    )
-    extracted_js = _cap_patch_text(
-        str(artifacts.get("extracted_js") or ""),
-        MAX_EXTRACTED_PATCH_BYTES,
-        label="extracted JS",
-    )
-    source_paths = (
-        artifacts.get("source_paths") if isinstance(artifacts.get("source_paths"), dict) else {}
-    )
-    if not css and not outline and not organize and not extracted_css and not extracted_js:
-        return ""
-    parts = _context_parts(organize, source_paths, extracted_css, extracted_js, css, outline)
-    return "\n\n".join(parts)
-
-
-def _context_parts(
-    organize: dict[str, Any],
-    source_paths: dict[str, Any],
-    extracted_css: str,
-    extracted_js: str,
-    css: str,
-    outline: str,
-) -> list[str]:
-    parts = [
-        "IMPORTED WEB PAGE (patch mode — change CSS property values and minimal HTML attributes only; "
-        "do not replace the entire document).",
-    ]
-    if organize or source_paths:
-        manifest_lines = _organize_manifest_lines(organize)
-        if manifest_lines:
-            parts.append("Import organize manifest:\n" + "\n".join(manifest_lines))
-        source_part = _source_paths_part(source_paths)
-        if source_part:
-            parts.append(source_part)
-    if extracted_css:
-        parts.append(
-            "Extracted inline CSS (from source/index.html):\n```css\n" + extracted_css + "\n```"
-        )
-    if extracted_js:
-        parts.append(
-            "Extracted inline JS (reference only — do not re-add <script> tags):\n```js\n"
-            + extracted_js
-            + "\n```"
-        )
-    if css:
-        parts.append("Visual CSS (colors, shapes, layout tokens):\n```css\n" + css + "\n```")
-    if outline:
-        parts.append("HTML structure outline:\n```html\n" + outline + "\n```")
-    return parts
-
-
-def http_patch_llm_rules() -> str:
-    """Extra LLM rules when iterating imported HTTP projects in patch mode."""
-    return "\n".join(
-        [
-            "PATCH MODE: the page was imported from the live web.",
-            "Prefer editing CSS property values in the visual CSS block; avoid regenerating the full HTML document.",
-            "Preserve ids, classes, data-* markers, and the HTML skeleton structure.",
-            "When HTML changes are required, patch only attributes or minimal wrapper nodes — never replace the whole tree.",
-            "Do NOT include <script> tags — runtime is injected by the host application after generation.",
-        ]
-    )
+__all__ = [
+    "HTTP_PREVIEW_NETWORK_SHIM",
+    "MAX_EXTRACTED_PATCH_BYTES",
+    "MAX_VISUAL_CSS_BYTES",
+    "OUTLINE_TEXT_PLACEHOLDER",
+    "build_html_outline",
+    "build_http_llm_context",
+    "extract_inline_css",
+    "extract_stylesheet_hrefs",
+    "extract_visual_css",
+    "filter_visual_css",
+    "http_patch_llm_rules",
+    "inject_http_preview_shim",
+    "normalize_linked_paths",
+    "prepare_http_preview_html",
+    "safe_read_under",
+    "sanitize_http_preview_html",
+]
