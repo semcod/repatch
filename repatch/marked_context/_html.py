@@ -100,8 +100,8 @@ def _collect_match_candidates(tag: str, attrs: dict[str, str]) -> set[str]:
 def _collect_button_candidates(tag: str, attrs: dict[str, str], match, raw_html: str) -> set[str]:
     inner_start = match.end()
     inner_end = raw_html.lower().find(f"</{tag}>", inner_start)
-    inner = raw_html[inner_start:inner_end if inner_end >= 0 else inner_start]
-    label = _normalize_label_text(re.sub(r"<[^>]+>", "", inner))
+    label_html = raw_html[inner_start:inner_end if inner_end >= 0 else inner_start]
+    label = _normalize_label_text(re.sub(r"<[^>]+>", "", label_html))
     logical = _logical_id(tag, attrs, text=label)
     if logical:
         return _id_candidates(logical)
