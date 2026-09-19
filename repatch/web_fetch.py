@@ -241,7 +241,7 @@ def _mirror_stylesheets(
     assets_dir: Path,
 ) -> tuple[str, list[WebAsset], list[str]]:
     assets: list[WebAsset] = []
-    errors: list[str] = []
+    stylesheet_errors: list[str] = []
     seen: dict[str, WebAsset] = {}
     counter = 0
 
@@ -270,7 +270,7 @@ def _mirror_stylesheets(
         )
         counter += 1
         if err:
-            errors.append(err)
+            stylesheet_errors.append(err)
             return tag
         if not asset:
             return tag
@@ -278,7 +278,7 @@ def _mirror_stylesheets(
         assets.append(asset)
         return _replace_attr(tag, _HREF_ATTR_RE, asset.local)
 
-    return _LINK_TAG_RE.sub(replace_link, html), assets, errors
+    return _LINK_TAG_RE.sub(replace_link, html), assets, stylesheet_errors
 
 
 def _parse_srcset(value: str) -> list[tuple[str, str]]:
@@ -308,7 +308,7 @@ def _mirror_images(
     assets_dir: Path,
 ) -> tuple[str, list[WebAsset], list[str]]:
     assets: list[WebAsset] = []
-    errors: list[str] = []
+    image_errors: list[str] = []
     seen: dict[str, WebAsset] = {}
     counter = 0
 
@@ -333,7 +333,7 @@ def _mirror_images(
         )
         counter += 1
         if err:
-            errors.append(err)
+            image_errors.append(err)
             return raw
         if not asset:
             return raw
@@ -360,7 +360,7 @@ def _mirror_images(
             tag = _replace_attr(tag, pattern, _format_srcset(mirrored))
         return tag
 
-    return _IMG_TAG_RE.sub(replace_img, html), assets, errors
+    return _IMG_TAG_RE.sub(replace_img, html), assets, image_errors
 
 
 def _fetch_page_source(
@@ -401,7 +401,7 @@ def _mirror_page_assets(
 ) -> tuple[str, list[WebAsset], list[str]]:
     """Mirror stylesheets and images into source_dir/assets."""
     assets: list[WebAsset] = []
-    errors: list[str] = []
+    mirror_errors: list[str] = []
     assets_dir = source_dir / "assets"
     html, css_assets, css_errors = _mirror_stylesheets(
         html,
@@ -415,9 +415,9 @@ def _mirror_page_assets(
     )
     assets.extend(css_assets)
     assets.extend(image_assets)
-    errors.extend(css_errors)
-    errors.extend(image_errors)
-    return html, assets, errors
+    mirror_errors.extend(css_errors)
+    mirror_errors.extend(image_errors)
+    return html, assets, mirror_errors
 
 
 def fetch_complete_web_page(
@@ -431,9 +431,9 @@ def fetch_complete_web_page(
     html, final_url, content_type, charset, method, render_error = _fetch_page_source(url, render_js)
 
     assets: list[WebAsset] = []
-    errors: list[str] = []
+    mirror_errors: list[str] = []
     if mirror_assets and "html" in content_type.lower():
-        html, assets, errors = _mirror_page_assets(html, final_url, source_dir)
+        html, assets, mirror_errors = _mirror_page_assets(html, final_url, source_dir)
 
     return WebFetchResult(
         html=html,
@@ -442,6 +442,6 @@ def fetch_complete_web_page(
         charset=charset,
         method=method,
         assets=assets,
-        errors=errors,
+        errors=mirror_errors,
         render_error=render_error,
     )

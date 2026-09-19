@@ -41,12 +41,12 @@ def split_css_rules(css: str) -> list[str]:
 
 def validate_css_safety(css: str, *, source: str = "css") -> tuple[bool, list[str]]:
     """Reject CSS patterns that commonly break HTML/CSS patch previews."""
-    errors: list[str] = []
+    violations: list[str] = []
     text = _strip_css_comments(css)
     if not text.strip():
         return True, []
     if re.search(r"@import\b|url\s*\(|expression\s*\(|javascript\s*:", text, re.I):
-        errors.append(f"{source}: external or executable CSS is not allowed")
+        violations.append(f"{source}: external or executable CSS is not allowed")
 
     for match in _RULE_RE.finditer(text):
         selectors = " ".join(match.group("selectors").split())
@@ -59,12 +59,12 @@ def validate_css_safety(css: str, *, source: str = "css") -> tuple[bool, list[st
         }
         position = declarations.get("position", "")
         if position in {"absolute", "fixed"}:
-            errors.append(f"{source}: {selectors} uses position:{position}")
+            violations.append(f"{source}: {selectors} uses position:{position}")
         for name, value in declarations.items():
             if name.startswith("margin") and re.match(r"-\d", value):
-                errors.append(f"{source}: {selectors} uses negative {name}")
+                violations.append(f"{source}: {selectors} uses negative {name}")
             if name == "transform" and ":hover" not in selectors:
-                errors.append(f"{source}: {selectors} uses transform outside hover state")
+                violations.append(f"{source}: {selectors} uses transform outside hover state")
             if name in {"top", "left", "right", "bottom"} and position in {"absolute", "fixed"}:
-                errors.append(f"{source}: {selectors} uses manual {name} offset")
-    return len(errors) == 0, errors
+                violations.append(f"{source}: {selectors} uses manual {name} offset")
+    return len(violations) == 0, violations
