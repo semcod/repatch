@@ -78,9 +78,9 @@ _VAR_PATTERN = re.compile(r"--[\w-]+\s*:", re.IGNORECASE)
 def safe_read_under(base_dir: Path, rel_path: str) -> str | None:
     """Read a file only when it resolves under base_dir."""
     try:
-        root = base_dir.resolve()
+        resolved_base = base_dir.resolve()
         candidate = (base_dir / rel_path).resolve()
-        if not str(candidate).startswith(str(root) + "/") and candidate != root:
+        if not str(candidate).startswith(str(resolved_base) + "/") and candidate != resolved_base:
             return None
         if not candidate.is_file():
             return None

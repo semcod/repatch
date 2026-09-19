@@ -123,10 +123,10 @@ def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
 
 def organize_html_project_dir(source_dir: Path) -> OrganizeResult | None:
     """Read index.html under source_dir, organize in place, return result or None if missing."""
-    root = Path(source_dir)
+    project_dir = Path(source_dir)
     index_path: Path | None = None
     for name in ("index.html", "index.htm"):
-        candidate = root / name
+        candidate = project_dir / name
         if candidate.is_file():
             index_path = candidate
             break
@@ -136,7 +136,7 @@ def organize_html_project_dir(source_dir: Path) -> OrganizeResult | None:
         index_html = index_path.read_text(encoding="utf-8")
     except OSError:
         return None
-    result = organize_html(index_html, base_dir=root)
+    result = organize_html(index_html, base_dir=project_dir)
     if result.html != index_html or result.meta.get("organized"):
         try:
             index_path.write_text(result.html, encoding="utf-8")

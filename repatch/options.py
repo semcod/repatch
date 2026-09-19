@@ -44,10 +44,10 @@ def normalize_html_body(html: str) -> str:
 
 def html_files_distinct(base_dir: Path | str, names: list[str]) -> bool:
     """True when all named HTML files exist and at least two have different bodies."""
-    root = Path(base_dir)
+    base_path = Path(base_dir)
     bodies: list[str] = []
     for name in names:
-        path = root / name
+        path = base_path / name
         if not path.exists():
             return False
         bodies.append(normalize_html_body(path.read_text(encoding="utf-8")))
@@ -69,8 +69,8 @@ def sync_option_previews_from_workspace(
     ``delete_ids=None`` means resolve current policy DELETE ids through
     ``delete_resolver``. ``delete_ids=[]`` mirrors the workspace as-is.
     """
-    root = Path(cinema_dir)
-    stage_file = root / f"stage{stage}.html"
+    cinema_path = Path(cinema_dir)
+    stage_file = cinema_path / f"stage{stage}.html"
     if not stage_file.exists():
         return {"error": f"missing {stage_file.name}"}
 
@@ -86,7 +86,7 @@ def sync_option_previews_from_workspace(
 
     written: list[str] = []
     for filename, title in option_files:
-        (root / filename).write_text(replace_html_title(base, title), encoding="utf-8")
+        (cinema_path / filename).write_text(replace_html_title(base, title), encoding="utf-8")
         written.append(filename)
 
     # Mirror options B/C into stage1/stage2, by position in `option_files`
@@ -94,13 +94,13 @@ def sync_option_previews_from_workspace(
     # custom option_files tuple would otherwise silently read stale/nonexistent
     # default filenames here instead of the files actually just written above.
     if len(option_files) > 1:
-        second = root / option_files[1][0]
+        second = cinema_path / option_files[1][0]
         if second.exists():
-            (root / "stage1.html").write_text(second.read_text(encoding="utf-8"), encoding="utf-8")
+            (cinema_path / "stage1.html").write_text(second.read_text(encoding="utf-8"), encoding="utf-8")
     if len(option_files) > 2:
-        third = root / option_files[2][0]
+        third = cinema_path / option_files[2][0]
         if third.exists():
-            (root / "stage2.html").write_text(third.read_text(encoding="utf-8"), encoding="utf-8")
+            (cinema_path / "stage2.html").write_text(third.read_text(encoding="utf-8"), encoding="utf-8")
 
     return {
         "status": "options_synced_from_workspace",
@@ -123,11 +123,11 @@ def enforce_deletes_on_option_previews(
     if not effective_delete:
         return {"status": "options_unchanged", "files": [], "delete_ids": []}
 
-    root = Path(cinema_dir)
+    cinema_path = Path(cinema_dir)
     touched: list[str] = []
     all_removed: list[str] = []
     for filename, _title in option_files:
-        path = root / filename
+        path = cinema_path / filename
         if not path.exists():
             continue
         preview_html = path.read_text(encoding="utf-8")
