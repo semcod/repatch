@@ -18,10 +18,10 @@ def supports_llm_patch_scope(
     has_marks: bool = False,
 ) -> bool:
     """True when A-C options can be generated as a CSS patch instead of full HTML."""
-    normalized = normalize_focus_scope(scope, project_kind)
-    if has_marks and normalized == "functions":
+    effective_scope = normalize_focus_scope(scope, project_kind)
+    if has_marks and effective_scope == "functions":
         return False
-    return normalized in _VISUAL_PATCH_SCOPES
+    return effective_scope in _VISUAL_PATCH_SCOPES
 
 
 def _compact_html(html: str, *, limit: int = 6000) -> str:

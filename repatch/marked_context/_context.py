@@ -46,15 +46,15 @@ def _collect_css_sources(html: str, ui_profile: dict[str, Any] | None) -> str:
 
 
 def _scope_semantics(scope: str) -> list[str]:
-    normalized = (scope or "").strip().lower()
-    if normalized == "functions":
+    scope_key = (scope or "").strip().lower()
+    if scope_key == "functions":
         return [
             "DELETE-marked elements must be removed or fully redesigned in each variant.",
             "KEEP-marked elements must remain present and usable.",
         ]
-    if normalized in _VISUAL_SCOPES:
+    if scope_key in _VISUAL_SCOPES:
         return [
-            f"Apply #{normalized} changes primarily to DELETE-marked elements.",
+            f"Apply #{scope_key} changes primarily to DELETE-marked elements.",
             "KEEP-marked elements are hard constraints — preserve their colors/shapes/layout.",
             "Do not restyle unrelated controls outside the marked fragments.",
         ]

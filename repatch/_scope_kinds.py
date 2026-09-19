@@ -128,5 +128,5 @@ def offline_fast_scopes_for_kind(project_kind: str) -> frozenset[str]:
 
 def scope_supports_offline_fast_path(scope: str, project_kind: str) -> bool:
     """True when focus_scope can be patched locally without a full LLM HTML call."""
-    normalized = normalize_focus_scope(scope, project_kind)
-    return normalized in offline_fast_scopes_for_kind(project_kind)
+    effective_scope = normalize_focus_scope(scope, project_kind)
+    return effective_scope in offline_fast_scopes_for_kind(project_kind)

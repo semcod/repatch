@@ -100,8 +100,8 @@ def _id_candidates(element_id: str) -> set[str]:
     raw = str(element_id or "").strip()
     if not raw:
         return set()
-    normalized = _normalize_label_text(raw)
-    out = {raw, raw.lower(), normalized, normalized.lower()}
+    normalized_label = _normalize_label_text(raw)
+    out = {raw, raw.lower(), normalized_label, normalized_label.lower()}
     if raw.startswith("btn-"):
         out.add(raw[4:])
         out.add(raw[4:].lower())

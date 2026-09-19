@@ -58,13 +58,13 @@ class RepatchService:
         return suggestions
 
     def _normalize_scopes(self, scopes: Iterable[str]) -> List[str]:
-        normalized = [scope.strip().lower() for scope in scopes if scope and scope.strip()]
-        if not normalized:
+        cleaned_scopes = [scope.strip().lower() for scope in scopes if scope and scope.strip()]
+        if not cleaned_scopes:
             raise ValueError("At least one scope must be provided.")
-        invalid = sorted(set(normalized) - SUPPORTED_SCOPES)
+        invalid = sorted(set(cleaned_scopes) - SUPPORTED_SCOPES)
         if invalid:
             raise ValueError(f"Unsupported scopes: {', '.join(invalid)}")
-        return sorted(set(normalized))
+        return sorted(set(cleaned_scopes))
 
     @staticmethod
     def _build_user_prompt(fragment: str, scopes: List[str]) -> str:

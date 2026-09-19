@@ -19,9 +19,9 @@ FinalizeHtmlFn = Callable[[str], str]
 
 def supports_function_patch(scope: str, project_kind: str) -> bool:
     """True when #functions can be generated as local DOM patches."""
-    normalized = (scope or "").strip().lower()
+    scope_key = (scope or "").strip().lower()
     kind = (project_kind or "").strip().lower()
-    return normalized == "functions" and kind in {
+    return scope_key == "functions" and kind in {
         "imported",
         "web",
         "frontend",
