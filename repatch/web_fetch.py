@@ -329,7 +329,7 @@ def _mirror_stylesheets(
 
 
 def _parse_srcset(value: str) -> list[tuple[str, str]]:
-    out: list[tuple[str, str]] = []
+    pairs: list[tuple[str, str]] = []
     for item in str(value or "").split(","):
         piece = item.strip()
         if not piece:
@@ -337,8 +337,8 @@ def _parse_srcset(value: str) -> list[tuple[str, str]]:
         parts = piece.split()
         url = parts[0]
         descriptor = " ".join(parts[1:])
-        out.append((url, descriptor))
-    return out
+        pairs.append((url, descriptor))
+    return pairs
 
 
 def _format_srcset(items: list[tuple[str, str]]) -> str:

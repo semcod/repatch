@@ -105,6 +105,6 @@ def inject_http_preview_shim(html: str) -> str:
 def prepare_http_preview_html(html: str) -> tuple[str, dict[str, Any]]:
     """Sanitize scripts and inject network isolation shim for preview iframes."""
     sanitized_html, meta = sanitize_http_preview_html(html)
-    out = inject_http_preview_shim(sanitized_html)
-    meta["preview_shim_injected"] = _NEXU_PREVIEW_SHIM_MARKER in out
-    return out, meta
+    shimmed_html = inject_http_preview_shim(sanitized_html)
+    meta["preview_shim_injected"] = _NEXU_PREVIEW_SHIM_MARKER in shimmed_html
+    return shimmed_html, meta

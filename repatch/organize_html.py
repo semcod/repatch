@@ -39,26 +39,26 @@ def _write_extracted(base_dir: Path | None, name: str, content: str) -> bool:
         return False
 
 
-def _extract_styles(out: str, style_meta: dict[str, Any], base_dir: Path | None) -> str:
-    style_text, style_blocks = _extract_inline_styles(out)
+def _extract_styles(html_text: str, style_meta: dict[str, Any], base_dir: Path | None) -> str:
+    style_text, style_blocks = _extract_inline_styles(html_text)
     style_meta["styles_inline_blocks"] = style_blocks
     if len(style_text) < MIN_STYLE_EXTRACT_CHARS:
-        return out
+        return html_text
     wrote_css = _write_extracted(base_dir, EXTRACTED_CSS_NAME, style_text)
     if base_dir is None:
         style_meta["extracted_css_inline"] = style_text
     if not wrote_css:
-        return out
-    out = _STYLE_BLOCK_FULL_RE.sub("", out)
+        return html_text
+    html_text = _STYLE_BLOCK_FULL_RE.sub("", html_text)
     style_meta["styles_extracted"] = True
     if base_dir is not None:
         style_meta["extracted_css_path"] = EXTRACTED_CSS_NAME
-        out = _inject_head_link(out, href=EXTRACTED_CSS_NAME)
-    return out
+        html_text = _inject_head_link(html_text, href=EXTRACTED_CSS_NAME)
+    return html_text
 
 
-def _extract_scripts(out: str, script_meta: dict[str, Any], base_dir: Path | None) -> str:
-    script_chunks, scripts_removed, script_edits = analyze_inline_scripts(out)
+def _extract_scripts(html_text: str, script_meta: dict[str, Any], base_dir: Path | None) -> str:
+    script_chunks, scripts_removed, script_edits = analyze_inline_scripts(html_text)
     script_meta["scripts_removed"] = scripts_removed
     wrote_js = False
     if script_chunks:
@@ -74,12 +74,12 @@ def _extract_scripts(out: str, script_meta: dict[str, Any], base_dir: Path | Non
     for original, replacement in script_edits:
         if replacement == "" and not wrote_js:
             continue
-        if original not in out:
+        if original not in html_text:
             continue
-        out = out.replace(original, replacement, 1)
+        html_text = html_text.replace(original, replacement, 1)
     if wrote_js and base_dir is not None:
-        out = _inject_head_script(out, src=EXTRACTED_JS_NAME)
-    return out
+        html_text = _inject_head_script(html_text, src=EXTRACTED_JS_NAME)
+    return html_text
 
 
 def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
@@ -100,13 +100,13 @@ def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
     if not source.strip():
         return OrganizeResult(html=source, meta=meta)
 
-    out = _extract_styles(source, meta, base_dir)
-    out = _extract_scripts(out, meta, base_dir)
+    organized_html = _extract_styles(source, meta, base_dir)
+    organized_html = _extract_scripts(organized_html, meta, base_dir)
 
-    out, lazy_removed = _strip_lazy_placeholder_imgs(out)
+    organized_html, lazy_removed = _strip_lazy_placeholder_imgs(organized_html)
     meta["lazy_imgs_removed"] = lazy_removed
 
-    out, targets_added = _add_markable_targets(out)
+    organized_html, targets_added = _add_markable_targets(organized_html)
     meta["targets_added"] = targets_added
 
     meta["organized"] = any(
@@ -118,7 +118,7 @@ def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
             targets_added,
         )
     )
-    return OrganizeResult(html=out, meta=meta)
+    return OrganizeResult(html=organized_html, meta=meta)
 
 
 def organize_html_project_dir(source_dir: Path) -> OrganizeResult | None:

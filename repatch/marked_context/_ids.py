@@ -53,7 +53,7 @@ def effective_delete_ids(delete_els: list[str], keep_els: list[str]) -> list[str
     """Return DELETE ids that are not overridden by current KEEP marks."""
     kept = {str(x).strip().lower().removeprefix("btn-") for x in keep_els if str(x).strip()}
     kept |= {f"btn-{x}" for x in kept}
-    out: list[str] = []
+    effective_deletes: list[str] = []
     for item in delete_els:
         raw = str(item).strip()
         if not raw:
@@ -61,8 +61,8 @@ def effective_delete_ids(delete_els: list[str], keep_els: list[str]) -> list[str
         norm = raw.lower()
         alt = norm[4:] if norm.startswith("btn-") else f"btn-{norm}"
         if norm not in kept and alt not in kept:
-            out.append(raw)
-    return out
+            effective_deletes.append(raw)
+    return effective_deletes
 
 
 def _normalize_label_text(text: str) -> str:
@@ -101,15 +101,15 @@ def _id_candidates(element_id: str) -> set[str]:
     if not raw:
         return set()
     normalized_label = _normalize_label_text(raw)
-    out = {raw, raw.lower(), normalized_label, normalized_label.lower()}
+    aliases = {raw, raw.lower(), normalized_label, normalized_label.lower()}
     if raw.startswith("btn-"):
-        out.add(raw[4:])
-        out.add(raw[4:].lower())
+        aliases.add(raw[4:])
+        aliases.add(raw[4:].lower())
     else:
         prefixed = f"btn-{raw}"
-        out.add(prefixed)
-        out.add(prefixed.lower())
-    return out
+        aliases.add(prefixed)
+        aliases.add(prefixed.lower())
+    return aliases
 
 
 def _css_id_selector(token: str) -> str | None:

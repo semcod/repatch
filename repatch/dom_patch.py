@@ -37,19 +37,19 @@ def build_function_patch_context(html_text: str, *, user_goal: str = "") -> str:
 
 
 def _strip_existing_patch(text: str) -> str:
-    out = re.sub(
+    cleaned = re.sub(
         rf'<style\s+id=["\']{_FUNCTION_PATCH_STYLE_ID}["\'][^>]*>[\s\S]*?</style>\s*',
         "",
         str(text or ""),
         flags=re.I,
     )
-    out = re.sub(
+    cleaned = re.sub(
         r'<section\s+class=["\']nexu-function-evolution\b[^>]*>[\s\S]*?</section>\s*',
         "",
-        out,
+        cleaned,
         flags=re.I,
     )
-    return out
+    return cleaned
 
 
 def _goal_label(user_goal: str) -> str:
@@ -173,13 +173,13 @@ def _target_candidates(element_id: str) -> set[str]:
     raw = str(element_id or "").strip()
     if not raw:
         return set()
-    out = {raw, raw.lower()}
+    aliases = {raw, raw.lower()}
     if raw.startswith("btn-"):
-        out.update({raw[4:], raw[4:].lower()})
+        aliases.update({raw[4:], raw[4:].lower()})
     else:
         prefixed = f"btn-{raw}"
-        out.update({prefixed, prefixed.lower()})
-    return out
+        aliases.update({prefixed, prefixed.lower()})
+    return aliases
 
 
 def _strip_tags(text: str) -> str:
@@ -244,14 +244,14 @@ def _patch_function_targets(html_text: str, delete_els: list[str], variant: str,
         r"<(?P<tag>a|button)\b(?P<attrs>[^>]*)>(?P<inner>[\s\S]*?)</(?P=tag)>",
         re.I,
     )
-    out: list[str] = []
+    segments: list[str] = []
     pos = 0
     for match in pattern.finditer(html_text):
         open_tag = match.group(0).split(">", 1)[0] + ">"
         inner = match.group("inner")
         if not _matches_target(open_tag, inner, wanted):
             continue
-        out.append(html_text[pos : match.start()])
+        segments.append(html_text[pos : match.start()])
         tag = match.group("tag").lower()
         label = _variant_target_label(variant, user_goal)
         href = _attrs_from_open_tag(open_tag).get("href", "")
@@ -259,10 +259,10 @@ def _patch_function_targets(html_text: str, delete_els: list[str], variant: str,
         patched_open = _set_attr(patched_open, "aria-label", label)
         if tag == "a":
             patched_open = _set_attr(patched_open, "href", _variant_href(variant, href))
-        out.append(f"{patched_open}{html.escape(label)}</{tag}>")
+        segments.append(f"{patched_open}{html.escape(label)}</{tag}>")
         pos = match.end()
-    out.append(html_text[pos:])
-    return "".join(out)
+    segments.append(html_text[pos:])
+    return "".join(segments)
 
 
 def _default_prepare_html(html: str, *, ui_type: str = "web") -> tuple[str | None, bool, list[str]]:
@@ -327,10 +327,10 @@ def _build_variant_doc(
     ui_type: str,
 ) -> tuple[str, bool, list[str]]:
     """Patch one function variant document (targets, style, section, finalize)."""
-    out = _patch_function_targets(base, effective_delete, variant, user_goal)
-    out = _inject_into_head(out, _patch_style())
-    out = _inject_into_body(out, _variant_section(variant, user_goal, ir))
-    doc, ok, errors = prepare(out, ui_type=ui_type)
+    variant_doc = _patch_function_targets(base, effective_delete, variant, user_goal)
+    variant_doc = _inject_into_head(variant_doc, _patch_style())
+    variant_doc = _inject_into_body(variant_doc, _variant_section(variant, user_goal, ir))
+    doc, ok, errors = prepare(variant_doc, ui_type=ui_type)
     if ok and doc and effective_delete:
         doc = finalize(doc)
     return doc, ok, errors
