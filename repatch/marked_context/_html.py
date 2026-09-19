@@ -87,14 +87,14 @@ def _extract_balanced_html(html: str, start: int) -> tuple[str, int] | None:
 
 def _collect_match_candidates(tag: str, attrs: dict[str, str]) -> set[str]:
     raw_id = str(attrs.get("id") or "").strip()
-    candidates = _id_candidates(raw_id) if raw_id else set()
+    id_keys = _id_candidates(raw_id) if raw_id else set()
     target = str(attrs.get("data-nexu-target") or "").strip()
     if target:
-        candidates |= _id_candidates(target)
+        id_keys |= _id_candidates(target)
     logical = _logical_id(tag, attrs)
     if logical:
-        candidates |= _id_candidates(logical)
-    return candidates
+        id_keys |= _id_candidates(logical)
+    return id_keys
 
 
 def _collect_button_candidates(tag: str, attrs: dict[str, str], match, raw_html: str) -> set[str]:

@@ -204,14 +204,14 @@ def _attrs_from_open_tag(open_tag: str) -> dict[str, str]:
 
 def _matches_target(open_tag: str, inner: str, wanted: set[str]) -> bool:
     attrs = _attrs_from_open_tag(open_tag)
-    candidates: set[str] = set()
+    target_keys: set[str] = set()
     for key in ("id", "data-nexu-target", "aria-label", "title"):
         if attrs.get(key):
-            candidates |= _target_candidates(attrs[key])
+            target_keys |= _target_candidates(attrs[key])
     text = _strip_tags(inner)
     if text:
-        candidates |= _target_candidates(text)
-    return bool(wanted & candidates)
+        target_keys |= _target_candidates(text)
+    return bool(wanted & target_keys)
 
 
 def _variant_target_label(variant: str, user_goal: str) -> str:

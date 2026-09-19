@@ -97,13 +97,13 @@ def _element_candidates(tag: str, attrs: dict[str, str]) -> tuple[set[str], str,
     """Collect candidate ids from id, data-nexu-target and logical id."""
     raw_id = str(attrs.get("id") or "").strip()
     target = str(attrs.get("data-nexu-target") or "").strip()
-    candidates = _id_candidates(raw_id) if raw_id else set()
+    id_keys = _id_candidates(raw_id) if raw_id else set()
     if target:
-        candidates |= _id_candidates(target)
+        id_keys |= _id_candidates(target)
     logical = _logical_id(tag, attrs)
     if logical:
-        candidates |= _id_candidates(logical)
-    return candidates, raw_id, target
+        id_keys |= _id_candidates(logical)
+    return id_keys, raw_id, target
 
 
 def _label_probe_hit(
@@ -174,8 +174,8 @@ def _annotation_target(
     attrs_text = match.group(2)
     attrs = _parse_attrs(attrs_text)
 
-    candidates, raw_id, target = _element_candidates(tag, attrs)
-    hit = wanted & candidates
+    element_keys, raw_id, target = _element_candidates(tag, attrs)
+    hit = wanted & element_keys
     if not hit and not raw_id and not target:
         hit = _label_probe_hit(text, match, tag, attrs, wanted)
     if not hit:
