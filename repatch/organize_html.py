@@ -39,37 +39,37 @@ def _write_extracted(base_dir: Path | None, name: str, content: str) -> bool:
         return False
 
 
-def _extract_styles(out: str, meta: dict[str, Any], base_dir: Path | None) -> str:
+def _extract_styles(out: str, style_meta: dict[str, Any], base_dir: Path | None) -> str:
     style_text, style_blocks = _extract_inline_styles(out)
-    meta["styles_inline_blocks"] = style_blocks
+    style_meta["styles_inline_blocks"] = style_blocks
     if len(style_text) < MIN_STYLE_EXTRACT_CHARS:
         return out
     wrote_css = _write_extracted(base_dir, EXTRACTED_CSS_NAME, style_text)
     if base_dir is None:
-        meta["extracted_css_inline"] = style_text
+        style_meta["extracted_css_inline"] = style_text
     if not wrote_css:
         return out
     out = _STYLE_BLOCK_FULL_RE.sub("", out)
-    meta["styles_extracted"] = True
+    style_meta["styles_extracted"] = True
     if base_dir is not None:
-        meta["extracted_css_path"] = EXTRACTED_CSS_NAME
+        style_meta["extracted_css_path"] = EXTRACTED_CSS_NAME
         out = _inject_head_link(out, href=EXTRACTED_CSS_NAME)
     return out
 
 
-def _extract_scripts(out: str, meta: dict[str, Any], base_dir: Path | None) -> str:
+def _extract_scripts(out: str, script_meta: dict[str, Any], base_dir: Path | None) -> str:
     script_chunks, scripts_removed, script_edits = analyze_inline_scripts(out)
-    meta["scripts_removed"] = scripts_removed
+    script_meta["scripts_removed"] = scripts_removed
     wrote_js = False
     if script_chunks:
         combined_js = "\n\n".join(script_chunks)
         wrote_js = _write_extracted(base_dir, EXTRACTED_JS_NAME, combined_js)
         if base_dir is None:
-            meta["extracted_js_inline"] = combined_js
+            script_meta["extracted_js_inline"] = combined_js
         if wrote_js:
-            meta["scripts_extracted"] = True
+            script_meta["scripts_extracted"] = True
             if base_dir is not None:
-                meta["extracted_js_path"] = EXTRACTED_JS_NAME
+                script_meta["extracted_js_path"] = EXTRACTED_JS_NAME
 
     for original, replacement in script_edits:
         if replacement == "" and not wrote_js:
@@ -152,15 +152,15 @@ def organize_html_project(html: str, *, base_dir: Path | None = None) -> Organiz
 
 def organize_result_manifest(result: OrganizeResult) -> dict[str, Any]:
     """Serialize ``OrganizeResult`` for ``project.json`` → ``organize`` metadata."""
-    meta = dict(result.meta)
+    manifest_meta = dict(result.meta)
     extracted_files: list[str] = []
     for key in ("extracted_css_path", "extracted_js_path"):
-        path = str(meta.get(key) or "").strip()
+        path = str(manifest_meta.get(key) or "").strip()
         if path:
             extracted_files.append(path)
     return {
-        **meta,
+        **manifest_meta,
         "extracted_files": extracted_files,
-        "stripped_lazy_img_count": int(meta.get("lazy_imgs_removed") or 0),
-        "tagged_targets_count": int(meta.get("targets_added") or 0),
+        "stripped_lazy_img_count": int(manifest_meta.get("lazy_imgs_removed") or 0),
+        "tagged_targets_count": int(manifest_meta.get("targets_added") or 0),
     }

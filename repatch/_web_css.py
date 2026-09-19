@@ -164,7 +164,7 @@ def extract_visual_css(
         if text:
             chunks.append(f"/* from {rel} */\n{text}")
     filtered = filter_visual_css("\n\n".join(chunks))
-    meta: dict[str, Any] = {
+    visual_css_stats: dict[str, Any] = {
         "visual_css_bytes": len(filtered.encode("utf-8")),
         "visual_css_truncated": False,
     }
@@ -174,6 +174,6 @@ def extract_visual_css(
         if not truncated.endswith("}"):
             truncated += "\n/* repatch: visual CSS truncated at 64KB */"
         filtered = truncated
-        meta["visual_css_bytes"] = len(filtered.encode("utf-8"))
-        meta["visual_css_truncated"] = True
-    return filtered, meta
+        visual_css_stats["visual_css_bytes"] = len(filtered.encode("utf-8"))
+        visual_css_stats["visual_css_truncated"] = True
+    return filtered, visual_css_stats

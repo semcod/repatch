@@ -87,5 +87,5 @@ def build_html_outline(html: str) -> tuple[str, dict[str, Any]]:
     outline = "\n".join(parser.parts).strip()
     if not outline.lower().startswith("<!doctype"):
         outline = f"<!DOCTYPE html>\n{outline}"
-    meta = {"outline_node_count": parser.node_count, "outline_bytes": len(outline.encode("utf-8"))}
-    return outline, meta
+    outline_stats = {"outline_node_count": parser.node_count, "outline_bytes": len(outline.encode("utf-8"))}
+    return outline, outline_stats
