@@ -7,6 +7,7 @@ from unittest.mock import patch
 import pytest
 
 from repatch import fetch_complete_web_page
+from repatch.web_fetch import _PageSource
 
 
 class FakeResp:
@@ -89,7 +90,13 @@ def test_fetch_complete_web_page_uses_rendered_dom_and_mirrors_assets(tmp_path):
     with (
         patch(
             "repatch.web_fetch._render_with_playwright",
-            return_value=(rendered_html, "https://example.com/app"),
+            return_value=_PageSource(
+                html=rendered_html,
+                content_type="text/html; charset=utf-8",
+                final_url="https://example.com/app",
+                charset="utf-8",
+                method="playwright",
+            ),
         ),
         patch("repatch.web_fetch._SAFE_OPENER.open", side_effect=fake_urlopen),
     ):

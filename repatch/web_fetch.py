@@ -56,6 +56,28 @@ class WebFetchResult:
     render_error: str = ""
 
 
+@dataclass(frozen=True)
+class _HttpBody:
+    """Raw HTTP response: payload plus where it ultimately came from."""
+
+    payload: bytes
+    content_type: str
+    final_url: str
+    charset: str | None
+
+
+@dataclass(frozen=True)
+class _PageSource:
+    """Resolved page source: rendered DOM (Playwright) or raw HTTP fallback."""
+
+    html: str
+    content_type: str
+    final_url: str
+    charset: str | None
+    method: str
+    render_error: str = ""
+
+
 def _non_public_ip_reason(ip_str: str) -> str | None:
     try:
         ip = ipaddress.ip_address(ip_str)
@@ -136,13 +158,12 @@ def _same_origin(url: str, base_url: str) -> bool:
     return left.scheme in {"http", "https"} and left.netloc == right.netloc
 
 
-def _read_http_body(url: str, *, max_bytes: int = MAX_HTTP_BYTES) -> tuple[bytes, str, str, str | None]:
+def _read_http_body(url: str, *, max_bytes: int = MAX_HTTP_BYTES) -> _HttpBody:
     err = _validate_http_url(url)
     if err:
         raise ValueError(err)
     req = Request(url.strip(), headers={"User-Agent": HTTP_USER_AGENT})
     with _SAFE_OPENER.open(req, timeout=HTTP_TIMEOUT) as resp:
-        final_url = str(getattr(resp, "url", None) or url.strip())
         content_type = str(resp.headers.get("Content-Type") or "text/html")
         charset = _charset_from_content_type(content_type)
         chunks: list[bytes] = []
@@ -155,10 +176,15 @@ def _read_http_body(url: str, *, max_bytes: int = MAX_HTTP_BYTES) -> tuple[bytes
             if total > max_bytes:
                 raise ValueError(f"HTTP response exceeds {max_bytes} bytes")
             chunks.append(block)
-    return b"".join(chunks), content_type, final_url, charset
+    return _HttpBody(
+        payload=b"".join(chunks),
+        content_type=content_type,
+        final_url=str(getattr(resp, "url", None) or url.strip()),
+        charset=charset,
+    )
 
 
-def _render_with_playwright(url: str) -> tuple[str, str] | None:
+def _render_with_playwright(url: str) -> _PageSource | None:
     try:
         from playwright.sync_api import sync_playwright  # type: ignore[import-not-found]
     except Exception:
@@ -170,12 +196,18 @@ def _render_with_playwright(url: str) -> tuple[str, str] | None:
             response = page.goto(url, wait_until="networkidle", timeout=30_000)
             page.wait_for_timeout(500)
             html = page.content()
-            final_url = page.url or url
+            resolved_url = page.url or url
             status = response.status if response else 0
             browser.close()
             if status and status >= 400:
                 raise ValueError(f"playwright status {status}")
-            return html, final_url
+            return _PageSource(
+                html=html,
+                content_type="text/html; charset=utf-8",
+                final_url=resolved_url,
+                charset="utf-8",
+                method="playwright",
+            )
     except Exception as exc:
         raise RuntimeError(str(exc)) from exc
 
@@ -197,26 +229,26 @@ def _save_asset(
     index: int,
 ) -> tuple[WebAsset | None, str | None]:
     try:
-        payload, content_type, final_url, _charset = _read_http_body(
+        asset_body = _read_http_body(
             absolute,
             max_bytes=MAX_ASSET_BYTES,
         )
     except (HTTPError, URLError, TimeoutError, ValueError) as exc:
         return None, f"{original}: {exc}"[:240]
     ext = _extension_from_url_or_type(
-        final_url,
-        content_type,
+        asset_body.final_url,
+        asset_body.content_type,
         ".css" if kind == "stylesheet" else ".bin",
     )
     filename = f"{kind}-{index}{ext}"
     assets_dir.mkdir(parents=True, exist_ok=True)
-    (assets_dir / filename).write_bytes(payload)
+    (assets_dir / filename).write_bytes(asset_body.payload)
     return (
         WebAsset(
-            url=final_url,
+            url=asset_body.final_url,
             original=original,
             local=f"assets/{filename}",
-            content_type=content_type,
+            content_type=asset_body.content_type,
             kind=kind,
         ),
         None,
@@ -363,40 +395,35 @@ def _mirror_images(
     return _IMG_TAG_RE.sub(replace_img, html), assets, image_errors
 
 
-def _fetch_page_source(
-    url: str,
-    render_js: bool,
-) -> tuple[str, str, str, str | None, str, str]:
-    """Fetch page HTML via Playwright render or raw HTTP fallback.
-
-    Returns (html, final_url, content_type, charset, method, render_error).
-    """
+def _fetch_page_source(url: str, render_js: bool) -> _PageSource:
+    """Fetch page HTML via Playwright render or raw HTTP fallback."""
     render_error = ""
-    method = "urllib"
-    html = ""
-    final_url = url.strip()
-    content_type = "text/html; charset=utf-8"
-    charset: str | None = "utf-8"
-
     if render_js:
         try:
             rendered = _render_with_playwright(url.strip())
-            if rendered:
-                html, final_url = rendered
-                method = "playwright"
+            if rendered and rendered.html:
+                return rendered
         except Exception as exc:
             render_error = str(exc)[:500]
 
-    if not html:
-        payload, content_type, final_url, charset = _read_http_body(url.strip())
-        html = _decode_http_bytes(payload, content_type=content_type, charset=charset)
-
-    return html, final_url, content_type, charset, method, render_error
+    http_body = _read_http_body(url.strip())
+    return _PageSource(
+        html=_decode_http_bytes(
+            http_body.payload,
+            content_type=http_body.content_type,
+            charset=http_body.charset,
+        ),
+        content_type=http_body.content_type,
+        final_url=http_body.final_url,
+        charset=http_body.charset,
+        method="urllib",
+        render_error=render_error,
+    )
 
 
 def _mirror_page_assets(
     html: str,
-    final_url: str,
+    page_url: str,
     source_dir: Path,
 ) -> tuple[str, list[WebAsset], list[str]]:
     """Mirror stylesheets and images into source_dir/assets."""
@@ -405,12 +432,12 @@ def _mirror_page_assets(
     assets_dir = source_dir / "assets"
     html, css_assets, css_errors = _mirror_stylesheets(
         html,
-        page_url=final_url,
+        page_url=page_url,
         assets_dir=assets_dir,
     )
     html, image_assets, image_errors = _mirror_images(
         html,
-        page_url=final_url,
+        page_url=page_url,
         assets_dir=assets_dir,
     )
     assets.extend(css_assets)
@@ -428,20 +455,21 @@ def fetch_complete_web_page(
     mirror_assets: bool = True,
 ) -> WebFetchResult:
     """Fetch one page, optionally render JS with Playwright, and mirror core assets locally."""
-    html, final_url, content_type, charset, method, render_error = _fetch_page_source(url, render_js)
+    source = _fetch_page_source(url, render_js)
 
+    html = source.html
     assets: list[WebAsset] = []
     mirror_errors: list[str] = []
-    if mirror_assets and "html" in content_type.lower():
-        html, assets, mirror_errors = _mirror_page_assets(html, final_url, source_dir)
+    if mirror_assets and "html" in source.content_type.lower():
+        html, assets, mirror_errors = _mirror_page_assets(html, source.final_url, source_dir)
 
     return WebFetchResult(
         html=html,
-        content_type=content_type,
-        final_url=final_url,
-        charset=charset,
-        method=method,
+        content_type=source.content_type,
+        final_url=source.final_url,
+        charset=source.charset,
+        method=source.method,
         assets=assets,
         errors=mirror_errors,
-        render_error=render_error,
+        render_error=source.render_error,
     )
