@@ -1,52 +1,54 @@
-# repatch | 184 func | 14f | 8259L | python | 2026-06-01
+# repatch | 230 func | 30f | 9532L | python | 2026-09-19
 # generated in 0.00s
 
 HEALTH:
-  CC̄=5.2  critical=23 (limit:10)  dup=0  cycles=0
+  CC̄=4.5  critical=24 (limit:10)  dup=0  cycles=0
 
 ALERTS[20]:
-  !!! cc_exceeded      _bind_annotations_to_html = 29 (limit:15)
-  !!! cc_exceeded      build_http_llm_context = 29 (limit:15)
-  !!! cc_exceeded      inject_scope_style = 27 (limit:15)
-  !!! cc_exceeded      apply_ui_patch_options = 25 (limit:15)
-  !!! high_fan_out     organize_html = 22 (limit:10)
-  !!! high_fan_out     _bind_annotations_to_html = 21 (limit:10)
-  !!! high_fan_out     apply_ui_patch_options = 21 (limit:10)
-  !!! high_fan_out     inject_scope_style = 20 (limit:10)
-  !!  cc_exceeded      organize_html = 24 (limit:15)
-  !!  high_fan_out     _mirror_images = 19 (limit:10)
+  !!  high_fan_out     _patch_function_targets = 18 (limit:10)
+  !!  high_fan_out     _mirror_images = 18 (limit:10)
+  !!  high_fan_out     validate_css_safety = 18 (limit:10)
+  !!  high_fan_out     sync_option_previews_from_workspace = 15 (limit:10)
+  !!  high_fan_out     _extract_balanced_html = 15 (limit:10)
+  !   high_fan_out     _read_http_body = 14 (limit:10)
+  !   high_fan_out     RepatchSDK.apply = 14 (limit:10)
+  !   high_fan_out     restrict_scope_css_to_marks = 13 (limit:10)
+  !   high_fan_out     RepatchSDK.removeMatch = 13 (limit:10)
+  !   high_fan_out     enforce_deletes_on_option_previews = 12 (limit:10)
 
-MODULES[23] (top by size):
+MODULES[48] (top by size):
   M[deps.json] 3394L C:0 F:0 CC↑0 D:0 (json)
-  M[repatch/marked_context.py] 696L C:0 F:32 CC↑17 D:3 (python)
-  M[repatch/scope.py] 647L C:0 F:22 CC↑29 D:2 (python)
-  M[goal.yaml] 511L C:0 F:0 CC↑0 D:0 (yaml)
-  M[repatch/web_preprocess.py] 459L C:1 F:21 CC↑29 D:1 (python)
-  M[repatch/web_fetch.py] 370L C:2 F:15 CC↑7 D:0 (python)
-  M[repatch/dom_patch.py] 315L C:0 F:19 CC↑12 D:0 (python)
-  M[repatch/organize_html.py] 287L C:1 F:12 CC↑24 D:0 (python)
-  M[repatch/ui_patch.py] 267L C:0 F:10 CC↑25 D:0 (python)
+  M[goal.yaml] 526L C:0 F:0 CC↑0 D:0 (yaml)
+  M[repatch/web_fetch.py] 468L C:6 F:21 CC↑8 D:0 (python)
+  M[repatch/dom_patch.py] 336L C:0 F:20 CC↑11 D:0 (python)
+  M[repatch/scope.py] 331L C:0 F:14 CC↑14 D:3 (python)
+  M[repatch/_scope_css.py] 300L C:0 F:8 CC↑7 D:3 (python)
+  M[repatch/dev_server.py] 218L C:10 F:13 CC↑2 D:0 (python)
+  M[repatch/marked_context/_html.py] 187L C:0 F:8 CC↑10 D:2 (python)
   M[sdks/js/repatch-sdk.js] 186L C:1 F:18 CC↑12 D:1 (javascript)
-  M[repatch/options.py] 140L C:0 F:5 CC↑10 D:0 (python)
-  M[repatch/__init__.py] 139L C:0 F:0 CC↑0 D:0 (python)
-  M[wup.yaml] 134L C:0 F:0 CC↑0 D:0 (yaml)
-  M[repatch/project_ir.py] 132L C:1 F:8 CC↑12 D:1 (python)
-  M[repatch/spatial.py] 108L C:0 F:4 CC↑6 D:1 (python)
-  LANGS: python:14/yaml:4/javascript:1/json:1/shell:1/toml:1/txt:1
+  M[repatch/marked_context/_context.py] 182L C:0 F:7 CC↑14 D:0 (python)
+  M[repatch/marked_context/_selectors.py] 179L C:0 F:7 CC↑14 D:3 (python)
+  M[repatch/_web_css.py] 179L C:0 F:7 CC↑9 D:0 (python)
+  M[repatch/spatial.py] 168L C:0 F:8 CC↑6 D:2 (python)
+  M[repatch/organize_html.py] 166L C:1 F:7 CC↑11 D:1 (python)
+  M[repatch/marked_context/_scope_css.py] 149L C:0 F:6 CC↑8 D:2 (python)
+  LANGS: python:33/yaml:6/other:2/txt:2/javascript:1/json:1/yml:1/shell:1/toml:1
 
 HOTSPOTS[10]:
-  ★ organize_html fan=22  // Extract substantial inline CSS/JS, strip preview scripts and lazy imgs, tag mark
-  ★ _bind_annotations_to_html fan=21  // Orchestrates 21 calls
-  ★ apply_ui_patch_options fan=21  // Apply validated CSS patches to one baseline HTML document.
-  ★ inject_scope_style fan=20  // Orchestrates 20 calls
-  ★ _mirror_images fan=19  // Orchestrates 19 calls
+  ★ _patch_function_targets fan=18  // Orchestrates 18 calls
+  ★ _mirror_images fan=18  // Orchestrates 18 calls
+  ★ validate_css_safety fan=18  // Reject CSS patterns that commonly break HTML/CSS patch previews.
+  ★ sync_option_previews_from_workspace fan=15  // Refresh Options A-C from the active workspace HTML.
 
-REFACTOR[14]:
-  [1] H/L Split _bind_annotations_to_html (CC=29)
-  [2] H/L Split inject_scope_style (CC=27)
-  [3] H/L Split apply_ui_patch_options (CC=25)
-  [4] H/L Split build_http_llm_context (CC=29)
-  [5] H/H Split god module repatch/scope.py (647L, 0 classes)
+``delete_ids=None`` means r
+  ★ _extract_balanced_html fan=15  // Return outerHTML starting at ``start`` and the index after it.
+
+REFACTOR[5]:
+  [1] H/H Split god module deps.json (3394L, 0 classes)
+  [2] H/H Split god module goal.yaml (526L, 0 classes)
+  [3] M/M Reduce _patch_function_targets fan-out (currently 18)
+  [4] M/M Reduce _mirror_images fan-out (currently 18)
+  [5] M/M Reduce validate_css_safety fan-out (currently 18)
 
 EVOLUTION:
-  2026-06-01 CC̄=5.2 crit=23 8259L // Automated analysis
+  2026-09-19 CC̄=4.5 crit=24 9532L // Automated analysis

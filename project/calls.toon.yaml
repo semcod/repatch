@@ -1,90 +1,188 @@
 # code2llm call graph | /home/tom/github/semcod/repatch
-# generated in 0.09s
-# nodes: 129 | edges: 140 | modules: 13
-# CC̄=5.2
+# generated in 0.12s
+# nodes: 182 | edges: 216 | modules: 28
+# CC̄=4.5
 
 HUBS[20]:
-  repatch.scope._bind_annotations_to_html
-    CC=29  in:1  out:44  total:45
-  repatch.web_preprocess.build_http_llm_context
-    CC=29  in:0  out:41  total:41
-  repatch.ui_patch.apply_ui_patch_options
-    CC=25  in:0  out:31  total:31
-  repatch.spatial.apply_spatial_deletes_to_html
-    CC=4  in:2  out:29  total:31
-  repatch.organize_html.organize_html
-    CC=24  in:2  out:29  total:31
-  repatch.scope.inject_scope_style
-    CC=27  in:0  out:29  total:29
   repatch.css.validate_css_safety
-    CC=14  in:1  out:26  total:27
-  repatch.marked_context.resolve_marked_selectors
-    CC=16  in:3  out:23  total:26
-  repatch.marked_context._find_marked_subtrees
-    CC=17  in:3  out:23  total:26
-  repatch.web_fetch._mirror_images
-    CC=1  in:1  out:24  total:25
-  repatch.dom_patch._patch_function_targets
+    CC=14  in:2  out:26  total:28
+  dom_patch._patch_function_targets
     CC=6  in:1  out:24  total:25
-  repatch.marked_context._id_candidates
+  repatch.web_fetch._mirror_images
+    CC=1  in:1  out:23  total:24
+  marked_context._ids._id_candidates
     CC=4  in:10  out:13  total:23
   repatch.project_ir.summarize_project_ir
     CC=12  in:1  out:21  total:22
-  repatch.marked_context._collect_keep_selectors
+  repatch._ui_patch_apply.apply_ui_patch_options
+    CC=13  in:0  out:20  total:20
+  marked_context._selectors._collect_keep_selectors
     CC=11  in:1  out:19  total:20
-  repatch.marked_context.restrict_scope_css_to_marks
-    CC=14  in:2  out:17  total:19
-  repatch.web_preprocess.extract_visual_css
+  _http_llm_context.build_http_llm_context
+    CC=12  in:0  out:20  total:20
+  repatch._web_css.extract_visual_css
     CC=8  in:0  out:19  total:19
-  repatch.marked_context._extract_balanced_html
+  repatch.marked_context._html._extract_balanced_html
     CC=10  in:1  out:18  total:19
-  repatch.web_fetch._read_http_body
-    CC=7  in:2  out:16  total:18
   repatch.options.sync_option_previews_from_workspace
-    CC=10  in:0  out:17  total:17
+    CC=12  in:0  out:19  total:19
+  repatch.web_fetch._read_http_body
+    CC=7  in:2  out:17  total:19
+  marked_context._selectors.restrict_scope_css_to_marks
+    CC=14  in:2  out:17  total:19
+  repatch.scope.inject_scope_style
+    CC=12  in:1  out:17  total:18
   sdks.js.repatch-sdk.RepatchSDK.apply
     CC=12  in:3  out:14  total:17
+  repatch.spatial.apply_spatial_deletes_to_html
+    CC=4  in:3  out:14  total:17
+  marked_context._selectors.resolve_marked_selectors
+    CC=11  in:3  out:13  total:16
+  repatch.spatial._apply_block_deletes
+    CC=5  in:1  out:15  total:16
+  repatch.scope._bind_annotations_to_html
+    CC=14  in:1  out:15  total:16
+  repatch.marked_context._context._format_context_body
+    CC=14  in:1  out:15  total:16
 
 MODULES:
-  repatch.css  [4 funcs]
-    _selector_is_runtime_only  CC=2  out:2
-    _strip_css_comments  CC=2  out:2
-    split_css_rules  CC=9  out:6
-    validate_css_safety  CC=14  out:26
-  repatch.dom_patch  [14 funcs]
+  _http_llm_context  [5 funcs]
+    _cap_patch_text  CC=4  out:6
+    _context_parts  CC=9  out:9
+    _organize_manifest_lines  CC=7  out:11
+    _source_paths_part  CC=4  out:4
+    build_http_llm_context  CC=12  out:20
+  _ui_patch_parse  [2 funcs]
+    _strip_json_fence  CC=3  out:5
+    parse_ui_patch_response  CC=6  out:11
+  dom_patch  [16 funcs]
     _attrs_from_open_tag  CC=2  out:6
+    _build_variant_doc  CC=4  out:7
     _goal_label  CC=3  out:2
     _inject_into_body  CC=2  out:3
     _inject_into_head  CC=4  out:5
     _matches_target  CC=4  out:7
     _patch_function_targets  CC=6  out:24
+    _patch_style  CC=1  out:0
     _strip_existing_patch  CC=2  out:3
     _strip_tags  CC=2  out:3
-    _target_candidates  CC=4  out:9
-    _variant_section  CC=3  out:11
-  repatch.marked_context  [27 funcs]
-    _assemble_marked_subtrees  CC=4  out:3
+  marked_context._ids  [8 funcs]
+    _css_id_selector  CC=4  out:3
+    _id_candidates  CC=4  out:13
+    _logical_id  CC=8  out:9
+    _normalize_label_text  CC=2  out:5
+    _parse_attrs  CC=3  out:5
+    effective_delete_ids  CC=9  out:11
+    has_ui_marks  CC=8  out:9
+    marked_css_selectors  CC=6  out:5
+  marked_context._selectors  [7 funcs]
+    _add_fragment_selectors  CC=6  out:11
+    _collect_keep_selectors  CC=11  out:19
+    _filter_css_for_tokens  CC=6  out:7
+    _fragment_class_names  CC=5  out:7
+    _selector_tokens  CC=9  out:14
+    resolve_marked_selectors  CC=11  out:13
+    restrict_scope_css_to_marks  CC=14  out:17
+  repatch._assets  [4 funcs]
+    _extract_inline_styles  CC=4  out:5
+    _inject_head_link  CC=3  out:4
+    _inject_head_script  CC=3  out:4
+    analyze_inline_scripts  CC=4  out:10
+  repatch._http_preview  [5 funcs]
+    _script_src_allowed_for_preview  CC=4  out:5
+    _should_remove_preview_script  CC=2  out:3
+    inject_http_preview_shim  CC=4  out:4
+    prepare_http_preview_html  CC=1  out:2
+    sanitize_http_preview_html  CC=2  out:4
+  repatch._images  [3 funcs]
+    _attr_map  CC=3  out:4
+    _strip_lazy_placeholder_imgs  CC=1  out:3
+    is_lazy_placeholder_img_tag  CC=11  out:14
+  repatch._scope_css  [8 funcs]
+    _calc_scope_css  CC=7  out:0
+    _scope_css  CC=6  out:0
+    _uses_web_scope_css  CC=7  out:1
+    _web_display_scope_css  CC=5  out:3
+    _web_orientation_scope_css  CC=6  out:2
+    _web_scope_css  CC=6  out:3
+    _web_shapes_scope_css  CC=3  out:2
+    strip_scope_style  CC=2  out:1
+  repatch._scope_kinds  [6 funcs]
+    allowed_scope_ids  CC=2  out:3
+    default_scope_for_kind  CC=3  out:4
+    goal_requests_column_layout  CC=3  out:3
+    normalize_focus_scope  CC=3  out:5
+    offline_fast_scopes_for_kind  CC=5  out:2
+    scope_supports_offline_fast_path  CC=1  out:2
+  repatch._targets  [1 funcs]
+    _add_markable_targets  CC=1  out:13
+  repatch._ui_patch_apply  [4 funcs]
+    _css_for  CC=2  out:4
+    _resolve_patch_css  CC=10  out:8
+    _safe_css  CC=9  out:11
+    apply_ui_patch_options  CC=13  out:20
+  repatch._ui_patch_prompt  [4 funcs]
+    _compact_html  CC=3  out:4
+    _patch_scope_rules  CC=7  out:9
+    build_ui_patch_prompt  CC=9  out:5
+    supports_llm_patch_scope  CC=3  out:1
+  repatch._web_css  [7 funcs]
+    _rule_is_visual  CC=6  out:8
+    extract_inline_css  CC=4  out:4
+    extract_stylesheet_hrefs  CC=7  out:4
+    extract_visual_css  CC=8  out:19
+    filter_visual_css  CC=3  out:4
+    normalize_linked_paths  CC=9  out:9
+    safe_read_under  CC=5  out:7
+  repatch.css  [4 funcs]
+    _selector_is_runtime_only  CC=2  out:2
+    _strip_css_comments  CC=2  out:2
+    split_css_rules  CC=9  out:6
+    validate_css_safety  CC=14  out:26
+  repatch.dev_server  [12 funcs]
+    css_split  CC=1  out:2
+    css_validate  CC=1  out:2
+    fragment  CC=1  out:2
+    health  CC=1  out:3
+    organize  CC=1  out:2
+    scope_inject  CC=1  out:2
+    scope_strip  CC=1  out:2
+    seed  CC=2  out:5
+    seeds  CC=2  out:3
+    spatial_deletes  CC=1  out:2
+  repatch.marked_context._context  [6 funcs]
     _cap_text  CC=2  out:4
+    _collect_css_sources  CC=7  out:10
+    _format_context_body  CC=14  out:15
+    _get_relevant_css  CC=2  out:6
+    build_marked_element_context  CC=11  out:13
+    resolve_marked_llm_context  CC=5  out:3
+  repatch.marked_context._html  [8 funcs]
+    _assemble_marked_subtrees  CC=4  out:3
     _client_fragment_html  CC=9  out:10
     _collect_button_candidates  CC=3  out:8
-    _collect_css_sources  CC=7  out:10
-    _collect_keep_selectors  CC=11  out:19
     _collect_match_candidates  CC=6  out:11
-    _css_id_selector  CC=4  out:3
     _extract_and_format_fragment  CC=3  out:6
     _extract_balanced_html  CC=10  out:18
+    _find_marked_subtrees  CC=10  out:12
+    _match_subtree_ids  CC=8  out:14
+  repatch.marked_context._scope_css  [6 funcs]
+    _clean_selectors  CC=4  out:4
+    _variant_letter  CC=2  out:0
+    marked_scope_colors_css  CC=8  out:9
+    marked_scope_display_css  CC=2  out:3
+    marked_scope_orientation_css  CC=4  out:9
+    marked_scope_shapes_css  CC=2  out:3
   repatch.options  [4 funcs]
     enforce_deletes_on_option_previews  CC=9  out:14
     html_files_distinct  CC=3  out:7
     normalize_html_body  CC=2  out:3
-    sync_option_previews_from_workspace  CC=10  out:17
-  repatch.organize_html  [8 funcs]
-    _add_markable_targets  CC=1  out:14
-    _attr_map  CC=3  out:4
-    _extract_inline_styles  CC=4  out:5
-    _strip_lazy_placeholder_imgs  CC=1  out:3
-    is_lazy_placeholder_img_tag  CC=11  out:14
-    organize_html  CC=24  out:29
+    sync_option_previews_from_workspace  CC=12  out:19
+  repatch.organize_html  [6 funcs]
+    _extract_scripts  CC=11  out:5
+    _extract_styles  CC=5  out:5
+    _write_extracted  CC=4  out:1
+    organize_html  CC=3  out:12
     organize_html_project  CC=1  out:1
     organize_html_project_dir  CC=8  out:6
   repatch.project_ir  [6 funcs]
@@ -94,53 +192,40 @@ MODULES:
     _clean_text  CC=2  out:3
     build_project_ir  CC=2  out:8
     summarize_project_ir  CC=12  out:21
-  repatch.scope  [20 funcs]
-    _bind_annotations_to_html  CC=29  out:44
-    _calc_scope_css  CC=7  out:0
+  repatch.scope  [14 funcs]
+    _annotation_target  CC=8  out:10
+    _bind_annotations_to_html  CC=14  out:15
+    _composed_css  CC=2  out:0
+    _element_candidates  CC=6  out:11
     _get_scope_css  CC=7  out:7
-    _inject_css_block  CC=5  out:4
+    _label_probe_hit  CC=3  out:9
+    _marked_scope_css  CC=11  out:11
+    _orientation_marked_css  CC=4  out:3
     _resolve_scope_kind  CC=10  out:3
-    _scope_css  CC=6  out:0
-    _web_display_scope_css  CC=5  out:3
-    _web_orientation_scope_css  CC=6  out:2
-    _web_scope_css  CC=6  out:3
-    _web_shapes_scope_css  CC=3  out:2
-  repatch.spatial  [3 funcs]
+    _splice_replacements  CC=2  out:4
+  repatch.seeds  [3 funcs]
+    get_seed  CC=2  out:1
+    list_seeds  CC=1  out:1
+    seed_kind  CC=1  out:1
+  repatch.spatial  [7 funcs]
+    _apply_block_deletes  CC=5  out:15
     _delete_match_keys  CC=4  out:11
     _element_delete_candidates  CC=6  out:8
-    apply_spatial_deletes_to_html  CC=4  out:29
-  repatch.ui_patch  [9 funcs]
-    _compact_html  CC=3  out:4
-    _css_for  CC=2  out:4
-    _patch_scope_rules  CC=7  out:9
-    _safe_css  CC=9  out:11
-    _strip_json_fence  CC=3  out:5
-    apply_ui_patch_options  CC=25  out:31
-    build_ui_patch_prompt  CC=9  out:5
-    parse_ui_patch_response  CC=6  out:11
-    supports_llm_patch_scope  CC=3  out:1
-  repatch.web_fetch  [12 funcs]
+    _find_matching_close  CC=5  out:7
+    _is_deletable_block  CC=2  out:4
+    _selectable_block_attrs  CC=5  out:4
+    apply_spatial_deletes_to_html  CC=4  out:14
+  repatch.web_fetch  [18 funcs]
+    mirror  CC=5  out:3
+    redirect_request  CC=2  out:4
     _charset_from_content_type  CC=3  out:4
     _decode_http_bytes  CC=4  out:3
     _extension_from_url_or_type  CC=4  out:7
+    _fetch_page_source  CC=5  out:7
     _is_stylesheet_link  CC=2  out:4
-    _mirror_images  CC=1  out:24
-    _mirror_stylesheets  CC=1  out:13
-    _read_http_body  CC=7  out:16
-    _replace_attr  CC=2  out:4
-    _same_origin  CC=2  out:2
-    _save_asset  CC=3  out:5
-  repatch.web_preprocess  [14 funcs]
-    _cap_patch_text  CC=4  out:6
-    _rule_is_visual  CC=6  out:8
-    _script_src_allowed_for_preview  CC=4  out:5
-    _should_remove_preview_script  CC=2  out:3
-    build_http_llm_context  CC=29  out:41
-    extract_inline_css  CC=4  out:4
-    extract_stylesheet_hrefs  CC=7  out:4
-    extract_visual_css  CC=8  out:19
-    filter_visual_css  CC=3  out:4
-    inject_http_preview_shim  CC=4  out:4
+    _mirror_images  CC=1  out:23
+    _mirror_page_assets  CC=1  out:6
+    _mirror_stylesheets  CC=1  out:11
   sdks.js.repatch-sdk  [7 funcs]
     _connectSSE  CC=3  out:5
     _connectWS  CC=3  out:7
@@ -156,50 +241,50 @@ EDGES:
   repatch.project_ir._ProjectIRParser._classify_node → repatch.project_ir._clean_text
   repatch.project_ir._ProjectIRParser.handle_endtag → repatch.project_ir._clean_text
   repatch.project_ir._ProjectIRParser.handle_data → repatch.project_ir._clean_text
-  repatch.scope.default_scope_for_kind → repatch.scope.allowed_scope_ids
-  repatch.scope.normalize_focus_scope → repatch.scope.default_scope_for_kind
-  repatch.scope.normalize_focus_scope → repatch.scope.allowed_scope_ids
-  repatch.scope.scope_supports_offline_fast_path → repatch.scope.normalize_focus_scope
-  repatch.scope.scope_supports_offline_fast_path → repatch.scope.offline_fast_scopes_for_kind
-  repatch.scope._web_orientation_scope_css → repatch.scope.goal_requests_column_layout
-  repatch.scope._web_scope_css → repatch.scope._web_shapes_scope_css
-  repatch.scope._web_scope_css → repatch.scope._web_display_scope_css
-  repatch.scope._web_scope_css → repatch.scope._web_orientation_scope_css
-  repatch.scope.should_block_full_html_iterate → repatch.marked_context.has_ui_marks
-  repatch.scope._get_scope_css → repatch.scope._calc_scope_css
-  repatch.scope._get_scope_css → repatch.scope._scope_css
-  repatch.scope._get_scope_css → repatch.scope._web_scope_css
+  repatch.scope.should_block_full_html_iterate → marked_context._ids.has_ui_marks
+  repatch.scope._element_candidates → marked_context._ids._logical_id
+  repatch.scope._element_candidates → marked_context._ids._id_candidates
+  repatch.scope._label_probe_hit → marked_context._ids._normalize_label_text
+  repatch.scope._label_probe_hit → marked_context._ids._logical_id
+  repatch.scope._label_probe_hit → marked_context._ids._id_candidates
+  repatch.scope._bind_annotations_to_html → repatch.scope._splice_replacements
+  repatch.scope._bind_annotations_to_html → repatch.scope._annotation_target
+  repatch.scope._annotation_target → marked_context._ids._parse_attrs
+  repatch.scope._annotation_target → repatch.scope._element_candidates
+  repatch.scope._annotation_target → repatch.scope._label_probe_hit
+  repatch.scope._get_scope_css → repatch._scope_css._calc_scope_css
+  repatch.scope._get_scope_css → repatch._scope_css._scope_css
+  repatch.scope._get_scope_css → repatch._scope_css._web_scope_css
+  repatch.scope._marked_scope_css → marked_context._selectors.resolve_marked_selectors
+  repatch.scope._marked_scope_css → repatch._scope_css._uses_web_scope_css
+  repatch.scope._marked_scope_css → marked_context._selectors.restrict_scope_css_to_marks
+  repatch.scope._marked_scope_css → repatch.marked_context._scope_css.marked_scope_colors_css
+  repatch.scope._marked_scope_css → repatch.scope._orientation_marked_css
+  repatch.scope._marked_scope_css → repatch.scope._composed_css
+  repatch.scope._marked_scope_css → repatch._scope_css._web_display_scope_css
+  repatch.scope._marked_scope_css → repatch.marked_context._scope_css.marked_scope_display_css
+  repatch.scope._marked_scope_css → repatch._scope_css._web_shapes_scope_css
+  repatch.scope._orientation_marked_css → repatch.marked_context._scope_css.marked_scope_orientation_css
+  repatch.scope._orientation_marked_css → repatch._scope_kinds.goal_requests_column_layout
+  repatch.scope._orientation_marked_css → repatch._scope_css._web_orientation_scope_css
   repatch.scope.inject_scope_style → repatch.scope._bind_annotations_to_html
   repatch.scope.inject_scope_style → repatch.scope._resolve_scope_kind
-  repatch.scope.inject_scope_style → repatch.scope.normalize_focus_scope
-  repatch.scope.inject_scope_style → repatch.marked_context.effective_delete_ids
+  repatch.scope.inject_scope_style → repatch._scope_kinds.normalize_focus_scope
+  repatch.scope.inject_scope_style → marked_context._ids.effective_delete_ids
   repatch.scope.inject_scope_style → repatch.scope._get_scope_css
-  repatch.scope.inject_scope_style → repatch.scope.strip_scope_style
-  repatch.scope.inject_scope_style → repatch.scope._inject_css_block
-  repatch.scope.scoped_html_fragment → repatch.scope.normalize_focus_scope
-  repatch.scope.scoped_html_fragment → repatch.scope.scope_supports_offline_fast_path
-  repatch.dom_patch.build_function_patch_context → repatch.project_ir.build_project_ir
-  repatch.dom_patch.build_function_patch_context → repatch.project_ir.summarize_project_ir
-  repatch.dom_patch._variant_section → repatch.dom_patch._goal_label
-  repatch.dom_patch._matches_target → repatch.dom_patch._attrs_from_open_tag
-  repatch.dom_patch._matches_target → repatch.dom_patch._strip_tags
-  repatch.dom_patch._matches_target → repatch.dom_patch._target_candidates
-  repatch.dom_patch._variant_target_label → repatch.dom_patch._goal_label
-  repatch.dom_patch._patch_function_targets → repatch.dom_patch._target_candidates
-  repatch.dom_patch._patch_function_targets → repatch.dom_patch._variant_target_label
-  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._strip_existing_patch
-  repatch.dom_patch.build_function_option_patches → repatch.project_ir.build_project_ir
-  repatch.dom_patch.build_function_option_patches → repatch.marked_context.effective_delete_ids
-  repatch.dom_patch.build_function_option_patches → repatch.dom_patch.supports_function_patch
-  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._patch_function_targets
-  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_head
-  repatch.dom_patch.build_function_option_patches → repatch.dom_patch._inject_into_body
-  repatch.marked_context.marked_css_selectors → repatch.marked_context._id_candidates
-  repatch.marked_context.marked_css_selectors → repatch.marked_context._css_id_selector
-  repatch.marked_context._collect_keep_selectors → repatch.marked_context._fragment_class_names
-  repatch.marked_context._collect_keep_selectors → repatch.marked_context.marked_css_selectors
-  repatch.marked_context._collect_keep_selectors → repatch.marked_context._find_marked_subtrees
-  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._find_marked_subtrees
-  repatch.marked_context.resolve_marked_selectors → repatch.marked_context._collect_keep_selectors
-  repatch.marked_context.resolve_marked_selectors → repatch.marked_context.marked_css_selectors
-  repatch.marked_context.restrict_scope_css_to_marks → repatch.css.split_css_rules
+  repatch.scope.inject_scope_style → repatch._scope_css.strip_scope_style
+  repatch.scope.inject_scope_style → repatch.scope.inject_css_block
+  repatch.scope.scoped_html_fragment → repatch._scope_kinds.normalize_focus_scope
+  repatch.scope.scoped_html_fragment → repatch._scope_kinds.scope_supports_offline_fast_path
+  dom_patch.build_function_patch_context → repatch.project_ir.build_project_ir
+  dom_patch.build_function_patch_context → repatch.project_ir.summarize_project_ir
+  dom_patch._variant_section → dom_patch._goal_label
+  dom_patch._matches_target → dom_patch._attrs_from_open_tag
+  dom_patch._matches_target → dom_patch._strip_tags
+  dom_patch._matches_target → dom_patch._target_candidates
+  dom_patch._variant_target_label → dom_patch._goal_label
+  dom_patch._patch_function_targets → dom_patch._target_candidates
+  dom_patch._patch_function_targets → dom_patch._variant_target_label
+  dom_patch.build_function_option_patches → dom_patch._strip_existing_patch
+  dom_patch.build_function_option_patches → repatch.project_ir.build_project_ir
+  dom_patch.build_function_option_patches → marked_context._ids.effective_delete_ids

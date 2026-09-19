@@ -1,26 +1,64 @@
 flowchart TD
-%% generated in 0.02s
+%% generated in 0.01s
+    M__ui_patch_parse["_ui_patch_parse<br/>2 funcs"]
+    dom_patch["dom_patch<br/>20 funcs"]
+    marked_context___ids["marked_context._ids<br/>8 funcs"]
+    marked_context___selectors["marked_context._selectors<br/>7 funcs"]
+    repatch___assets["repatch._assets<br/>4 funcs"]
+    repatch___http_preview["repatch._http_preview<br/>5 funcs"]
+    repatch___images["repatch._images<br/>3 funcs"]
+    repatch___scope_css["repatch._scope_css<br/>8 funcs"]
+    repatch___scope_kinds["repatch._scope_kinds<br/>7 funcs"]
+    repatch___targets["repatch._targets<br/>2 funcs"]
+    repatch___ui_patch_apply["repatch._ui_patch_apply<br/>5 funcs"]
+    repatch___ui_patch_prompt["repatch._ui_patch_prompt<br/>4 funcs"]
+    repatch___web_css["repatch._web_css<br/>7 funcs"]
     repatch__css["repatch.css<br/>4 funcs"]
-    repatch__dom_patch["repatch.dom_patch<br/>19 funcs"]
-    repatch__marked_context["repatch.marked_context<br/>32 funcs"]
+    repatch__dev_server["repatch.dev_server<br/>13 funcs"]
+    repatch__marked_context["repatch.marked_context<br/>21 funcs"]
     repatch__options["repatch.options<br/>5 funcs"]
-    repatch__organize_html["repatch.organize_html<br/>12 funcs"]
+    repatch__organize_html["repatch.organize_html<br/>7 funcs"]
     repatch__project_ir["repatch.project_ir<br/>8 funcs"]
-    repatch__scope["repatch.scope<br/>22 funcs"]
-    repatch__spatial["repatch.spatial<br/>4 funcs"]
-    repatch__ui_patch["repatch.ui_patch<br/>10 funcs"]
-    repatch__web_preprocess["repatch.web_preprocess<br/>21 funcs"]
+    repatch__scope["repatch.scope<br/>14 funcs"]
+    repatch__seeds["repatch.seeds<br/>3 funcs"]
+    repatch__spatial["repatch.spatial<br/>8 funcs"]
     sdks__js["sdks.js<br/>18 funcs"]
     sdks__python["sdks.python<br/>7 funcs"]
-    repatch__scope ==>|16| repatch__marked_context
-    repatch__ui_patch ==>|5| repatch__scope
-    repatch__dom_patch -->|3| repatch__project_ir
-    repatch__ui_patch -->|3| repatch__marked_context
-    repatch__marked_context -->|2| repatch__css
+    repatch__scope ==>|10| marked_context___ids
+    repatch__scope ==>|10| repatch___scope_css
+    repatch__marked_context ==>|8| marked_context___ids
+    marked_context___selectors ==>|6| marked_context___ids
+    repatch__dev_server ==>|5| repatch__seeds
+    repatch__scope ==>|4| repatch__marked_context
+    repatch__scope ==>|4| repatch___scope_kinds
+    repatch__organize_html ==>|4| repatch___assets
+    dom_patch -->|3| repatch__project_ir
+    repatch__scope -->|2| marked_context___selectors
+    repatch___ui_patch_prompt -->|2| repatch___scope_kinds
+    repatch__dev_server -->|2| repatch__css
+    repatch__dev_server -->|2| repatch__scope
     repatch__options -->|2| repatch__spatial
-    repatch__dom_patch -->|1| repatch__marked_context
-    repatch__marked_context -->|1| repatch__scope
-    repatch__ui_patch -->|1| repatch__css
+    repatch___ui_patch_apply -->|2| marked_context___selectors
+    marked_context___selectors -->|2| repatch__marked_context
+    marked_context___selectors -->|2| repatch__css
+    repatch__marked_context -->|2| marked_context___selectors
+    dom_patch -->|1| marked_context___ids
+    repatch__organize_html -->|1| repatch___images
+    repatch__organize_html -->|1| repatch___targets
+    repatch___ui_patch_prompt -->|1| repatch__scope
+    repatch___assets -->|1| repatch___http_preview
+    repatch__dev_server -->|1| repatch__spatial
+    repatch__dev_server -->|1| repatch___scope_css
+    repatch__dev_server -->|1| repatch__organize_html
+    repatch__dev_server -->|1| repatch___ui_patch_prompt
+    repatch__dev_server -->|1| M__ui_patch_parse
+    repatch___ui_patch_apply -->|1| repatch__css
+    repatch___ui_patch_apply -->|1| repatch__marked_context
+    repatch___ui_patch_apply -->|1| repatch___scope_css
+    repatch___ui_patch_apply -->|1| repatch___scope_kinds
+    repatch___ui_patch_apply -->|1| repatch__scope
+    repatch___scope_css -->|1| repatch___scope_kinds
+    repatch___web_css -->|1| repatch__css
+    repatch___targets -->|1| repatch___images
+    repatch__marked_context -->|1| repatch___scope_kinds
     sdks__python -->|1| sdks__js
-    repatch__organize_html -->|1| repatch__web_preprocess
-    repatch__web_preprocess -->|1| repatch__css

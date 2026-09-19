@@ -1,47 +1,133 @@
-# repatch | 27f 5314L | python:23,shell:2,less:1,javascript:1 | 2026-06-01
-# stats: 201 func | 10 cls | 27 mod | CC̄=5.5 | critical:20 | cycles:0
-# alerts[5]: CC _bind_annotations_to_html=29; CC build_http_llm_context=29; CC inject_scope_style=27; CC apply_ui_patch_options=25; CC organize_html=24
-# hotspots[5]: inject_scope_style fan=20; organize_html fan=19; _bind_annotations_to_html fan=19; apply_ui_patch_options fan=19; _patch_function_targets fan=18
-# evolution: baseline
+# repatch | 48f 9532L | json:1,yaml:6,txt:2,yml:1,toml:1,shell:1,python:33,javascript:1 | 2026-09-19
+# generated in 0.01s
+# stats: 230 func | 0 cls | 48 mod | CC̄=4.5 | critical:0 | cycles:0
+# alerts[5]: fan-out _mirror_images=18; fan-out _patch_function_targets=18; fan-out validate_css_safety=18; fan-out _extract_balanced_html=15; fan-out sync_option_previews_from_workspace=15
+# hotspots[5]: _patch_function_targets fan=18; _mirror_images fan=18; validate_css_safety fan=18; sync_option_previews_from_workspace fan=15; _extract_balanced_html fan=15
+# evolution: CC̄ 4.5→4.5 (flat 0.0)
 # Keys: M=modules, D=details, i=imports, e=exports, c=classes, f=functions, m=methods
-M[27]:
-  app.doql.less,22
+M[48]:
+  Dockerfile,15
+  Makefile,19
+  repatch/_http_llm_context.py,120
+  repatch/_ui_patch_parse.py,34
+  deps.json,3394
+  docker-compose.yml,8
+  repatch/dom_patch.py,336
+  goal.yaml,526
+  koru.yaml,133
+  local.dev.txt,11
+  repatch/marked_context/_ids.py,134
+  repatch/marked_context/_selectors.py,179
   project.sh,50
-  repatch/__init__.py,140
-  repatch/css.py,71
-  repatch/dom_patch.py,316
-  repatch/marked_context.py,697
-  repatch/options.py,141
-  repatch/organize_html.py,288
-  repatch/project_ir.py,133
-  repatch/scope.py,648
-  repatch/service.py,106
-  repatch/spatial.py,109
-  repatch/ui_patch.py,268
-  repatch/web_fetch.py,371
-  repatch/web_preprocess.py,460
-  sdks/js/repatch-sdk.js,187
-  sdks/python/repatch_sdk.py,74
-  tests/test_dom_patch.py,74
-  tests/test_marked_context.py,442
-  tests/test_options.py,81
-  tests/test_organize_html.py,85
-  tests/test_service.py,54
-  tests/test_spatial.py,30
-  tests/test_ui_patch.py,157
-  tests/test_web_fetch.py,222
-  tests/test_web_preprocess.py,86
-  tree.sh,2
+  pyproject.toml,47
+  regix.yaml,93
+  repatch/__init__.py,139
+  repatch/_assets.py,74
+  repatch/_html_outline.py,91
+  repatch/_http_preview.py,109
+  repatch/_images.py,42
+  repatch/_scope_css.py,300
+  repatch/_scope_kinds.py,132
+  repatch/_targets.py,44
+  repatch/_ui_patch_apply.py,120
+  repatch/_ui_patch_prompt.py,128
+  repatch/_web_css.py,179
+  repatch/css.py,70
+  repatch/dev_server.py,218
+  repatch/marked_context/__init__.py,92
+  repatch/marked_context/_context.py,182
+  repatch/marked_context/_html.py,187
+  repatch/marked_context/_scope_css.py,149
+  repatch/options.py,148
+  repatch/organize_html.py,166
+  repatch/project_ir.py,132
+  repatch/scope.py,331
+  repatch/seeds.py,65
+  repatch/service.py,105
+  repatch/spatial.py,168
+  repatch/ui_patch.py,14
+  repatch/web_fetch.py,468
+  repatch/web_preprocess.py,61
+  sdks/js/repatch-sdk.js,186
+  sdks/python/repatch_sdk.py,73
+  testql-scenarios/generated-cli-tests.testql.toon.yaml,20
+  testql-scenarios/generated-from-pytests.testql.toon.yaml,10
+  tree.txt,96
+  wup.yaml,134
 D:
-  repatch/__init__.py:
+  repatch/scope.py:
+    e: _resolve_scope_kind,should_block_full_html_iterate,_element_candidates,_label_probe_hit,_splice_replacements,_bind_annotations_to_html,_annotation_target,_get_scope_css,inject_css_block,_marked_scope_css,_composed_css,_orientation_marked_css,inject_scope_style,scoped_html_fragment
+    _resolve_scope_kind(project_kind;html)
+    should_block_full_html_iterate(project_kind;keep_els;delete_els)
+    _element_candidates(tag;attrs)
+    _label_probe_hit(text;match;tag;attrs;wanted)
+    _splice_replacements(text;matched_ranges)
+    _bind_annotations_to_html(html;keep_ids;delete_ids)
+    _annotation_target(text;match;wanted;seen_elements)
+    _get_scope_css(inferred;html;scope;variant)
+    inject_css_block(html;css)
+    _marked_scope_css(scope;variant;css;cleaned;inferred;effective_delete;keep_list;user_goal)
+    _composed_css(base;extra)
+    _orientation_marked_css(selectors;variant;web_scope;user_goal)
+    inject_scope_style(html;scope;variant)
+    scoped_html_fragment(html;focus_scope;project_kind)
   repatch/css.py:
     e: _strip_css_comments,_selector_is_runtime_only,split_css_rules,validate_css_safety
     _strip_css_comments(css)
     _selector_is_runtime_only(selector)
     split_css_rules(css)
     validate_css_safety(css)
+  repatch/marked_context/_selectors.py:
+    e: _fragment_class_names,_collect_keep_selectors,resolve_marked_selectors,_add_fragment_selectors,restrict_scope_css_to_marks,_selector_tokens,_filter_css_for_tokens
+    _fragment_class_names(fragment)
+    _collect_keep_selectors(html;keep_ids)
+    resolve_marked_selectors(html;element_ids)
+    _add_fragment_selectors(add;html;delete;narrow)
+    restrict_scope_css_to_marks(css;delete_ids)
+    _selector_tokens(subtrees)
+    _filter_css_for_tokens(css;tokens)
+  repatch/marked_context/_context.py:
+    e: _collect_css_sources,_scope_semantics,_cap_text,_get_relevant_css,_format_context_body,build_marked_element_context,resolve_marked_llm_context
+    _collect_css_sources(html;ui_profile)
+    _scope_semantics(scope)
+    _cap_text(text;limit)
+    _get_relevant_css(html;subtrees;ui_profile)
+    _format_context_body(keep;delete;marked_ids;subtrees;css;scope;ui_profile)
+    build_marked_element_context(html)
+    resolve_marked_llm_context(html)
+  repatch/_ui_patch_apply.py:
+    e: _safe_css,_label_for,_css_for,_resolve_patch_css,apply_ui_patch_options
+    _safe_css(css)
+    _label_for(filename;item;fallback)
+    _css_for(item)
+    _resolve_patch_css(item;filename;scope;delete;keep;base)
+    apply_ui_patch_options(html;patch)
+  repatch/project_ir.py:
+    e: _ProjectIRParser,_clean_text,build_project_ir,summarize_project_ir
+    _ProjectIRParser(HTMLParser): __init__(0),handle_starttag(2),_classify_node(4),handle_endtag(1),handle_data(1)
+    _clean_text(text)
+    build_project_ir(html)
+    summarize_project_ir(ir)
+  repatch/options.py:
+    e: replace_html_title,normalize_html_body,html_files_distinct,sync_option_previews_from_workspace,enforce_deletes_on_option_previews
+    replace_html_title(html;title)
+    normalize_html_body(html)
+    html_files_distinct(base_dir;names)
+    sync_option_previews_from_workspace(cinema_dir)
+    enforce_deletes_on_option_previews(cinema_dir;delete_ids)
+  repatch/_http_llm_context.py:
+    e: _cap_patch_text,build_http_llm_context,_organize_manifest_lines,_source_paths_part,_context_parts,http_patch_llm_rules
+    _cap_patch_text(text;max_bytes)
+    build_http_llm_context(artifacts)
+    _organize_manifest_lines(organize)
+    _source_paths_part(source_paths)
+    _context_parts(organize;source_paths;extracted_css;extracted_js;css;outline)
+    http_patch_llm_rules()
+  sdks/js/repatch-sdk.js:
+    e: RepatchSDK
+    RepatchSDK: connect(-1),_connectWS(-1),payload(-1),setTimeout(-1),_connectSSE(-1),payload(-1),onPatch(-1),apply(-1),dslClean(-1),addMatch(-1),replaceMatch(-1),styleMatch(-1),removeMatch(-1),html(-1),target(-1),html(-1),target(-1),css(-1),styleEl(-1),target(-1),cb(-1),cb(-1),sendPatchRequest(-1)
   repatch/dom_patch.py:
-    e: supports_function_patch,build_function_patch_context,_strip_existing_patch,_goal_label,_variant_section,_patch_style,_inject_into_head,_inject_into_body,_target_candidates,_strip_tags,_set_attr,_attrs_from_open_tag,_matches_target,_variant_target_label,_variant_href,_patch_function_targets,_default_prepare_html,_default_finalize_html,build_function_option_patches
+    e: supports_function_patch,build_function_patch_context,_strip_existing_patch,_goal_label,_variant_section,_patch_style,_inject_into_head,_inject_into_body,_target_candidates,_strip_tags,_set_attr,_attrs_from_open_tag,_matches_target,_variant_target_label,_variant_href,_patch_function_targets,_default_prepare_html,_default_finalize_html,build_function_option_patches,_build_variant_doc
     supports_function_patch(scope;project_kind)
     build_function_patch_context(html_text)
     _strip_existing_patch(text)
@@ -61,70 +147,24 @@ D:
     _default_prepare_html(html)
     _default_finalize_html(html)
     build_function_option_patches(html_text)
-  repatch/marked_context.py:
-    e: has_ui_marks,effective_delete_ids,_css_id_selector,marked_css_selectors,_fragment_class_names,_collect_keep_selectors,resolve_marked_selectors,marked_scope_colors_css,marked_scope_display_css,marked_scope_shapes_css,marked_scope_orientation_css,restrict_scope_css_to_marks,_id_candidates,_normalize_label_text,_parse_attrs,_logical_id,_extract_balanced_html,_collect_match_candidates,_collect_button_candidates,_extract_and_format_fragment,_find_marked_subtrees,_selector_tokens,_filter_css_for_tokens,_collect_css_sources,_scope_semantics,_cap_text,_client_fragment_html,_assemble_marked_subtrees,_get_relevant_css,_format_context_body,build_marked_element_context,resolve_marked_llm_context
-    has_ui_marks(keep_els;delete_els)
-    effective_delete_ids(delete_els;keep_els)
-    _css_id_selector(token)
-    marked_css_selectors(element_ids)
-    _fragment_class_names(fragment)
-    _collect_keep_selectors(html;keep_ids)
-    resolve_marked_selectors(html;element_ids)
-    marked_scope_colors_css(selectors;variant)
-    marked_scope_display_css(selectors;variant)
-    marked_scope_shapes_css(selectors;variant)
-    marked_scope_orientation_css(selectors;variant)
-    restrict_scope_css_to_marks(css;delete_ids)
-    _id_candidates(element_id)
-    _normalize_label_text(text)
-    _parse_attrs(attr_text)
-    _logical_id(tag;attrs)
-    _extract_balanced_html(html;start)
-    _collect_match_candidates(tag;attrs)
-    _collect_button_candidates(tag;attrs;match;raw_html)
-    _extract_and_format_fragment(text;start)
-    _find_marked_subtrees(html;marked_ids)
-    _selector_tokens(subtrees)
-    _filter_css_for_tokens(css;tokens)
-    _collect_css_sources(html;ui_profile)
-    _scope_semantics(scope)
-    _cap_text(text;limit)
-    _client_fragment_html(client_fragments;element_id)
-    _assemble_marked_subtrees(html;marked_ids;client_fragments)
-    _get_relevant_css(html;subtrees;ui_profile)
-    _format_context_body(keep;delete;marked_ids;subtrees;css;scope;ui_profile)
-    build_marked_element_context(html)
-    resolve_marked_llm_context(html)
-  repatch/options.py:
-    e: replace_html_title,normalize_html_body,html_files_distinct,sync_option_previews_from_workspace,enforce_deletes_on_option_previews
-    replace_html_title(html;title)
-    normalize_html_body(html)
-    html_files_distinct(base_dir;names)
-    sync_option_previews_from_workspace(cinema_dir)
-    enforce_deletes_on_option_previews(cinema_dir;delete_ids)
+    _build_variant_doc(base;effective_delete;variant;user_goal;ir;prepare;finalize;ui_type)
   repatch/organize_html.py:
-    e: _attr_map,is_lazy_placeholder_img_tag,_strip_lazy_placeholder_imgs,_extract_inline_styles,_inject_head_link,_inject_head_script,_slug_piece,_add_markable_targets,organize_html,organize_html_project_dir,organize_html_project,organize_result_manifest,OrganizeResult
-    OrganizeResult:  # HTML after organization plus counters for import metadata.
-    _attr_map(tag_attrs)
-    is_lazy_placeholder_img_tag(tag)
-    _strip_lazy_placeholder_imgs(html)
-    _extract_inline_styles(html)
-    _inject_head_link(html)
-    _inject_head_script(html)
-    _slug_piece(value)
-    _add_markable_targets(html)
+    e: OrganizeResult,_write_extracted,_extract_styles,_extract_scripts,organize_html,organize_html_project_dir,organize_html_project,organize_result_manifest
+    OrganizeResult:  # HTML after organization plus counters for import metadata...
+    _write_extracted(base_dir;name;content)
+    _extract_styles(html_text;style_meta;base_dir)
+    _extract_scripts(html_text;script_meta;base_dir)
     organize_html(html)
     organize_html_project_dir(source_dir)
     organize_html_project(html)
     organize_result_manifest(result)
-  repatch/project_ir.py:
-    e: _clean_text,build_project_ir,summarize_project_ir,_ProjectIRParser
-    _ProjectIRParser: __init__(0),handle_starttag(2),_classify_node(4),handle_endtag(1),handle_data(1)
-    _clean_text(text)
-    build_project_ir(html)
-    summarize_project_ir(ir)
-  repatch/scope.py:
-    e: goal_requests_column_layout,ui_type_for_kind,allowed_scope_ids,default_scope_for_kind,normalize_focus_scope,offline_fast_scopes_for_kind,scope_supports_offline_fast_path,strip_scope_style,_scope_css,_calc_scope_css,_uses_web_scope_css,_web_display_scope_css,_web_shapes_scope_css,_web_orientation_scope_css,_web_scope_css,_resolve_scope_kind,should_block_full_html_iterate,_bind_annotations_to_html,_get_scope_css,_inject_css_block,inject_scope_style,scoped_html_fragment
+  repatch/_images.py:
+    e: _attr_map,is_lazy_placeholder_img_tag,_strip_lazy_placeholder_imgs
+    _attr_map(tag_attrs)
+    is_lazy_placeholder_img_tag(tag)
+    _strip_lazy_placeholder_imgs(html)
+  repatch/_scope_kinds.py:
+    e: goal_requests_column_layout,ui_type_for_kind,allowed_scope_ids,default_scope_for_kind,normalize_focus_scope,offline_fast_scopes_for_kind,scope_supports_offline_fast_path
     goal_requests_column_layout(user_goal)
     ui_type_for_kind(kind)
     allowed_scope_ids(project_kind)
@@ -132,47 +172,52 @@ D:
     normalize_focus_scope(scope;project_kind)
     offline_fast_scopes_for_kind(project_kind)
     scope_supports_offline_fast_path(scope;project_kind)
-    strip_scope_style(html)
-    _scope_css(scope;variant)
-    _calc_scope_css(scope;variant)
-    _uses_web_scope_css(inferred;html)
-    _web_display_scope_css(variant)
-    _web_shapes_scope_css(variant)
-    _web_orientation_scope_css(variant)
-    _web_scope_css(scope;variant)
-    _resolve_scope_kind(project_kind;html)
-    should_block_full_html_iterate(project_kind;keep_els;delete_els)
-    _bind_annotations_to_html(html;keep_ids;delete_ids)
-    _get_scope_css(inferred;html;scope;variant)
-    _inject_css_block(html;css)
-    inject_scope_style(html;scope;variant)
-    scoped_html_fragment(html;focus_scope;project_kind)
-  repatch/service.py:
-    e: PatchSuggestion,RepatchService
-    PatchSuggestion:
-    RepatchService: __init__(2),generate_patch_suggestions(3),_normalize_scopes(1),_build_user_prompt(2),_parse_choice(1),_choice_content(1),_default_completion(0)
-  repatch/spatial.py:
-    e: _delete_match_keys,_selectable_block_attrs,_element_delete_candidates,apply_spatial_deletes_to_html
-    _delete_match_keys(element_id)
-    _selectable_block_attrs(attrs)
-    _element_delete_candidates(attrs;inner_text)
-    apply_spatial_deletes_to_html(html;delete_ids)
-  repatch/ui_patch.py:
-    e: supports_llm_patch_scope,_compact_html,_patch_scope_rules,build_ui_patch_prompt,_strip_json_fence,parse_ui_patch_response,_safe_css,_label_for,_css_for,apply_ui_patch_options
+  repatch/marked_context/_html.py:
+    e: _extract_balanced_html,_collect_match_candidates,_collect_button_candidates,_extract_and_format_fragment,_match_subtree_ids,_find_marked_subtrees,_client_fragment_html,_assemble_marked_subtrees
+    _extract_balanced_html(html;start)
+    _collect_match_candidates(tag;attrs)
+    _collect_button_candidates(tag;attrs;match;raw_html)
+    _extract_and_format_fragment(text;start)
+    _match_subtree_ids(text;match;wanted)
+    _find_marked_subtrees(html;marked_ids)
+    _client_fragment_html(client_fragments;element_id)
+    _assemble_marked_subtrees(html;marked_ids;client_fragments)
+  repatch/_ui_patch_prompt.py:
+    e: supports_llm_patch_scope,_compact_html,_patch_scope_rules,build_ui_patch_prompt
     supports_llm_patch_scope(scope;project_kind)
     _compact_html(html)
     _patch_scope_rules(scope)
     build_ui_patch_prompt(html)
-    _strip_json_fence(text)
-    parse_ui_patch_response(text)
-    _safe_css(css)
-    _label_for(filename;item;fallback)
-    _css_for(item)
-    apply_ui_patch_options(html;patch)
+  repatch/_web_css.py:
+    e: safe_read_under,extract_inline_css,extract_stylesheet_hrefs,normalize_linked_paths,_rule_is_visual,filter_visual_css,extract_visual_css
+    safe_read_under(base_dir;rel_path)
+    extract_inline_css(html)
+    extract_stylesheet_hrefs(html)
+    normalize_linked_paths(linked_css_paths;html)
+    _rule_is_visual(rule)
+    filter_visual_css(css)
+    extract_visual_css(html;linked_css_paths;source_dir)
+  repatch/marked_context/_ids.py:
+    e: has_ui_marks,effective_delete_ids,_normalize_label_text,_parse_attrs,_logical_id,_id_candidates,_css_id_selector,marked_css_selectors
+    has_ui_marks(keep_els;delete_els)
+    effective_delete_ids(delete_els;keep_els)
+    _normalize_label_text(text)
+    _parse_attrs(attr_text)
+    _logical_id(tag;attrs)
+    _id_candidates(element_id)
+    _css_id_selector(token)
+    marked_css_selectors(element_ids)
   repatch/web_fetch.py:
-    e: _validate_http_url,_charset_from_content_type,_decode_http_bytes,_same_origin,_read_http_body,_render_with_playwright,_extension_from_url_or_type,_save_asset,_is_stylesheet_link,_replace_attr,_mirror_stylesheets,_parse_srcset,_format_srcset,_mirror_images,fetch_complete_web_page,WebAsset,WebFetchResult
-    WebAsset:  # One mirrored page asset.
-    WebFetchResult:  # Fetched page HTML plus mirrored assets and diagnostics.
+    e: WebAsset,WebFetchResult,_HttpBody,_PageSource,_SSRFSafeRedirectHandler,_AssetMirror,_non_public_ip_reason,_validate_http_url,_charset_from_content_type,_decode_http_bytes,_same_origin,_read_http_body,_render_with_playwright,_extension_from_url_or_type,_save_asset,_is_stylesheet_link,_replace_attr,_mirror_stylesheets,_parse_srcset,_format_srcset,_mirror_images,_fetch_page_source,_mirror_page_assets,fetch_complete_web_page
+    WebAsset:  # One mirrored page asset...
+    WebFetchResult:  # Fetched page HTML plus mirrored assets and diagnostics...
+    _HttpBody:  # Raw HTTP response: payload plus where it ultimately came fro...
+    _PageSource:  # Resolved page source: rendered DOM (Playwright) or raw HTTP ...
+    _SSRFSafeRedirectHandler(HTTPRedirectHandler): redirect_request(6)  # Re-validate each redirect target before following it.
+
+Witho...
+    _AssetMirror: __init__(0),mirror(0)  # Own mirrored-asset bookkeeping: dedup, attempt cap, naming, ...
+    _non_public_ip_reason(ip_str)
     _validate_http_url(url)
     _charset_from_content_type(content_type)
     _decode_http_bytes(body)
@@ -187,105 +232,115 @@ D:
     _parse_srcset(value)
     _format_srcset(items)
     _mirror_images(html)
+    _fetch_page_source(url;render_js)
+    _mirror_page_assets(html;page_url;source_dir)
     fetch_complete_web_page(url)
-  repatch/web_preprocess.py:
-    e: safe_read_under,extract_inline_css,extract_stylesheet_hrefs,normalize_linked_paths,_rule_is_visual,filter_visual_css,extract_visual_css,build_html_outline,_script_src_allowed_for_preview,_should_remove_preview_script,sanitize_http_preview_html,inject_http_preview_shim,prepare_http_preview_html,_cap_patch_text,build_http_llm_context,http_patch_llm_rules,_OutlineParser
-    _OutlineParser: __init__(0),_keep_attr(1),handle_starttag(2),handle_endtag(1),handle_data(1)
-    safe_read_under(base_dir;rel_path)
-    extract_inline_css(html)
-    extract_stylesheet_hrefs(html)
-    normalize_linked_paths(linked_css_paths;html)
-    _rule_is_visual(rule)
-    filter_visual_css(css)
-    extract_visual_css(html;linked_css_paths;source_dir)
+  repatch/_html_outline.py:
+    e: _OutlineParser,build_html_outline
+    _OutlineParser(HTMLParser): __init__(0),_keep_attr(1),handle_starttag(2),handle_endtag(1),handle_data(1)
     build_html_outline(html)
+  repatch/marked_context/_scope_css.py:
+    e: _clean_selectors,_variant_letter,marked_scope_colors_css,marked_scope_display_css,marked_scope_shapes_css,marked_scope_orientation_css
+    _clean_selectors(selectors)
+    _variant_letter(variant)
+    marked_scope_colors_css(selectors;variant)
+    marked_scope_display_css(selectors;variant)
+    marked_scope_shapes_css(selectors;variant)
+    marked_scope_orientation_css(selectors;variant)
+  repatch/_scope_css.py:
+    e: strip_scope_style,_scope_css,_calc_scope_css,_uses_web_scope_css,_web_display_scope_css,_web_shapes_scope_css,_web_orientation_scope_css,_web_scope_css
+    strip_scope_style(html)
+    _scope_css(scope;variant)
+    _calc_scope_css(scope;variant)
+    _uses_web_scope_css(inferred;html)
+    _web_display_scope_css(variant)
+    _web_shapes_scope_css(variant)
+    _web_orientation_scope_css(variant)
+    _web_scope_css(scope;variant)
+  sdks/python/repatch_sdk.py:
+    e: RepatchClient
+    RepatchClient: __init__(1),on_patch(1),start(0),_run_event_loop(0),_connect_and_listen(0),_trigger_listeners(1),send_patch(1)  # Repatch Python Client SDK (v1.0.0)
+Allows other Python servi...
+  repatch/_ui_patch_parse.py:
+    e: _strip_json_fence,parse_ui_patch_response
+    _strip_json_fence(text)
+    parse_ui_patch_response(text)
+  repatch/spatial.py:
+    e: _find_matching_close,_delete_match_keys,_selectable_block_attrs,_element_delete_candidates,apply_spatial_deletes_to_html,_apply_block_deletes,_is_deletable_block,_block_label
+    _find_matching_close(html;tag_name;content_start)
+    _delete_match_keys(element_id)
+    _selectable_block_attrs(attrs)
+    _element_delete_candidates(attrs;inner_text)
+    apply_spatial_deletes_to_html(html;delete_ids)
+    _apply_block_deletes(html;delete_keys;deleted_labels)
+    _is_deletable_block(attrs;inner;delete_keys)
+    _block_label(attrs;inner)
+  repatch/service.py:
+    e: PatchSuggestion,RepatchService
+    PatchSuggestion:
+    RepatchService: __init__(2),generate_patch_suggestions(3),_normalize_scopes(1),_build_user_prompt(1),_parse_choice(0),_choice_content(0),_default_completion(-1)
+  repatch/_assets.py:
+    e: _extract_inline_styles,_inject_head_link,_inject_head_script,analyze_inline_scripts
+    _extract_inline_styles(html)
+    _inject_head_link(html)
+    _inject_head_script(html)
+    analyze_inline_scripts(html)
+  repatch/_http_preview.py:
+    e: _script_src_allowed_for_preview,_should_remove_preview_script,sanitize_http_preview_html,inject_http_preview_shim,prepare_http_preview_html
     _script_src_allowed_for_preview(src)
     _should_remove_preview_script(tag)
     sanitize_http_preview_html(html)
     inject_http_preview_shim(html)
     prepare_http_preview_html(html)
-    _cap_patch_text(text;max_bytes)
-    build_http_llm_context(artifacts)
-    http_patch_llm_rules()
-  sdks/python/repatch_sdk.py:
-    e: RepatchClient
-    RepatchClient: __init__(1),on_patch(1),start(0),_run_event_loop(0),_connect_and_listen(0),_trigger_listeners(1),send_patch(1)  # Repatch Python Client SDK (v1.0.0)
-  tests/test_dom_patch.py:
-    e: test_build_function_option_patches_returns_valid_abc,test_build_function_option_patches_xpatches_delete_marks,test_function_patch_context_is_compact_ir,test_supports_function_patch_only_for_web_like_projects
-    test_build_function_option_patches_returns_valid_abc()
-    test_build_function_option_patches_xpatches_delete_marks()
-    test_function_patch_context_is_compact_ir()
-    test_supports_function_patch_only_for_web_like_projects()
-  tests/test_marked_context.py:
-    e: test_build_marked_element_context_extracts_subtree_and_css,test_build_marked_element_context_uses_client_fragment_fallback,test_build_marked_element_context_returns_none_without_marks,test_build_marked_element_context_patch_mode_note,test_ui_patch_prompt_uses_marked_context_fragment,test_has_ui_marks,test_restrict_scope_css_to_marks_targets_delete_only,test_inject_scope_style_skips_global_css_for_keep_only_marks,test_inject_scope_style_scopes_css_to_delete_marks,test_resolve_marked_selectors_includes_classes,test_resolve_marked_selectors_narrow_excludes_keep_and_generic_classes,test_inject_scope_style_colors_mixed_keep_delete,test_marked_scope_colors_css_differs_by_variant,test_marked_scope_colors_css_overrides_all_descendants,test_resolve_marked_selectors_heading_text_id,test_resolve_marked_selectors_heading_text_entities,test_inject_scope_style_colors_overrides_inline_heading_color,test_inject_scope_style_colors_overrides_multiple_marked_headings,test_should_block_full_html_for_imported_marks,test_marked_css_selectors_includes_btn_prefix,test_goal_requests_column_layout_detects_polish_and_english,test_inject_scope_style_display_keeps_entry_content_typography,test_inject_scope_style_shapes_keeps_content_wrapper_radii,test_inject_scope_style_orientation_column_goal_keeps_layout_css
-    test_build_marked_element_context_extracts_subtree_and_css()
-    test_build_marked_element_context_uses_client_fragment_fallback()
-    test_build_marked_element_context_returns_none_without_marks()
-    test_build_marked_element_context_patch_mode_note()
-    test_ui_patch_prompt_uses_marked_context_fragment()
-    test_has_ui_marks()
-    test_restrict_scope_css_to_marks_targets_delete_only()
-    test_inject_scope_style_skips_global_css_for_keep_only_marks()
-    test_inject_scope_style_scopes_css_to_delete_marks()
-    test_resolve_marked_selectors_includes_classes()
-    test_resolve_marked_selectors_narrow_excludes_keep_and_generic_classes()
-    test_inject_scope_style_colors_mixed_keep_delete()
-    test_marked_scope_colors_css_differs_by_variant()
-    test_marked_scope_colors_css_overrides_all_descendants()
-    test_resolve_marked_selectors_heading_text_id()
-    test_resolve_marked_selectors_heading_text_entities()
-    test_inject_scope_style_colors_overrides_inline_heading_color()
-    test_inject_scope_style_colors_overrides_multiple_marked_headings()
-    test_should_block_full_html_for_imported_marks()
-    test_marked_css_selectors_includes_btn_prefix()
-    test_goal_requests_column_layout_detects_polish_and_english()
-    test_inject_scope_style_display_keeps_entry_content_typography()
-    test_inject_scope_style_shapes_keeps_content_wrapper_radii()
-    test_inject_scope_style_orientation_column_goal_keeps_layout_css()
-  tests/test_options.py:
-    e: test_replace_html_title_preserves_body,test_sync_option_previews_from_workspace_applies_delete_ids,test_sync_option_previews_uses_delete_resolver_only_for_none,test_enforce_deletes_on_option_previews,test_html_files_distinct_ignores_title
-    test_replace_html_title_preserves_body()
-    test_sync_option_previews_from_workspace_applies_delete_ids(tmp_path)
-    test_sync_option_previews_uses_delete_resolver_only_for_none(tmp_path)
-    test_enforce_deletes_on_option_previews(tmp_path)
-    test_html_files_distinct_ignores_title(tmp_path)
-  tests/test_organize_html.py:
-    e: test_organize_extracts_substantial_inline_css,test_organize_strips_preview_scripts_and_lazy_imgs,test_is_lazy_placeholder_img_tag,test_organize_html_project_dir_writes_index,test_organize_noop_for_minimal_html,test_organize_result_manifest_summarizes_extracted_files
-    test_organize_extracts_substantial_inline_css(tmp_path)
-    test_organize_strips_preview_scripts_and_lazy_imgs()
-    test_is_lazy_placeholder_img_tag()
-    test_organize_html_project_dir_writes_index(tmp_path)
-    test_organize_noop_for_minimal_html()
-    test_organize_result_manifest_summarizes_extracted_files(tmp_path)
-  tests/test_service.py:
-    e: RepatchServiceTests
-    RepatchServiceTests: test_rejects_invalid_scope(0),test_returns_three_variants_from_completion(0)
-  tests/test_spatial.py:
-    e: test_apply_spatial_deletes_removes_dashboard_kpi_card,test_apply_spatial_deletes_removes_only_marked_buttons
-    test_apply_spatial_deletes_removes_dashboard_kpi_card()
-    test_apply_spatial_deletes_removes_only_marked_buttons()
-  tests/test_ui_patch.py:
-    e: test_build_ui_patch_prompt_is_json_contract,test_parse_and_apply_ui_patch_response,test_apply_ui_patch_restricts_visual_scope_to_red_marks,test_apply_ui_patch_noops_visual_scope_with_keep_only_marks,test_apply_ui_patch_rejects_unsafe_css,test_apply_ui_patch_rejects_flow_breaking_css,test_supports_llm_patch_scope
-    test_build_ui_patch_prompt_is_json_contract()
-    test_parse_and_apply_ui_patch_response()
-    test_apply_ui_patch_restricts_visual_scope_to_red_marks()
-    test_apply_ui_patch_noops_visual_scope_with_keep_only_marks()
-    test_apply_ui_patch_rejects_unsafe_css()
-    test_apply_ui_patch_rejects_flow_breaking_css()
-    test_supports_llm_patch_scope()
-  tests/test_web_fetch.py:
-    e: test_fetch_complete_web_page_mirrors_stylesheets_and_images,test_fetch_complete_web_page_uses_rendered_dom_and_mirrors_assets,test_fetch_complete_web_page_falls_back_when_rendering_fails,test_fetch_complete_web_page_deduplicates_and_skips_external_assets,test_fetch_complete_web_page_rejects_non_http_urls,test_fetch_complete_web_page_against_local_http_server,test_fetch_complete_web_page_records_asset_errors_without_breaking_page,FakeResp
-    FakeResp: __init__(1),read(1),__enter__(0),__exit__(0)
-    test_fetch_complete_web_page_mirrors_stylesheets_and_images(tmp_path)
-    test_fetch_complete_web_page_uses_rendered_dom_and_mirrors_assets(tmp_path)
-    test_fetch_complete_web_page_falls_back_when_rendering_fails(tmp_path)
-    test_fetch_complete_web_page_deduplicates_and_skips_external_assets(tmp_path)
-    test_fetch_complete_web_page_rejects_non_http_urls(tmp_path)
-    test_fetch_complete_web_page_against_local_http_server(tmp_path)
-    test_fetch_complete_web_page_records_asset_errors_without_breaking_page(tmp_path)
-  tests/test_web_preprocess.py:
-    e: test_extract_visual_css_keeps_patch_relevant_rules,test_build_html_outline_strips_scripts_and_text,test_prepare_http_preview_html_blocks_cross_origin_runtime,test_build_http_llm_context_includes_organize_manifest
-    test_extract_visual_css_keeps_patch_relevant_rules(tmp_path)
-    test_build_html_outline_strips_scripts_and_text()
-    test_prepare_http_preview_html_blocks_cross_origin_runtime()
-    test_build_http_llm_context_includes_organize_manifest()
+  repatch/_targets.py:
+    e: _slug_piece,_add_markable_targets
+    _slug_piece(value)
+    _add_markable_targets(html)
+  repatch/seeds.py:
+    e: list_seeds,get_seed,seed_kind
+    list_seeds()
+    get_seed(name)
+    seed_kind(name)
+  repatch/dev_server.py:
+    e: CSSInput,HTMLInput,SpatialDeletesInput,ScopeStripInput,ScopeInjectInput,OrganizeInput,OptionVariant,UIPatchPromptInput,UIPatchParseInput,FragmentInput,root,health,css_split,css_validate,spatial_deletes,scope_strip,scope_inject,organize,ui_patch_prompt,ui_patch_parse,fragment,seeds,seed
+    CSSInput(BaseModel):
+    HTMLInput(BaseModel):
+    SpatialDeletesInput(BaseModel):
+    ScopeStripInput(BaseModel):
+    ScopeInjectInput(BaseModel):
+    OrganizeInput(BaseModel):
+    OptionVariant(BaseModel):
+    UIPatchPromptInput(BaseModel):
+    UIPatchParseInput(BaseModel):
+    FragmentInput(BaseModel):
+    root()
+    health()
+    css_split(body)
+    css_validate(body)
+    spatial_deletes(body)
+    scope_strip(body)
+    scope_inject(body)
+    organize(body)
+    ui_patch_prompt(body)
+    ui_patch_parse(body)
+    fragment(body)
+    seeds()
+    seed(name)
+  deps.json:
+  goal.yaml:
+  regix.yaml:
+  local.dev.txt:
+  Makefile:
+  koru.yaml:
+  wup.yaml:
+  docker-compose.yml:
+  pyproject.toml:
+  tree.txt:
+  Dockerfile:
+  project.sh:
+  repatch/ui_patch.py:
+  repatch/__init__.py:
+  repatch/web_preprocess.py:
+  repatch/marked_context/__init__.py:
+  testql-scenarios/generated-from-pytests.testql.toon.yaml:
+  testql-scenarios/generated-cli-tests.testql.toon.yaml:

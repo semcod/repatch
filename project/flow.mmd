@@ -1,5 +1,5 @@
 flowchart TD
-%% generated in 0.02s
+%% generated in 0.01s
 
     %% Entry points (blue)
     classDef entry fill:#4dabf7,stroke:#1971c2,color:#fff
@@ -9,18 +9,18 @@ flowchart TD
         repatch__project_ir___ProjectIRParser___classify_node["_classify_node"]
         repatch__project_ir___ProjectIRParser__handle_endtag["handle_endtag"]
         repatch__project_ir___ProjectIRParser__handle_data["handle_data"]
-        repatch__scope__ui_type_for_kind["ui_type_for_kind"]
         repatch__scope__should_block_full_html_iterate["should_block_full_html_iterate"]
-        repatch__scope___bind_annotations_to_html{{_bind_annotations_to_html CC=29}}
-        repatch__scope__inject_scope_style["inject_scope_style"]
-        repatch__dom_patch__build_function_patch_context["build_function_patch_context"]
-        repatch__dom_patch___default_prepare_html["_default_prepare_html"]
-        repatch__dom_patch___default_finalize_html["_default_finalize_html"]
-        repatch__dom_patch__build_function_option_patches["build_function_option_patches"]
-        repatch__marked_context___collect_keep_selectors("_collect_keep_selectors CC=11")
-        repatch__marked_context__resolve_marked_selectors{{resolve_marked_selectors CC=16}}
-        repatch__marked_context__restrict_scope_css_to_marks("restrict_scope_css_to_marks CC=14")
-        ...["+52 more"]
+        repatch__scope___marked_scope_css("_marked_scope_css CC=11")
+        repatch__scope__inject_scope_style("inject_scope_style CC=12")
+        dom_patch__build_function_patch_context["build_function_patch_context"]
+        dom_patch___default_prepare_html["_default_prepare_html"]
+        dom_patch___default_finalize_html["_default_finalize_html"]
+        dom_patch__build_function_option_patches["build_function_option_patches"]
+        repatch__organize_html__organize_html_project_dir["organize_html_project_dir"]
+        repatch__organize_html__organize_html_project["organize_html_project"]
+        repatch__organize_html__organize_result_manifest["organize_result_manifest"]
+        repatch___ui_patch_prompt__supports_llm_patch_scope["supports_llm_patch_scope"]
+        ...["+65 more"]
     end
 
-    class repatch__project_ir___ProjectIRParser__handle_starttag,repatch__project_ir___ProjectIRParser___classify_node,repatch__project_ir___ProjectIRParser__handle_endtag,repatch__project_ir___ProjectIRParser__handle_data,repatch__scope__ui_type_for_kind,repatch__scope__should_block_full_html_iterate,repatch__scope__inject_scope_style,repatch__dom_patch__build_function_patch_context,repatch__dom_patch___default_prepare_html,repatch__dom_patch___default_finalize_html entry
+    class repatch__project_ir___ProjectIRParser__handle_starttag,repatch__project_ir___ProjectIRParser___classify_node,repatch__project_ir___ProjectIRParser__handle_endtag,repatch__project_ir___ProjectIRParser__handle_data,repatch__scope__should_block_full_html_iterate,dom_patch__build_function_patch_context,dom_patch___default_prepare_html,dom_patch___default_finalize_html,dom_patch__build_function_option_patches,repatch__organize_html__organize_html_project_dir entry

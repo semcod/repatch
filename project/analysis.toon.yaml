@@ -1,20 +1,12 @@
-# code2llm | 23f 8259L | python:14,yaml:4,json:1,txt:1,shell:1,javascript:1,toml:1 | 2026-06-01
+# code2llm | 48f 9532L | python:33,yaml:6,txt:2,json:1,yml:1,toml:1,shell:1,javascript:1 | 2026-09-19
 # generated in 0.01s
-# CC̅=5.2 | critical:7/184 | dups:0 | cycles:0
+# CC̅=4.5 | critical:0/230 | dups:0 | cycles:0
 
-HEALTH[7]:
-  🟡 CC    _bind_annotations_to_html CC=29 (limit:15)
-  🟡 CC    inject_scope_style CC=27 (limit:15)
-  🟡 CC    resolve_marked_selectors CC=16 (limit:15)
-  🟡 CC    _find_marked_subtrees CC=17 (limit:15)
-  🟡 CC    apply_ui_patch_options CC=25 (limit:15)
-  🟡 CC    organize_html CC=24 (limit:15)
-  🟡 CC    build_http_llm_context CC=29 (limit:15)
+HEALTH[0]: ok
 
-REFACTOR[1]:
-  1. split 7 high-CC methods  (CC>15)
+REFACTOR[0]: none needed
 
-PIPELINES[58]:
+PIPELINES[69]:
   [1] Src [__init__]: __init__
       PURITY: 100% pure
   [2] Src [handle_starttag]: handle_starttag
@@ -25,112 +17,131 @@ PIPELINES[58]:
       PURITY: 100% pure
   [5] Src [handle_data]: handle_data → _clean_text
       PURITY: 100% pure
-  [6] Src [ui_type_for_kind]: ui_type_for_kind
+  [6] Src [should_block_full_html_iterate]: should_block_full_html_iterate → has_ui_marks
       PURITY: 100% pure
-  [7] Src [should_block_full_html_iterate]: should_block_full_html_iterate → has_ui_marks
+  [7] Src [build_function_patch_context]: build_function_patch_context → build_project_ir
       PURITY: 100% pure
-  [8] Src [inject_scope_style]: inject_scope_style → _bind_annotations_to_html → _parse_attrs → _normalize_label_text
+  [8] Src [_default_prepare_html]: _default_prepare_html
       PURITY: 100% pure
-  [9] Src [build_function_patch_context]: build_function_patch_context → build_project_ir
+  [9] Src [build_function_option_patches]: build_function_option_patches → _strip_existing_patch
       PURITY: 100% pure
-  [10] Src [_default_prepare_html]: _default_prepare_html
+  [10] Src [organize_html_project_dir]: organize_html_project_dir → organize_html → _extract_styles → _extract_inline_styles
       PURITY: 100% pure
-  [11] Src [build_function_option_patches]: build_function_option_patches → _strip_existing_patch
+  [11] Src [organize_html_project]: organize_html_project → organize_html → _extract_styles → _extract_inline_styles
       PURITY: 100% pure
-  [12] Src [resolve_marked_llm_context]: resolve_marked_llm_context → build_marked_element_context → _assemble_marked_subtrees → _find_marked_subtrees → ...(2 more)
+  [12] Src [organize_result_manifest]: organize_result_manifest
       PURITY: 100% pure
   [13] Src [supports_llm_patch_scope]: supports_llm_patch_scope → normalize_focus_scope → default_scope_for_kind → allowed_scope_ids
       PURITY: 100% pure
-  [14] Src [build_ui_patch_prompt]: build_ui_patch_prompt → normalize_focus_scope → default_scope_for_kind → allowed_scope_ids
+  [14] Src [root]: root
       PURITY: 100% pure
-  [15] Src [parse_ui_patch_response]: parse_ui_patch_response → _strip_json_fence
+  [15] Src [health]: health → list_seeds
       PURITY: 100% pure
-  [16] Src [apply_ui_patch_options]: apply_ui_patch_options → strip_scope_style
+  [16] Src [css_split]: css_split → split_css_rules
       PURITY: 100% pure
-  [17] Src [html_files_distinct]: html_files_distinct → normalize_html_body
+  [17] Src [css_validate]: css_validate → validate_css_safety → _strip_css_comments
       PURITY: 100% pure
-  [18] Src [sync_option_previews_from_workspace]: sync_option_previews_from_workspace → apply_spatial_deletes_to_html → _delete_match_keys
+  [18] Src [spatial_deletes]: spatial_deletes → apply_spatial_deletes_to_html → _apply_block_deletes → _find_matching_close
       PURITY: 100% pure
-  [19] Src [enforce_deletes_on_option_previews]: enforce_deletes_on_option_previews → apply_spatial_deletes_to_html → _delete_match_keys
+  [19] Src [scope_strip]: scope_strip → strip_scope_style
       PURITY: 100% pure
-  [20] Src [generate_patch_suggestions]: generate_patch_suggestions
+  [20] Src [scope_inject]: scope_inject → inject_scope_style → _bind_annotations_to_html → _splice_replacements
       PURITY: 100% pure
-  [21] Src [_normalize_scopes]: _normalize_scopes
+  [21] Src [organize]: organize → organize_html → _extract_styles → _extract_inline_styles
       PURITY: 100% pure
-  [22] Src [_build_user_prompt]: _build_user_prompt
+  [22] Src [ui_patch_prompt]: ui_patch_prompt → build_ui_patch_prompt → normalize_focus_scope → default_scope_for_kind → ...(1 more)
       PURITY: 100% pure
-  [23] Src [_parse_choice]: _parse_choice
+  [23] Src [ui_patch_parse]: ui_patch_parse → parse_ui_patch_response → _strip_json_fence
       PURITY: 100% pure
-  [24] Src [_choice_content]: _choice_content
+  [24] Src [fragment]: fragment → scoped_html_fragment → normalize_focus_scope → default_scope_for_kind → ...(1 more)
       PURITY: 100% pure
-  [25] Src [_default_completion]: _default_completion
+  [25] Src [seeds]: seeds → seed_kind
       PURITY: 100% pure
-  [26] Src [connect]: connect → _connectSSE → apply → cb
+  [26] Src [seed]: seed → get_seed
       PURITY: 100% pure
-  [27] Src [payload]: payload → apply → cb
+  [27] Src [html_files_distinct]: html_files_distinct → normalize_html_body
       PURITY: 100% pure
-  [28] Src [onPatch]: onPatch
+  [28] Src [sync_option_previews_from_workspace]: sync_option_previews_from_workspace → apply_spatial_deletes_to_html → _apply_block_deletes → _find_matching_close
       PURITY: 100% pure
-  [29] Src [dslClean]: dslClean
+  [29] Src [enforce_deletes_on_option_previews]: enforce_deletes_on_option_previews → apply_spatial_deletes_to_html → _apply_block_deletes → _find_matching_close
       PURITY: 100% pure
-  [30] Src [addMatch]: addMatch
+  [30] Src [apply_ui_patch_options]: apply_ui_patch_options → strip_scope_style
       PURITY: 100% pure
-  [31] Src [replaceMatch]: replaceMatch
+  [31] Src [extract_visual_css]: extract_visual_css → extract_inline_css
       PURITY: 100% pure
-  [32] Src [styleMatch]: styleMatch
+  [32] Src [redirect_request]: redirect_request → _validate_http_url → _non_public_ip_reason
       PURITY: 100% pure
-  [33] Src [removeMatch]: removeMatch → cb
+  [33] Src [mirror]: mirror → _save_asset → _extension_from_url_or_type
       PURITY: 100% pure
-  [34] Src [html]: html
+  [34] Src [fetch_complete_web_page]: fetch_complete_web_page → _fetch_page_source → _read_http_body → _validate_http_url → ...(1 more)
       PURITY: 100% pure
-  [35] Src [target]: target
+  [35] Src [ui_type_for_kind]: ui_type_for_kind
       PURITY: 100% pure
-  [36] Src [css]: css
+  [36] Src [build_http_llm_context]: build_http_llm_context → _cap_patch_text
       PURITY: 100% pure
-  [37] Src [styleEl]: styleEl
+  [37] Src [__init__]: __init__
       PURITY: 100% pure
-  [38] Src [sendPatchRequest]: sendPatchRequest
+  [38] Src [_keep_attr]: _keep_attr
       PURITY: 100% pure
-  [39] Src [on_patch]: on_patch
+  [39] Src [handle_starttag]: handle_starttag
       PURITY: 100% pure
-  [40] Src [start]: start
+  [40] Src [handle_endtag]: handle_endtag
       PURITY: 100% pure
-  [41] Src [_run_event_loop]: _run_event_loop
+  [41] Src [handle_data]: handle_data
       PURITY: 100% pure
-  [42] Src [_connect_and_listen]: _connect_and_listen
+  [42] Src [build_html_outline]: build_html_outline
       PURITY: 100% pure
-  [43] Src [_trigger_listeners]: _trigger_listeners → cb
+  [43] Src [generate_patch_suggestions]: generate_patch_suggestions
       PURITY: 100% pure
-  [44] Src [send_patch]: send_patch
+  [44] Src [_normalize_scopes]: _normalize_scopes
       PURITY: 100% pure
-  [45] Src [organize_html_project_dir]: organize_html_project_dir → organize_html → _extract_inline_styles
+  [45] Src [_build_user_prompt]: _build_user_prompt
       PURITY: 100% pure
-  [46] Src [organize_html_project]: organize_html_project → organize_html → _extract_inline_styles
+  [46] Src [_parse_choice]: _parse_choice
       PURITY: 100% pure
-  [47] Src [organize_result_manifest]: organize_result_manifest
+  [47] Src [_choice_content]: _choice_content
       PURITY: 100% pure
-  [48] Src [extract_visual_css]: extract_visual_css → extract_inline_css
+  [48] Src [_default_completion]: _default_completion
       PURITY: 100% pure
-  [49] Src [__init__]: __init__
+  [49] Src [prepare_http_preview_html]: prepare_http_preview_html → sanitize_http_preview_html → _should_remove_preview_script → _script_src_allowed_for_preview
       PURITY: 100% pure
-  [50] Src [_keep_attr]: _keep_attr
+  [50] Src [resolve_marked_llm_context]: resolve_marked_llm_context → build_marked_element_context → _assemble_marked_subtrees → _find_marked_subtrees → ...(3 more)
       PURITY: 100% pure
 
 LAYERS:
-  repatch/                        CC̄=5.6    ←in:0  →out:0
-  │ !! marked_context             696L  0C   32m  CC=17     ←3
-  │ !! scope                      647L  0C   22m  CC=29     ←2
-  │ !! web_preprocess             459L  1C   21m  CC=29     ←1
-  │ web_fetch                  370L  2C   15m  CC=7      ←0
-  │ dom_patch                  315L  0C   19m  CC=12     ←0
-  │ !! organize_html              287L  1C   12m  CC=24     ←0
-  │ !! ui_patch                   267L  0C   10m  CC=25     ←0
-  │ options                    140L  0C    5m  CC=10     ←0
+  repatch/                        CC̄=4.7    ←in:6  →out:20  !! split
+  │ web_fetch                  468L  6C   21m  CC=8      ←0
+  │ dom_patch                  336L  0C   20m  CC=11     ←0
+  │ scope                      331L  0C   14m  CC=14     ←3
+  │ _scope_css                 300L  0C    8m  CC=7      ←3
+  │ dev_server                 218L  10C   13m  CC=2      ←0
+  │ _html                      187L  0C    8m  CC=10     ←2
+  │ _context                   182L  0C    7m  CC=14     ←0
+  │ _web_css                   179L  0C    7m  CC=9      ←0
+  │ _selectors                 179L  0C    7m  CC=14     ←3
+  │ spatial                    168L  0C    8m  CC=6      ←2
+  │ organize_html              166L  1C    7m  CC=11     ←1
+  │ _scope_css                 149L  0C    6m  CC=8      ←2
+  │ options                    148L  0C    5m  CC=12     ←0
   │ __init__                   139L  0C    0m  CC=0.0    ←0
+  │ _ids                       134L  0C    8m  CC=9      ←4
   │ project_ir                 132L  1C    8m  CC=12     ←1
-  │ spatial                    108L  0C    4m  CC=6      ←1
+  │ _scope_kinds               132L  0C    7m  CC=11     ←5
+  │ _ui_patch_prompt           128L  0C    4m  CC=9      ←1
+  │ _ui_patch_apply            120L  0C    5m  CC=13     ←0
+  │ _http_llm_context          120L  0C    6m  CC=12     ←0
+  │ _http_preview              109L  0C    5m  CC=4      ←1
   │ service                    105L  2C    7m  CC=6      ←0
-  │ css                         70L  0C    4m  CC=14     ←3
+  │ __init__                    92L  0C    0m  CC=0.0    ←0
+  │ _html_outline               91L  1C    6m  CC=8      ←0
+  │ _assets                     74L  0C    4m  CC=4      ←1
+  │ css                         70L  0C    4m  CC=14     ←4
+  │ seeds                       65L  0C    3m  CC=2      ←1
+  │ web_preprocess              61L  0C    0m  CC=0.0    ←0
+  │ _targets                    44L  0C    2m  CC=3      ←1
+  │ _images                     42L  0C    3m  CC=11     ←2
+  │ _ui_patch_parse             34L  0C    2m  CC=6      ←1
+  │ ui_patch                    14L  0C    0m  CC=0.0    ←0
   │
   sdks/                           CC̄=2.7    ←in:0  →out:0
   │ repatch-sdk.js             186L  1C   18m  CC=12     ←1
@@ -138,11 +149,17 @@ LAYERS:
   │
   ./                              CC̄=0.0    ←in:0  →out:0
   │ !! deps.json                 3394L  0C    0m  CC=0.0    ←0
-  │ !! goal.yaml                  511L  0C    0m  CC=0.0    ←0
+  │ !! goal.yaml                  526L  0C    0m  CC=0.0    ←0
   │ wup.yaml                   134L  0C    0m  CC=0.0    ←0
-  │ tree.txt                    90L  0C    0m  CC=0.0    ←0
-  │ pyproject.toml              56L  0C    0m  CC=0.0    ←0
+  │ koru.yaml                  133L  0C    0m  CC=0.0    ←0
+  │ tree.txt                    96L  0C    0m  CC=0.0    ←0
+  │ regix.yaml                  93L  0C    0m  CC=0.0    ←0
   │ project.sh                  50L  0C    0m  CC=0.0    ←0
+  │ pyproject.toml              47L  0C    0m  CC=0.0    ←0
+  │ Makefile                    19L  0C    0m  CC=0.0    ←0
+  │ Dockerfile                  15L  0C    0m  CC=0.0    ←0
+  │ local.dev.txt               11L  0C    0m  CC=0.0    ←0
+  │ docker-compose.yml           8L  0C    0m  CC=0.0    ←0
   │
   testql-scenarios/               CC̄=0.0    ←in:0  →out:0
   │ generated-cli-tests.testql.toon.yaml    20L  0C    0m  CC=0.0    ←0
@@ -150,10 +167,20 @@ LAYERS:
   │
 
 COUPLING:
-                   sdks.js  sdks.python
-      sdks.js           ──           ←1
-  sdks.python            1           ──
+                                  marked_context                 repatch  repatch.marked_context               dom_patch         _ui_patch_parse                 sdks.js             sdks.python
+          marked_context                      ──                       2                       2                      ←1                                                                          hub
+                 repatch                      14                      ──                       5                      ←3                       1                                                  hub
+  repatch.marked_context                      10                       1                      ──                                                                                                  hub
+               dom_patch                       1                       3                                              ──                                                                        
+         _ui_patch_parse                                              ←1                                                                      ──                                                
+                 sdks.js                                                                                                                                              ──                      ←1
+             sdks.python                                                                                                                                               1                      ──
   CYCLES: none
+  HUB: repatch/ (fan-in=6)
+  HUB: repatch.marked_context/ (fan-in=7)
+  HUB: marked_context/ (fan-in=25)
+  SMELL: repatch/ fan-out=20 → split needed
+  SMELL: repatch.marked_context/ fan-out=11 → split needed
 
 EXTERNAL:
   validation: run `vallm batch .` → validation.toon
