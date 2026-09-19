@@ -163,9 +163,9 @@ def _inject_into_head(text: str, style: str) -> str:
 
 
 def _inject_into_body(text: str, section: str) -> str:
-    body = re.search(r"<body[^>]*>", text, flags=re.I)
-    if body:
-        return text[: body.end()] + section + text[body.end() :]
+    body_tag_match = re.search(r"<body[^>]*>", text, flags=re.I)
+    if body_tag_match:
+        return text[: body_tag_match.end()] + section + text[body_tag_match.end() :]
     return section + text
 
 

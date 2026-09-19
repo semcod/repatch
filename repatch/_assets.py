@@ -63,9 +63,9 @@ def analyze_inline_scripts(html: str) -> tuple[list[str], int, list[tuple[str, s
             script_edits.append((block, "<!-- repatch: preview script removed -->"))
             continue
         inner = re.sub(r"^<script\b[^>]*>|</script>$", "", block, flags=re.IGNORECASE | re.DOTALL)
-        body = inner.strip()
-        if len(body) >= MIN_SCRIPT_EXTRACT_CHARS:
-            script_chunks.append(body)
+        script_text = inner.strip()
+        if len(script_text) >= MIN_SCRIPT_EXTRACT_CHARS:
+            script_chunks.append(script_text)
             script_edits.append((block, ""))
             continue
         scripts_removed += 1

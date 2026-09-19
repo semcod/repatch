@@ -302,7 +302,7 @@ def test_inject_scope_style_colors_overrides_inline_heading_color() -> None:
 
 def test_inject_scope_style_colors_overrides_multiple_marked_headings() -> None:
     heading = "Pracownia Malort Gdynia – przestrzeń dla kreatywności Twojego dziecka"
-    body = (
+    second_heading_text = (
         "Zapraszamy do wyjątkowego miejsca, gdzie dzieci rozwijają wyobraźnię i "
         "pewność siebie poprzez spontaniczną twórczość artystyczną."
     )
@@ -313,7 +313,7 @@ def test_inject_scope_style_colors_overrides_multiple_marked_headings() -> None:
         "przestrzeń dla kreatywności Twojego dziecka"
         "</h2>"
         '<h2 class="kt-adv-heading2_79aa1a-c6 wp-block-kadence-advancedheading">'
-        f"{body}"
+        f"{second_heading_text}"
         "</h2>"
         "</body></html>"
     )
@@ -322,7 +322,7 @@ def test_inject_scope_style_colors_overrides_multiple_marked_headings() -> None:
         "colors",
         "c",
         project_kind="imported",
-        delete_ids=[body, heading],
+        delete_ids=[second_heading_text, heading],
     )
     assert "nexu-scope-variant" in patched
     assert ".kt-adv-heading2_289857-94" in patched

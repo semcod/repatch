@@ -150,10 +150,10 @@ def build_marked_element_context(
 
     scope = normalize_focus_scope(focus_scope, project_kind)
     css = _get_relevant_css(html, subtrees, ui_profile)
-    body = _format_context_body(
+    context_text = _format_context_body(
         marked_keep_ids, marked_delete_ids, marked_ids, subtrees, css, scope, ui_profile
     )
-    return _cap_text(body, MAX_MARKED_CONTEXT_BYTES)
+    return _cap_text(context_text, MAX_MARKED_CONTEXT_BYTES)
 
 
 def resolve_marked_llm_context(

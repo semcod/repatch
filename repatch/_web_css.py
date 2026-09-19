@@ -121,18 +121,18 @@ def normalize_linked_paths(linked_css_paths: list[str] | None, html: str) -> lis
 
 
 def _rule_is_visual(rule: str) -> bool:
-    body = rule.strip()
-    if not body:
+    rule_text = rule.strip()
+    if not rule_text:
         return False
-    if _SKIP_AT_RULE_RE.search(body):
+    if _SKIP_AT_RULE_RE.search(rule_text):
         return False
-    if _PRINT_MEDIA_RE.search(body):
+    if _PRINT_MEDIA_RE.search(rule_text):
         return False
-    if _VAR_PATTERN.search(body):
+    if _VAR_PATTERN.search(rule_text):
         return True
-    if _PROP_PATTERN.search(body):
+    if _PROP_PATTERN.search(rule_text):
         return True
-    selector = body.split("{", 1)[0].strip().lower()
+    selector = rule_text.split("{", 1)[0].strip().lower()
     return selector in {":root", "html", "body"}
 
 
