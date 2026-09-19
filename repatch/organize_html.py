@@ -133,11 +133,11 @@ def organize_html_project_dir(source_dir: Path) -> OrganizeResult | None:
     if index_path is None:
         return None
     try:
-        html = index_path.read_text(encoding="utf-8")
+        index_html = index_path.read_text(encoding="utf-8")
     except OSError:
         return None
-    result = organize_html(html, base_dir=root)
-    if result.html != html or result.meta.get("organized"):
+    result = organize_html(index_html, base_dir=root)
+    if result.html != index_html or result.meta.get("organized"):
         try:
             index_path.write_text(result.html, encoding="utf-8")
         except OSError:

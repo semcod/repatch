@@ -74,13 +74,13 @@ def sync_option_previews_from_workspace(
     if not stage_file.exists():
         return {"error": f"missing {stage_file.name}"}
 
-    html = stage_file.read_text(encoding="utf-8")
+    stage_html = stage_file.read_text(encoding="utf-8")
     if delete_ids is None and delete_resolver is not None:
         to_delete = list(delete_resolver() or [])
     else:
         to_delete = list(delete_ids or [])
 
-    base, removed = apply_spatial_deletes_to_html(html, to_delete)
+    base, removed = apply_spatial_deletes_to_html(stage_html, to_delete)
     if finalize_html is not None:
         base = finalize_html(base)
 
@@ -130,8 +130,8 @@ def enforce_deletes_on_option_previews(
         path = root / filename
         if not path.exists():
             continue
-        html = path.read_text(encoding="utf-8")
-        patched, removed = apply_spatial_deletes_to_html(html, effective_delete)
+        preview_html = path.read_text(encoding="utf-8")
+        patched, removed = apply_spatial_deletes_to_html(preview_html, effective_delete)
         if not removed:
             continue
         if finalize_html is not None:

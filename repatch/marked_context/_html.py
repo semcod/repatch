@@ -166,9 +166,9 @@ def _client_fragment_html(client_fragments: list[Any] | None, element_id: str) -
             continue
         frag = item.get("fragment")
         if isinstance(frag, dict):
-            html = re.sub(r"\s+", " ", str(frag.get("html") or "")).strip()
-            if html:
-                return html
+            fragment_html = re.sub(r"\s+", " ", str(frag.get("html") or "")).strip()
+            if fragment_html:
+                return fragment_html
     return None
 
 

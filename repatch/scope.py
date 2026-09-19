@@ -293,16 +293,16 @@ def inject_scope_style(
     keep_ids: list[str] | None = None,
     user_goal: str = "",
 ) -> str:
-    html = _bind_annotations_to_html(html, keep_ids, delete_ids)
-    inferred = _resolve_scope_kind(project_kind, html)
+    bound = _bind_annotations_to_html(html, keep_ids, delete_ids)
+    inferred = _resolve_scope_kind(project_kind, bound)
     scope = normalize_focus_scope(scope, inferred)
     delete_list = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
     keep_list = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
     effective_delete = effective_delete_ids(delete_list, keep_list)
     if scope in VISUAL_REDESIGN_SCOPES and keep_list and not effective_delete:
-        return strip_scope_style(html)
-    css = _get_scope_css(inferred, html, scope, variant, user_goal=user_goal)
-    cleaned = strip_scope_style(html)
+        return strip_scope_style(bound)
+    css = _get_scope_css(inferred, bound, scope, variant, user_goal=user_goal)
+    cleaned = strip_scope_style(bound)
     if scope in VISUAL_REDESIGN_SCOPES and effective_delete:
         css = _marked_scope_css(
             scope, variant, css, cleaned, inferred,

@@ -140,8 +140,8 @@ def css_validate(body: CSSInput) -> dict[str, Any]:
 @app.post("/spatial/deletes")
 def spatial_deletes(body: SpatialDeletesInput) -> dict[str, Any]:
     """Apply spatial deletes to an HTML fragment."""
-    html, removed = apply_spatial_deletes_to_html(body.html, body.delete_ids)
-    return {"html": html, "removed": removed}
+    patched_html, removed = apply_spatial_deletes_to_html(body.html, body.delete_ids)
+    return {"html": patched_html, "removed": removed}
 
 
 @app.post("/scope/strip")
@@ -153,7 +153,7 @@ def scope_strip(body: ScopeStripInput) -> dict[str, Any]:
 @app.post("/scope/inject")
 def scope_inject(body: ScopeInjectInput) -> dict[str, Any]:
     """Inject a scope style into HTML."""
-    html = inject_scope_style(
+    patched_html = inject_scope_style(
         body.html,
         body.scope,
         body.variant,
@@ -162,7 +162,7 @@ def scope_inject(body: ScopeInjectInput) -> dict[str, Any]:
         keep_ids=body.keep_ids,
         user_goal=body.user_goal,
     )
-    return {"html": html}
+    return {"html": patched_html}
 
 
 @app.post("/organize")
