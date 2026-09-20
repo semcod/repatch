@@ -40,7 +40,7 @@ def _patch_scope_rules(
     delete_els: list[str] | None = None,
 ) -> list[str]:
     keep = list(keep_els or [])
-    delete = list(delete_els or [])
+    delete_ids = list(delete_els or [])
     rules = [
         f"Focus only on #{scope}.",
         "Do not return HTML. Return CSS/xpatches only.",
@@ -75,8 +75,8 @@ def _patch_scope_rules(
         )
     if keep:
         rules.append(f"KEEP ids: {', '.join(keep[:16])}.")
-    if delete:
-        rules.append(f"DELETE ids: {', '.join(delete[:16])}.")
+    if delete_ids:
+        rules.append(f"DELETE ids: {', '.join(delete_ids[:16])}.")
     return rules
 
 

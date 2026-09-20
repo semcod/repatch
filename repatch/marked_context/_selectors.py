@@ -102,11 +102,11 @@ def resolve_marked_selectors(
 def _add_fragment_selectors(
     add: "Callable[[str | None], None]",
     html: str,
-    delete: list[str],
+    marked_delete_ids: list[str],
     narrow: bool,
 ) -> None:
     """Add selectors harvested from id/class tokens in marked HTML fragments."""
-    for fragment in _find_marked_subtrees(html, set(delete)).values():
+    for fragment in _find_marked_subtrees(html, set(marked_delete_ids)).values():
         for match in re.finditer(r"""\bid\s*=\s*(['"])(.*?)\1""", fragment, re.IGNORECASE):
             add(_css_id_selector(match.group(2).strip()))
         for cls in _fragment_class_names(fragment):

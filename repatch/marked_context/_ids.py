@@ -45,8 +45,8 @@ def has_ui_marks(
 ) -> bool:
     """True when the session or ledger sent KEEP/DELETE element ids."""
     keep_marks = [str(x).strip() for x in (keep_els or []) if str(x).strip()]
-    delete = [str(x).strip() for x in (delete_els or []) if str(x).strip()]
-    return bool(keep_marks or delete)
+    delete_marks = [str(x).strip() for x in (delete_els or []) if str(x).strip()]
+    return bool(keep_marks or delete_marks)
 
 
 def effective_delete_ids(delete_els: list[str], keep_els: list[str]) -> list[str]:

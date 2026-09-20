@@ -140,8 +140,8 @@ def _bind_annotations_to_html(
     delete_ids: list[str] | None,
 ) -> str:
     keep = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
-    delete = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
-    marked_ids = keep + [x for x in delete if x not in keep]
+    marked_delete_ids = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
+    marked_ids = keep + [x for x in marked_delete_ids if x not in keep]
     if not marked_ids:
         return html
 

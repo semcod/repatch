@@ -65,22 +65,22 @@ def _resolve_patch_css(
     item: Any,
     filename: str,
     scope: str,
-    delete: list[str],
+    delete_ids: list[str],
     keep: list[str],
     base: str,
 ) -> str:
     """Resolve the CSS payload for one variant, honoring marked scopes."""
     variant_css = _css_for(item)
-    if scope in VISUAL_REDESIGN_SCOPES and delete:
-        restricted = restrict_scope_css_to_marks(variant_css, delete, html=base).strip()
+    if scope in VISUAL_REDESIGN_SCOPES and delete_ids:
+        restricted = restrict_scope_css_to_marks(variant_css, delete_ids, html=base).strip()
         if not restricted and scope == "colors":
             variant_key = filename.removeprefix("alt_").removesuffix(".html")
             restricted = marked_scope_colors_css(
-                resolve_marked_selectors(base, delete),
+                resolve_marked_selectors(base, delete_ids),
                 variant_key,
             )
         variant_css = restricted or variant_css
-    elif scope in VISUAL_REDESIGN_SCOPES and keep and not delete:
+    elif scope in VISUAL_REDESIGN_SCOPES and keep and not delete_ids:
         variant_css = ""
     if not variant_css.strip():
         variant_css = "/* xpatch noop: only KEEP marks were provided */"
@@ -104,7 +104,7 @@ def apply_ui_patch_options(
     fallback_labels = {filename: label for filename, label, _note in option_variants}
     base = strip_scope_style(str(html or ""))
     scope = normalize_focus_scope(focus_scope, project_kind) if focus_scope else ""
-    delete = [str(x).strip() for x in (delete_els or []) if str(x).strip()]
+    delete_ids = [str(x).strip() for x in (delete_els or []) if str(x).strip()]
     keep = [str(x).strip() for x in (keep_els or []) if str(x).strip()]
     files: dict[str, str] = {}
     labels: list[str] = []
@@ -112,7 +112,7 @@ def apply_ui_patch_options(
         item = variants.get(filename)
         if item is None:
             raise ValueError(f"missing {filename} in LLM patch response")
-        variant_css = _resolve_patch_css(item, filename, scope, delete, keep, base)
+        variant_css = _resolve_patch_css(item, filename, scope, delete_ids, keep, base)
         label = _label_for(filename, item, fallback_labels)
         payload = f"/* llm patch: {label} */\n{variant_css}"
         files[filename] = inject_css_block(base, payload)
