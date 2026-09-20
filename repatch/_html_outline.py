@@ -33,7 +33,7 @@ class _OutlineParser(HTMLParser):
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
-        self.parts: list[str] = []
+        self.outline_lines: list[str] = []
         self.node_count = 0
         self._skip_depth = 0
         self._indent = 0
@@ -52,9 +52,9 @@ class _OutlineParser(HTMLParser):
         attr_text = "".join(f' {k}="{v}"' for k, v in kept)
         indent = "  " * self._indent
         if tag in self._VOID_TAGS:
-            self.parts.append(f"{indent}<{tag}{attr_text} />")
+            self.outline_lines.append(f"{indent}<{tag}{attr_text} />")
         else:
-            self.parts.append(f"{indent}<{tag}{attr_text}>")
+            self.outline_lines.append(f"{indent}<{tag}{attr_text}>")
             self._indent += 1
         self.node_count += 1
 
@@ -66,7 +66,7 @@ class _OutlineParser(HTMLParser):
             return
         self._indent = max(0, self._indent - 1)
         indent = "  " * self._indent
-        self.parts.append(f"{indent}</{tag}>")
+        self.outline_lines.append(f"{indent}</{tag}>")
 
     def handle_data(self, data: str) -> None:
         if self._skip_depth:
@@ -75,7 +75,7 @@ class _OutlineParser(HTMLParser):
         if not text:
             return
         indent = "  " * self._indent
-        self.parts.append(f"{indent}{OUTLINE_TEXT_PLACEHOLDER}")
+        self.outline_lines.append(f"{indent}{OUTLINE_TEXT_PLACEHOLDER}")
 
 
 def build_html_outline(html: str) -> tuple[str, dict[str, Any]]:
@@ -84,7 +84,7 @@ def build_html_outline(html: str) -> tuple[str, dict[str, Any]]:
     parser = _OutlineParser()
     parser.feed(comment_free_html)
     parser.close()
-    outline = "\n".join(parser.parts).strip()
+    outline = "\n".join(parser.outline_lines).strip()
     if not outline.lower().startswith("<!doctype"):
         outline = f"<!DOCTYPE html>\n{outline}"
     outline_stats = {"outline_node_count": parser.node_count, "outline_bytes": len(outline.encode("utf-8"))}

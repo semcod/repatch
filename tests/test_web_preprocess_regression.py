@@ -120,11 +120,11 @@ def test_outline_parser_keeps_whitelisted_attrs_and_void_selfclose() -> None:
     parser.feed('<img src="/x.png" class="hero" data-nexu-x="1" style="color:red">')
     parser.close()
 
-    assert 'class="hero"' in parser.parts[0]
-    assert 'data-nexu-x="1"' in parser.parts[0]
-    assert 'src="/x.png"' not in parser.parts[0]
-    assert 'style="color:red"' not in parser.parts[0]
-    assert parser.parts[0].endswith(" />")
+    assert 'class="hero"' in parser.outline_lines[0]
+    assert 'data-nexu-x="1"' in parser.outline_lines[0]
+    assert 'src="/x.png"' not in parser.outline_lines[0]
+    assert 'style="color:red"' not in parser.outline_lines[0]
+    assert parser.outline_lines[0].endswith(" />")
 
 
 def test_script_src_allowed_for_preview_rules() -> None:
