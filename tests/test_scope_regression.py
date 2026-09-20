@@ -24,6 +24,7 @@ from repatch.scope import (
     _resolve_scope_kind,
     allowed_scope_ids,
     default_scope_for_kind,
+    effective_focus_scope,
     goal_requests_column_layout,
     inject_scope_style,
     normalize_focus_scope,
@@ -76,6 +77,18 @@ def test_normalize_focus_scope_accepts_valid_and_defaults_invalid() -> None:
     assert normalize_focus_scope("colors", "dashboard") == "colors"
     assert normalize_focus_scope("keypad", "calculator") == "keypad"
     assert normalize_focus_scope("bogus", "dashboard") == "functions"
+
+
+def test_effective_focus_scope_is_single_owner_of_request_scope_resolution() -> None:
+    assert effective_focus_scope("colors", "dashboard") == "colors"
+    assert effective_focus_scope("bogus", "dashboard") == "functions"
+    assert effective_focus_scope("", "calculator") == "keypad"
+
+
+def test_effective_focus_scope_can_preserve_unset_scope() -> None:
+    assert effective_focus_scope("", "calculator", default_when_unset=False) == ""
+    assert effective_focus_scope(None, "calculator", default_when_unset=False) == ""
+    assert effective_focus_scope("  ", "calculator", default_when_unset=False) == "keypad"
 
 
 def test_offline_fast_scopes_by_kind() -> None:

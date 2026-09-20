@@ -13,8 +13,8 @@ from .marked_context import (
 )
 from .scope import (
     VISUAL_REDESIGN_SCOPES,
+    effective_focus_scope,
     inject_css_block,
-    normalize_focus_scope,
     strip_scope_style,
 )
 
@@ -105,7 +105,7 @@ def apply_ui_patch_options(
         filename: variant_label for filename, variant_label, _note in option_variants
     }
     base = strip_scope_style(str(html or ""))
-    apply_scope = normalize_focus_scope(focus_scope, project_kind) if focus_scope else ""
+    apply_scope = effective_focus_scope(focus_scope, project_kind, default_when_unset=False)
     delete_ids = [str(x).strip() for x in (delete_els or []) if str(x).strip()]
     keep_ids = [str(x).strip() for x in (keep_els or []) if str(x).strip()]
     files: dict[str, str] = {}

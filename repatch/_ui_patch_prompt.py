@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import re
 
-from .scope import normalize_focus_scope, scoped_html_fragment
+from .scope import effective_focus_scope, scoped_html_fragment
 
 _ALT_FILES = ("alt_a.html", "alt_b.html", "alt_c.html")
 _VISUAL_PATCH_SCOPES = frozenset({"colors", "shapes", "display", "orientation", "keypad"})
@@ -18,7 +18,7 @@ def supports_llm_patch_scope(
     has_marks: bool = False,
 ) -> bool:
     """True when A-C options can be generated as a CSS patch instead of full HTML."""
-    effective_scope = normalize_focus_scope(scope, project_kind)
+    effective_scope = effective_focus_scope(scope, project_kind)
     if has_marks and effective_scope == "functions":
         return False
     return effective_scope in _VISUAL_PATCH_SCOPES
@@ -92,7 +92,7 @@ def build_ui_patch_prompt(
     context_fragment: str | None = None,
 ) -> str:
     """Build a compact JSON-only prompt for scoped CSS A-C options."""
-    prompt_scope = normalize_focus_scope(focus_scope, project_kind)
+    prompt_scope = effective_focus_scope(focus_scope, project_kind)
     if context_fragment:
         fragment = context_fragment
     else:

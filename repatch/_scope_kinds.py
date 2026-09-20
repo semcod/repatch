@@ -116,6 +116,24 @@ def normalize_focus_scope(scope: str, project_kind: str) -> str:
     return default_scope_for_kind(project_kind)
 
 
+def effective_focus_scope(
+    focus_scope: str,
+    project_kind: str,
+    *,
+    default_when_unset: bool = True,
+) -> str:
+    """Single owner of request-level focus-scope resolution.
+
+    Every pipeline stage (prompt build, patch apply, scope CSS injection,
+    fragment extraction) resolves its effective scope here instead of
+    re-deriving it locally. With ``default_when_unset=False`` an unset
+    focus scope stays empty instead of falling back to the kind default.
+    """
+    if not focus_scope and not default_when_unset:
+        return ""
+    return normalize_focus_scope(focus_scope, project_kind)
+
+
 def offline_fast_scopes_for_kind(project_kind: str) -> frozenset[str]:
     """Scopes that may use the offline A–C path on /iterate (not functions)."""
     k = (project_kind or "").strip().lower()
@@ -128,5 +146,5 @@ def offline_fast_scopes_for_kind(project_kind: str) -> frozenset[str]:
 
 def scope_supports_offline_fast_path(scope: str, project_kind: str) -> bool:
     """True when focus_scope can be patched locally without a full LLM HTML call."""
-    effective_scope = normalize_focus_scope(scope, project_kind)
+    effective_scope = effective_focus_scope(scope, project_kind)
     return effective_scope in offline_fast_scopes_for_kind(project_kind)

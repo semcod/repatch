@@ -22,6 +22,7 @@ from ._scope_kinds import (
     VISUAL_REDESIGN_SCOPES,
     allowed_scope_ids,
     default_scope_for_kind,
+    effective_focus_scope,
     goal_requests_column_layout,
     normalize_focus_scope,
     offline_fast_scopes_for_kind,
@@ -52,6 +53,7 @@ __all__ = [
     "VISUAL_REDESIGN_SCOPES",
     "allowed_scope_ids",
     "default_scope_for_kind",
+    "effective_focus_scope",
     "goal_requests_column_layout",
     "inject_scope_style",
     "normalize_focus_scope",
@@ -295,7 +297,7 @@ def inject_scope_style(
 ) -> str:
     bound = _bind_annotations_to_html(html, keep_ids, delete_ids)
     inferred = _resolve_scope_kind(project_kind, bound)
-    style_scope = normalize_focus_scope(scope, inferred)
+    style_scope = effective_focus_scope(scope, inferred)
     delete_list = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
     keep_list = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
     effective_delete = effective_delete_ids(delete_list, keep_list)
@@ -316,7 +318,7 @@ def scoped_html_fragment(html: str, focus_scope: str, project_kind: str) -> str 
     if not scope_supports_offline_fast_path(focus_scope, project_kind):
         return None
     text = str(html or "")
-    fragment_scope = normalize_focus_scope(focus_scope, project_kind)
+    fragment_scope = effective_focus_scope(focus_scope, project_kind)
     patterns = (
         r'(<div[^>]*class=[\'"][^\'"]*calc-body[^\'"]*[\'"][\s\S]*?</div>\s*</div>)',
         r'(<div[^>]*class=[\'"][^\'"]*app-shell[^\'"]*[\'"][\s\S]*?</div>\s*</div>)',

@@ -146,9 +146,9 @@ def build_marked_element_context(
     if not subtrees:
         return None
 
-    from ..scope import normalize_focus_scope
+    from ..scope import effective_focus_scope
 
-    context_focus_scope = normalize_focus_scope(focus_scope, project_kind)
+    context_focus_scope = effective_focus_scope(focus_scope, project_kind)
     relevant_css = _get_relevant_css(html, subtrees, ui_profile)
     context_text = _format_context_body(
         marked_keep_ids,
