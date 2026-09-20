@@ -195,14 +195,14 @@ def _render_with_playwright(url: str) -> _PageSource | None:
             page = browser.new_page()
             response = page.goto(url, wait_until="networkidle", timeout=30_000)
             page.wait_for_timeout(500)
-            html = page.content()
+            rendered_page_html = page.content()
             resolved_url = page.url or url
             status = response.status if response else 0
             browser.close()
             if status and status >= 400:
                 raise ValueError(f"playwright status {status}")
             return _PageSource(
-                html=html,
+                html=rendered_page_html,
                 content_type="text/html; charset=utf-8",
                 final_url=resolved_url,
                 charset="utf-8",
@@ -415,7 +415,7 @@ def _fetch_page_source(url: str, render_js: bool) -> _PageSource:
 
 
 def _mirror_page_assets(
-    html: str,
+    page_html: str,
     page_url: str,
     source_dir: Path,
 ) -> tuple[str, list[WebAsset], list[str]]:
@@ -423,13 +423,13 @@ def _mirror_page_assets(
     assets: list[WebAsset] = []
     mirror_errors: list[str] = []
     assets_dir = source_dir / "assets"
-    html, css_assets, css_errors = _mirror_stylesheets(
-        html,
+    page_html, css_assets, css_errors = _mirror_stylesheets(
+        page_html,
         page_url=page_url,
         assets_dir=assets_dir,
     )
-    html, image_assets, image_errors = _mirror_images(
-        html,
+    page_html, image_assets, image_errors = _mirror_images(
+        page_html,
         page_url=page_url,
         assets_dir=assets_dir,
     )
@@ -437,7 +437,7 @@ def _mirror_page_assets(
     assets.extend(image_assets)
     mirror_errors.extend(css_errors)
     mirror_errors.extend(image_errors)
-    return html, assets, mirror_errors
+    return page_html, assets, mirror_errors
 
 
 def fetch_complete_web_page(
@@ -450,14 +450,16 @@ def fetch_complete_web_page(
     """Fetch one page, optionally render JS with Playwright, and mirror core assets locally."""
     source = _fetch_page_source(url, render_js)
 
-    html = source.html
+    final_html = source.html
     assets: list[WebAsset] = []
     mirror_errors: list[str] = []
     if mirror_assets and "html" in source.content_type.lower():
-        html, assets, mirror_errors = _mirror_page_assets(html, source.final_url, source_dir)
+        final_html, assets, mirror_errors = _mirror_page_assets(
+            final_html, source.final_url, source_dir
+        )
 
     return WebFetchResult(
-        html=html,
+        html=final_html,
         content_type=source.content_type,
         final_url=source.final_url,
         charset=source.charset,
