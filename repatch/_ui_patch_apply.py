@@ -105,7 +105,7 @@ def apply_ui_patch_options(
         filename: variant_label for filename, variant_label, _note in option_variants
     }
     base = strip_scope_style(str(html or ""))
-    scope = normalize_focus_scope(focus_scope, project_kind) if focus_scope else ""
+    apply_scope = normalize_focus_scope(focus_scope, project_kind) if focus_scope else ""
     delete_ids = [str(x).strip() for x in (delete_els or []) if str(x).strip()]
     keep_ids = [str(x).strip() for x in (keep_els or []) if str(x).strip()]
     files: dict[str, str] = {}
@@ -114,7 +114,7 @@ def apply_ui_patch_options(
         item = variants.get(filename)
         if item is None:
             raise ValueError(f"missing {filename} in LLM patch response")
-        variant_css = _resolve_patch_css(item, filename, scope, delete_ids, keep_ids, base)
+        variant_css = _resolve_patch_css(item, filename, apply_scope, delete_ids, keep_ids, base)
         variant_label = _label_for(filename, item, fallback_labels)
         payload = f"/* llm patch: {variant_label} */\n{variant_css}"
         files[filename] = inject_css_block(base, payload)

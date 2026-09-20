@@ -295,17 +295,17 @@ def inject_scope_style(
 ) -> str:
     bound = _bind_annotations_to_html(html, keep_ids, delete_ids)
     inferred = _resolve_scope_kind(project_kind, bound)
-    scope = normalize_focus_scope(scope, inferred)
+    style_scope = normalize_focus_scope(scope, inferred)
     delete_list = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
     keep_list = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
     effective_delete = effective_delete_ids(delete_list, keep_list)
-    if scope in VISUAL_REDESIGN_SCOPES and keep_list and not effective_delete:
+    if style_scope in VISUAL_REDESIGN_SCOPES and keep_list and not effective_delete:
         return strip_scope_style(bound)
-    scope_css_text = _get_scope_css(inferred, bound, scope, variant, user_goal=user_goal)
+    scope_css_text = _get_scope_css(inferred, bound, style_scope, variant, user_goal=user_goal)
     cleaned = strip_scope_style(bound)
-    if scope in VISUAL_REDESIGN_SCOPES and effective_delete:
+    if style_scope in VISUAL_REDESIGN_SCOPES and effective_delete:
         scope_css_text = _marked_scope_css(
-            scope, variant, scope_css_text, cleaned, inferred,
+            style_scope, variant, scope_css_text, cleaned, inferred,
             effective_delete, keep_list, user_goal,
         )
     return inject_css_block(cleaned, scope_css_text)
@@ -316,7 +316,7 @@ def scoped_html_fragment(html: str, focus_scope: str, project_kind: str) -> str 
     if not scope_supports_offline_fast_path(focus_scope, project_kind):
         return None
     text = str(html or "")
-    scope = normalize_focus_scope(focus_scope, project_kind)
+    fragment_scope = normalize_focus_scope(focus_scope, project_kind)
     patterns = (
         r'(<div[^>]*class=[\'"][^\'"]*calc-body[^\'"]*[\'"][\s\S]*?</div>\s*</div>)',
         r'(<div[^>]*class=[\'"][^\'"]*app-shell[^\'"]*[\'"][\s\S]*?</div>\s*</div>)',
@@ -325,7 +325,7 @@ def scoped_html_fragment(html: str, focus_scope: str, project_kind: str) -> str 
         match = re.search(pattern, text, flags=re.IGNORECASE)
         if match and len(match.group(1)) >= 40:
             return (
-                f"<!-- scoped DOM fragment for #{scope}; regenerate full page from baseline -->\n"
+                f"<!-- scoped DOM fragment for #{fragment_scope}; regenerate full page from baseline -->\n"
                 + match.group(1)
             )
     return None

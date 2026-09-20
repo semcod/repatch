@@ -148,10 +148,16 @@ def build_marked_element_context(
 
     from ..scope import normalize_focus_scope
 
-    scope = normalize_focus_scope(focus_scope, project_kind)
+    context_focus_scope = normalize_focus_scope(focus_scope, project_kind)
     relevant_css = _get_relevant_css(html, subtrees, ui_profile)
     context_text = _format_context_body(
-        marked_keep_ids, marked_delete_ids, marked_ids, subtrees, relevant_css, scope, ui_profile
+        marked_keep_ids,
+        marked_delete_ids,
+        marked_ids,
+        subtrees,
+        relevant_css,
+        context_focus_scope,
+        ui_profile,
     )
     return _cap_text(context_text, MAX_MARKED_CONTEXT_BYTES)
 

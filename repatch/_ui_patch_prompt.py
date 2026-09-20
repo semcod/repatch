@@ -92,11 +92,11 @@ def build_ui_patch_prompt(
     context_fragment: str | None = None,
 ) -> str:
     """Build a compact JSON-only prompt for scoped CSS A-C options."""
-    scope = normalize_focus_scope(focus_scope, project_kind)
+    prompt_scope = normalize_focus_scope(focus_scope, project_kind)
     if context_fragment:
         fragment = context_fragment
     else:
-        fragment = scoped_html_fragment(html, scope, project_kind) or _compact_html(html)
+        fragment = scoped_html_fragment(html, prompt_scope, project_kind) or _compact_html(html)
     variants = [
         {"file": filename, "label": option_label, "direction": note}
         for filename, option_label, note in option_variants
@@ -112,7 +112,7 @@ def build_ui_patch_prompt(
                 "alt_c.html": {"label": "short label", "css": "CSS patch only"},
             }
         },
-        "rules": _patch_scope_rules(scope, keep_els=keep_els, delete_els=delete_els),
+        "rules": _patch_scope_rules(prompt_scope, keep_els=keep_els, delete_els=delete_els),
         "project_kind": project_kind or "web",
         "user_goal": user_goal or "",
         "keep": keep_els or [],
