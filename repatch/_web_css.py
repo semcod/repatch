@@ -137,11 +137,11 @@ def _rule_is_visual(rule: str) -> bool:
 
 
 def filter_visual_css(css: str) -> str:
-    kept: list[str] = []
+    visual_rules: list[str] = []
     for rule in split_css_rules(css):
         if _rule_is_visual(rule):
-            kept.append(rule)
-    return "\n\n".join(kept)
+            visual_rules.append(rule)
+    return "\n\n".join(visual_rules)
 
 
 def extract_visual_css(

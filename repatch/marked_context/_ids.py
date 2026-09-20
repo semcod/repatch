@@ -51,8 +51,10 @@ def has_ui_marks(
 
 def effective_delete_ids(delete_els: list[str], keep_els: list[str]) -> list[str]:
     """Return DELETE ids that are not overridden by current KEEP marks."""
-    kept = {str(x).strip().lower().removeprefix("btn-") for x in keep_els if str(x).strip()}
-    kept |= {f"btn-{x}" for x in kept}
+    keep_id_forms = {
+        str(x).strip().lower().removeprefix("btn-") for x in keep_els if str(x).strip()
+    }
+    keep_id_forms |= {f"btn-{x}" for x in keep_id_forms}
     effective_deletes: list[str] = []
     for item in delete_els:
         delete_value = str(item).strip()
@@ -60,7 +62,7 @@ def effective_delete_ids(delete_els: list[str], keep_els: list[str]) -> list[str
             continue
         norm = delete_value.lower()
         alt = norm[4:] if norm.startswith("btn-") else f"btn-{norm}"
-        if norm not in kept and alt not in kept:
+        if norm not in keep_id_forms and alt not in keep_id_forms:
             effective_deletes.append(delete_value)
     return effective_deletes
 

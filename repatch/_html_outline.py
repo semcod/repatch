@@ -48,8 +48,10 @@ class _OutlineParser(HTMLParser):
             return
         if self._skip_depth:
             return
-        kept = [(k, v) for k, v in attrs if v is not None and self._keep_attr(k)]
-        attr_text = "".join(f' {k}="{v}"' for k, v in kept)
+        outline_attrs = [
+            (k, v) for k, v in attrs if v is not None and self._keep_attr(k)
+        ]
+        attr_text = "".join(f' {k}="{v}"' for k, v in outline_attrs)
         indent = "  " * self._indent
         if tag in self._VOID_TAGS:
             self.outline_lines.append(f"{indent}<{tag}{attr_text} />")
