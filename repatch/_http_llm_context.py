@@ -7,7 +7,7 @@ from typing import Any
 MAX_EXTRACTED_PATCH_BYTES = 16_384
 
 
-def _cap_patch_text(text: str, max_bytes: int, *, label: str) -> str:
+def _cap_patch_text(text: str, max_bytes: int, *, section_label: str) -> str:
     uncapped_text = str(text or "").strip()
     if not uncapped_text:
         return ""
@@ -15,7 +15,7 @@ def _cap_patch_text(text: str, max_bytes: int, *, label: str) -> str:
     if len(encoded) <= max_bytes:
         return uncapped_text
     truncated = encoded[:max_bytes].decode("utf-8", errors="ignore").rstrip()
-    return truncated + f"\n/* repatch: {label} truncated */"
+    return truncated + f"\n/* repatch: {section_label} truncated */"
 
 
 def build_http_llm_context(artifacts: dict[str, Any]) -> str:
@@ -26,12 +26,12 @@ def build_http_llm_context(artifacts: dict[str, Any]) -> str:
     extracted_css = _cap_patch_text(
         str(artifacts.get("extracted_css") or ""),
         MAX_EXTRACTED_PATCH_BYTES,
-        label="extracted CSS",
+        section_label="extracted CSS",
     )
     extracted_js = _cap_patch_text(
         str(artifacts.get("extracted_js") or ""),
         MAX_EXTRACTED_PATCH_BYTES,
-        label="extracted JS",
+        section_label="extracted JS",
     )
     source_paths = (
         artifacts.get("source_paths") if isinstance(artifacts.get("source_paths"), dict) else {}

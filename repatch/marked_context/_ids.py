@@ -90,9 +90,9 @@ def _logical_id(tag: str, attrs: dict[str, str], *, text: str = "") -> str | Non
     if target:
         return target
     if tag.lower() in _TEXT_LABEL_TAGS:
-        label = _normalize_label_text(text)
-        if label:
-            return label
+        text_label = _normalize_label_text(text)
+        if text_label:
+            return text_label
     return None
 
 

@@ -53,8 +53,8 @@ def _strip_existing_patch(text: str) -> str:
 
 
 def _goal_label(user_goal: str) -> str:
-    label = re.sub(r"\s+", " ", user_goal or "").strip()
-    return label[:120] if label else "doprecyzowana ścieżka użytkownika"
+    goal_text = re.sub(r"\s+", " ", user_goal or "").strip()
+    return goal_text[:120] if goal_text else "doprecyzowana ścieżka użytkownika"
 
 
 def _variant_section(variant: str, user_goal: str, ir: dict[str, Any]) -> str:
@@ -253,13 +253,13 @@ def _patch_function_targets(html_text: str, delete_els: list[str], variant: str,
             continue
         segments.append(html_text[pos : match.start()])
         tag = match.group("tag").lower()
-        label = _variant_target_label(variant, user_goal)
+        target_label = _variant_target_label(variant, user_goal)
         href = _attrs_from_open_tag(open_tag).get("href", "")
         patched_open = _set_attr(open_tag, "data-nexu-function-xpatch", variant)
-        patched_open = _set_attr(patched_open, "aria-label", label)
+        patched_open = _set_attr(patched_open, "aria-label", target_label)
         if tag == "a":
             patched_open = _set_attr(patched_open, "href", _variant_href(variant, href))
-        segments.append(f"{patched_open}{html.escape(label)}</{tag}>")
+        segments.append(f"{patched_open}{html.escape(target_label)}</{tag}>")
         pos = match.end()
     segments.append(html_text[pos:])
     return "".join(segments)
@@ -297,7 +297,7 @@ def build_function_option_patches(
     effective_delete = effective_delete_ids(list(delete_els or []), list(keep_els or []))
     files: dict[str, str] = {}
     labels: list[str] = []
-    for filename, variant, label in _FUNCTION_VARIANTS:
+    for filename, variant, option_label in _FUNCTION_VARIANTS:
         doc, ok, variant_errors = _build_variant_doc(
             base, effective_delete, variant, user_goal, ir,
             prepare, finalize, ui_type,
@@ -305,7 +305,7 @@ def build_function_option_patches(
         if not ok or not doc:
             return {}, [], {"status": "invalid", "errors": variant_errors}
         files[filename] = doc
-        labels.append(label)
+        labels.append(option_label)
     return files, labels, {"status": "ok", "ir": ir}
 
 

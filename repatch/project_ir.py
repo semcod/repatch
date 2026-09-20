@@ -40,13 +40,13 @@ class _ProjectIRParser(HTMLParser):
         elif tag in {"h1", "h2", "h3"} and text:
             self.headings.append(item)
         elif tag in self._ACTION_TAGS:
-            label = (
+            action_label = (
                 text
                 or attrs.get("aria-label")
                 or attrs.get("placeholder")
                 or attrs.get("value")
             )
-            item["text"] = _clean_text(label)[:120]
+            item["text"] = _clean_text(action_label)[:120]
             self.actions.append(item)
         elif tag in self._SECTION_TAGS:
             self.sections.append(item)
@@ -126,7 +126,7 @@ def summarize_project_ir(ir: dict[str, Any]) -> str:
         for item in items[:8]:
             if not isinstance(item, dict):
                 continue
-            label = item.get("text") or item.get("id") or item.get("class") or item.get("tag")
-            values.append(str(label))
+            item_label = item.get("text") or item.get("id") or item.get("class") or item.get("tag")
+            values.append(str(item_label))
         lines.append(f"{key}: " + " | ".join(values))
     return "\n".join(lines)

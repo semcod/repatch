@@ -49,9 +49,9 @@ def _safe_css(css: object) -> str:
 
 def _label_for(filename: str, item: Any, fallback: dict[str, str]) -> str:
     if isinstance(item, dict):
-        label = str(item.get("label") or "").strip()
-        if label:
-            return label[:120]
+        variant_label = str(item.get("label") or "").strip()
+        if variant_label:
+            return variant_label[:120]
     return fallback.get(filename, filename)
 
 
@@ -101,7 +101,9 @@ def apply_ui_patch_options(
     variants = patch.get("variants")
     if not isinstance(variants, dict):
         raise ValueError("patch variants must be an object")
-    fallback_labels = {filename: label for filename, label, _note in option_variants}
+    fallback_labels = {
+        filename: variant_label for filename, variant_label, _note in option_variants
+    }
     base = strip_scope_style(str(html or ""))
     scope = normalize_focus_scope(focus_scope, project_kind) if focus_scope else ""
     delete_ids = [str(x).strip() for x in (delete_els or []) if str(x).strip()]
@@ -113,8 +115,8 @@ def apply_ui_patch_options(
         if item is None:
             raise ValueError(f"missing {filename} in LLM patch response")
         variant_css = _resolve_patch_css(item, filename, scope, delete_ids, keep_ids, base)
-        label = _label_for(filename, item, fallback_labels)
-        payload = f"/* llm patch: {label} */\n{variant_css}"
+        variant_label = _label_for(filename, item, fallback_labels)
+        payload = f"/* llm patch: {variant_label} */\n{variant_css}"
         files[filename] = inject_css_block(base, payload)
-        labels.append(label)
+        labels.append(variant_label)
     return files, labels

@@ -77,9 +77,9 @@ def _element_delete_candidates(attrs: str, inner_text: str) -> set[str]:
     el_id = id_match.group(1) if id_match else ""
     target_match = re.search(r'data-nexu-target="([^"]*)"', attrs, re.IGNORECASE)
     target = target_match.group(1) if target_match else ""
-    label = re.sub(r"<[^>]+>", "", inner_text or "").strip()
+    plain_text = re.sub(r"<[^>]+>", "", inner_text or "").strip()
     match_keys: set[str] = set()
-    for signal in (el_id, target, label):
+    for signal in (el_id, target, plain_text):
         if signal:
             match_keys |= _delete_match_keys(signal)
     return match_keys
@@ -102,12 +102,12 @@ def apply_spatial_deletes_to_html(html: str, delete_ids: list[str]) -> tuple[str
     deleted_labels: list[str] = []
 
     def _btn_replacer(match: re.Match[str]) -> str:
-        btn_attr_text, label = match.group(1), match.group(2).strip()
-        element_keys = _element_delete_candidates(btn_attr_text, label)
+        btn_attr_text, btn_text = match.group(1), match.group(2).strip()
+        element_keys = _element_delete_candidates(btn_attr_text, btn_text)
         if delete_keys.intersection(element_keys):
             id_match = re.search(r'\bid="([^"]*)"', btn_attr_text, re.IGNORECASE)
             el_id = id_match.group(1) if id_match else ""
-            deleted_labels.append(label or el_id or "unknown")
+            deleted_labels.append(btn_text or el_id or "unknown")
             return ""
         return match.group(0)
 

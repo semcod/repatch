@@ -118,8 +118,8 @@ def _label_probe_hit(
     inner_end = text.lower().find(f"</{tag}>", inner_start)
     if inner_end < 0:
         return set()
-    label = _normalize_label_text(re.sub(r"<[^>]+>", "", text[inner_start:inner_end]))
-    logical = _logical_id(tag, attrs, text=label)
+    inner_label = _normalize_label_text(re.sub(r"<[^>]+>", "", text[inner_start:inner_end]))
+    logical = _logical_id(tag, attrs, text=inner_label)
     return wanted & _id_candidates(logical) if logical else set()
 
 

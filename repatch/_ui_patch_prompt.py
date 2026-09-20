@@ -98,8 +98,8 @@ def build_ui_patch_prompt(
     else:
         fragment = scoped_html_fragment(html, scope, project_kind) or _compact_html(html)
     variants = [
-        {"file": filename, "label": label, "direction": note}
-        for filename, label, note in option_variants
+        {"file": filename, "label": option_label, "direction": note}
+        for filename, option_label, note in option_variants
         if filename in _ALT_FILES
     ]
     contract = {

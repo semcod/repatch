@@ -168,9 +168,9 @@ def test_prepare_http_preview_html_sets_shim_flag() -> None:
 
 
 def test_cap_patch_text_truncates_and_labels() -> None:
-    assert _cap_patch_text("", 10, label="x") == ""
-    assert _cap_patch_text("short", 10, label="x") == "short"
-    out = _cap_patch_text("a" * 30, 10, label="extracted CSS")
+    assert _cap_patch_text("", 10, section_label="x") == ""
+    assert _cap_patch_text("short", 10, section_label="x") == "short"
+    out = _cap_patch_text("a" * 30, 10, section_label="extracted CSS")
     assert out.startswith("a" * 10)
     assert "truncated" in out
     assert "extracted CSS" in out
