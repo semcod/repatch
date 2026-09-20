@@ -356,15 +356,15 @@ def _mirror_images(
 ) -> tuple[str, list[WebAsset], list[str]]:
     mirror = _AssetMirror(assets_dir=assets_dir, max_assets=MAX_IMAGES)
 
-    def mirror_url(raw: str) -> str:
-        value = raw.strip()
+    def mirror_url(attr_url: str) -> str:
+        value = attr_url.strip()
         if not value or value.startswith(("data:", "blob:", "javascript:")):
-            return raw
+            return attr_url
         absolute = urljoin(page_url, value)
         if not _same_origin(absolute, page_url):
-            return raw
+            return attr_url
         local = mirror.mirror(absolute=absolute, original=value, kind="image")
-        return local or raw
+        return local or attr_url
 
     def replace_img(match: re.Match[str]) -> str:
         tag = match.group(0)
