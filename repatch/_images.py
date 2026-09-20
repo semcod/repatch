@@ -16,8 +16,8 @@ def is_lazy_placeholder_img_tag(tag: str) -> bool:
     """True for lazy-load placeholder imgs (blank src + lazy markers)."""
     if not _IMG_TAG_RE.match(str(tag or "").strip()):
         return False
-    inner = tag[4:] if tag.lower().startswith("<img") else tag
-    img_attrs = _attr_map(inner)
+    attr_text = tag[4:] if tag.lower().startswith("<img") else tag
+    img_attrs = _attr_map(attr_text)
     src = (img_attrs.get("src") or "").strip().lower()
     cls = img_attrs.get("class") or ""
     lazy_attr = any(

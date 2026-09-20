@@ -136,10 +136,10 @@ def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[
             search_from = open_match.end()
             continue
         close_start, close_end = close
-        inner = html[open_match.end() : close_start]
-        if _is_deletable_block(block_attr_text, inner, delete_keys):
+        block_content = html[open_match.end() : close_start]
+        if _is_deletable_block(block_attr_text, block_content, delete_keys):
             kept_segments.append(html[emitted_to : open_match.start()])
-            deleted_labels.append(_block_label(block_attr_text, inner))
+            deleted_labels.append(_block_label(block_attr_text, block_content))
             emitted_to = close_end
             search_from = close_end
         else:
@@ -150,19 +150,19 @@ def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[
     return "".join(kept_segments)
 
 
-def _is_deletable_block(attrs: str, inner: str, delete_keys: set[str]) -> bool:
+def _is_deletable_block(attrs: str, block_content: str, delete_keys: set[str]) -> bool:
     return _selectable_block_attrs(attrs) and bool(
-        delete_keys.intersection(_element_delete_candidates(attrs, inner))
+        delete_keys.intersection(_element_delete_candidates(attrs, block_content))
     )
 
 
-def _block_label(attrs: str, inner: str) -> str:
+def _block_label(attrs: str, block_content: str) -> str:
     """Best-effort human label for a removed block: id, target, or text."""
     id_match = re.search(r'\bid="([^"]*)"', attrs, re.IGNORECASE)
     target_match = re.search(r'data-nexu-target="([^"]*)"', attrs, re.IGNORECASE)
     return (
         (id_match.group(1) if id_match else "")
         or (target_match.group(1) if target_match else "")
-        or re.sub(r"<[^>]+>", "", inner).strip()
+        or re.sub(r"<[^>]+>", "", block_content).strip()
         or "unknown"
     )

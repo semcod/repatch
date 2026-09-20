@@ -202,13 +202,13 @@ def _attrs_from_open_tag(open_tag: str) -> dict[str, str]:
     }
 
 
-def _matches_target(open_tag: str, inner: str, wanted: set[str]) -> bool:
+def _matches_target(open_tag: str, element_content: str, wanted: set[str]) -> bool:
     attr_map = _attrs_from_open_tag(open_tag)
     target_keys: set[str] = set()
     for key in ("id", "data-nexu-target", "aria-label", "title"):
         if attr_map.get(key):
             target_keys |= _target_candidates(attr_map[key])
-    text = _strip_tags(inner)
+    text = _strip_tags(element_content)
     if text:
         target_keys |= _target_candidates(text)
     return bool(wanted & target_keys)
@@ -241,15 +241,15 @@ def _patch_function_targets(html_text: str, delete_els: list[str], variant: str,
         return html_text
 
     pattern = re.compile(
-        r"<(?P<tag>a|button)\b(?P<attrs>[^>]*)>(?P<inner>[\s\S]*?)</(?P=tag)>",
+        r"<(?P<tag>a|button)\b(?P<attrs>[^>]*)>(?P<content>[\s\S]*?)</(?P=tag)>",
         re.I,
     )
     segments: list[str] = []
     pos = 0
     for match in pattern.finditer(html_text):
         open_tag = match.group(0).split(">", 1)[0] + ">"
-        inner = match.group("inner")
-        if not _matches_target(open_tag, inner, wanted):
+        element_content = match.group("content")
+        if not _matches_target(open_tag, element_content, wanted):
             continue
         segments.append(html_text[pos : match.start()])
         tag = match.group("tag").lower()
