@@ -81,15 +81,15 @@ class RepatchService:
     def _parse_choice(choice: object) -> PatchSuggestion:
         content = RepatchService._choice_content(choice)
         try:
-            payload = json.loads(content)
+            suggestion_data = json.loads(content)
         except json.JSONDecodeError as exc:
             raise ValueError(
                 f"Invalid JSON in LLM suggestion: {content[:120]}"
             ) from exc
         return PatchSuggestion(
-            keep=list(payload.get("keep", [])),
-            change=list(payload.get("change", [])),
-            patched_fragment=str(payload.get("patched_fragment", "")),
+            keep=list(suggestion_data.get("keep", [])),
+            change=list(suggestion_data.get("change", [])),
+            patched_fragment=str(suggestion_data.get("patched_fragment", "")),
         )
 
     @staticmethod

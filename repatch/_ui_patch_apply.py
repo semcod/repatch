@@ -116,7 +116,7 @@ def apply_ui_patch_options(
             raise ValueError(f"missing {filename} in LLM patch response")
         variant_css = _resolve_patch_css(item, filename, apply_scope, delete_ids, keep_ids, base)
         variant_label = _label_for(filename, item, fallback_labels)
-        payload = f"/* llm patch: {variant_label} */\n{variant_css}"
-        files[filename] = inject_css_block(base, payload)
+        labeled_variant_css = f"/* llm patch: {variant_label} */\n{variant_css}"
+        files[filename] = inject_css_block(base, labeled_variant_css)
         labels.append(variant_label)
     return files, labels

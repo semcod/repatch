@@ -11,19 +11,19 @@ from repatch.web_fetch import _PageSource
 
 
 class FakeResp:
-    def __init__(self, payload: bytes, *, url: str, content_type: str):
+    def __init__(self, body_bytes: bytes, *, url: str, content_type: str):
         self.headers = {"Content-Type": content_type}
         self.url = url
-        self._payload = payload
+        self._body_bytes = body_bytes
         self._offset = 0
 
     def read(self, n=-1):
-        if self._offset >= len(self._payload):
+        if self._offset >= len(self._body_bytes):
             return b""
         if n == -1:
-            n = len(self._payload) - self._offset
-        end = min(self._offset + max(n, 0), len(self._payload))
-        chunk = self._payload[self._offset : end]
+            n = len(self._body_bytes) - self._offset
+        end = min(self._offset + max(n, 0), len(self._body_bytes))
+        chunk = self._body_bytes[self._offset : end]
         self._offset = end
         return chunk
 
@@ -210,11 +210,11 @@ def test_fetch_complete_web_page_against_local_http_server(tmp_path):
                 "/site.css": ("text/css", b"h1{color:#123456}"),
                 "/hero.png": ("image/png", b"\x89PNG\r\n"),
             }
-            content_type, payload = routes.get(self.path, ("text/plain", b"missing"))
+            content_type, served_bytes = routes.get(self.path, ("text/plain", b"missing"))
             self.send_response(200 if self.path in routes else 404)
             self.send_header("Content-Type", content_type)
             self.end_headers()
-            self.wfile.write(payload)
+            self.wfile.write(served_bytes)
 
         def log_message(self, format, *args):  # noqa: A002
             return

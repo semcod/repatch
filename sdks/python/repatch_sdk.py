@@ -45,9 +45,9 @@ class RepatchClient:
                     logging.info(f"[Repatch SDK] Connected to patch stream at {self.url}")
                     async for message in ws:
                         try:
-                            payload = json.loads(message)
-                            if "dsl" in payload:
-                                dsl = payload["dsl"]
+                            patch_message = json.loads(message)
+                            if "dsl" in patch_message:
+                                dsl = patch_message["dsl"]
                                 self._trigger_listeners({"success": True, "dsl": dsl})
                         except json.JSONDecodeError:
                             pass
