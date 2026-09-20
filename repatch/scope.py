@@ -148,19 +148,19 @@ def _bind_annotations_to_html(
         return html
 
     wanted = set(marked_ids)
-    text = str(html or "")
+    binding_html = str(html or "")
 
     matched_ranges: list[tuple[int, int, str]] = []
     seen_elements = set()
 
-    for match in _TAG_OPEN_RE.finditer(text):
-        target_range = _annotation_target(text, match, wanted, seen_elements)
+    for match in _TAG_OPEN_RE.finditer(binding_html):
+        target_range = _annotation_target(binding_html, match, wanted, seen_elements)
         if target_range:
             matched_ranges.append(target_range)
 
     if not matched_ranges:
         return html
-    return _splice_replacements(text, matched_ranges)
+    return _splice_replacements(binding_html, matched_ranges)
 
 
 def _annotation_target(
@@ -317,14 +317,14 @@ def scoped_html_fragment(html: str, focus_scope: str, project_kind: str) -> str 
     """Smaller HTML slice for scoped LLM prompts when the scope is visual-only."""
     if not scope_supports_offline_fast_path(focus_scope, project_kind):
         return None
-    text = str(html or "")
+    fragment_source = str(html or "")
     fragment_scope = effective_focus_scope(focus_scope, project_kind)
     patterns = (
         r'(<div[^>]*class=[\'"][^\'"]*calc-body[^\'"]*[\'"][\s\S]*?</div>\s*</div>)',
         r'(<div[^>]*class=[\'"][^\'"]*app-shell[^\'"]*[\'"][\s\S]*?</div>\s*</div>)',
     )
     for pattern in patterns:
-        match = re.search(pattern, text, flags=re.IGNORECASE)
+        match = re.search(pattern, fragment_source, flags=re.IGNORECASE)
         if match and len(match.group(1)) >= 40:
             return (
                 f"<!-- scoped DOM fragment for #{fragment_scope}; regenerate full page from baseline -->\n"

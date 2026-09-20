@@ -30,21 +30,21 @@ _BAD_CSS_TOKENS = (
 
 
 def _safe_css(css: object) -> str:
-    text = str(css or "").strip()
-    lowered = text.lower()
-    if not text:
+    patch_css = str(css or "").strip()
+    lowered = patch_css.lower()
+    if not patch_css:
         raise ValueError("empty CSS patch")
-    if len(text) > 5000:
+    if len(patch_css) > 5000:
         raise ValueError("CSS patch is too large")
     for token in _BAD_CSS_TOKENS:
         if token in lowered:
             raise ValueError(f"unsafe CSS token: {token}")
-    if "{" not in text or "}" not in text:
+    if "{" not in patch_css or "}" not in patch_css:
         raise ValueError("CSS patch must contain CSS rules")
-    ok, violations = validate_css_safety(text, source="LLM CSS patch")
+    ok, violations = validate_css_safety(patch_css, source="LLM CSS patch")
     if not ok:
         raise ValueError("; ".join(violations[:4]))
-    return text
+    return patch_css
 
 
 def _label_for(filename: str, item: Any, fallback: dict[str, str]) -> str:

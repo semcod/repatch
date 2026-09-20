@@ -64,25 +64,25 @@ class _ProjectIRParser(HTMLParser):
         if node["tag"] != tag and self._stack:
             self._stack[-1]["text"].extend(node["text"])
             return
-        text = _clean_text(" ".join(node["text"]))
+        node_text = _clean_text(" ".join(node["text"]))
         node_attrs = node["attrs"]
         item = {
             "tag": tag,
             "id": node_attrs.get("id", ""),
             "class": node_attrs.get("class", ""),
             "role": node_attrs.get("role", ""),
-            "text": text[:160],
+            "text": node_text[:160],
         }
-        self._classify_node(tag, text, node_attrs, item)
-        if self._stack and text:
-            self._stack[-1]["text"].append(text)
+        self._classify_node(tag, node_text, node_attrs, item)
+        if self._stack and node_text:
+            self._stack[-1]["text"].append(node_text)
 
     def handle_data(self, data: str) -> None:
         if self._skip_depth or not self._stack:
             return
-        text = _clean_text(data)
-        if text:
-            self._stack[-1]["text"].append(text)
+        clean_data = _clean_text(data)
+        if clean_data:
+            self._stack[-1]["text"].append(clean_data)
 
 
 def _clean_text(text: str) -> str:

@@ -142,12 +142,12 @@ def _find_marked_subtrees(html: str, marked_ids: set[str]) -> dict[str, str]:
         return {}
     wanted = {str(item).strip() for item in marked_ids if str(item).strip()}
     found: dict[str, str] = {}
-    text = str(html or "")
-    for match in _TAG_OPEN_RE.finditer(text):
-        hit = _match_subtree_ids(text, match, wanted)
+    source_html = str(html or "")
+    for match in _TAG_OPEN_RE.finditer(source_html):
+        hit = _match_subtree_ids(source_html, match, wanted)
         if not hit:
             continue
-        compact = _extract_and_format_fragment(text, match.start())
+        compact = _extract_and_format_fragment(source_html, match.start())
         if not compact:
             continue
         for element_id in hit:

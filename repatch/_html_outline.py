@@ -73,8 +73,8 @@ class _OutlineParser(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self._skip_depth:
             return
-        text = re.sub(r"\s+", " ", data or "").strip()
-        if not text:
+        data_text = re.sub(r"\s+", " ", data or "").strip()
+        if not data_text:
             return
         indent = "  " * self._indent
         self.outline_lines.append(f"{indent}{OUTLINE_TEXT_PLACEHOLDER}")

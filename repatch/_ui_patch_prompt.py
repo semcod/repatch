@@ -25,11 +25,11 @@ def supports_llm_patch_scope(
 
 
 def _compact_html(html: str, *, limit: int = 6000) -> str:
-    text = re.sub(r"\s+", " ", str(html or "")).strip()
-    if len(text) <= limit:
-        return text
-    head = text[: limit // 2]
-    tail = text[-limit // 2 :]
+    flattened_html = re.sub(r"\s+", " ", str(html or "")).strip()
+    if len(flattened_html) <= limit:
+        return flattened_html
+    head = flattened_html[: limit // 2]
+    tail = flattened_html[-limit // 2 :]
     return head + "\n<!-- middle omitted for compact LLM patch prompt -->\n" + tail
 
 

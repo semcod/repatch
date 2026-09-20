@@ -160,9 +160,9 @@ def extract_visual_css(
             pass
         elif local.startswith("source/"):
             local = local[len("source/") :]
-        text = safe_read_under(source_dir, local)
-        if text:
-            chunks.append(f"/* from {rel} */\n{text}")
+        linked_css = safe_read_under(source_dir, local)
+        if linked_css:
+            chunks.append(f"/* from {rel} */\n{linked_css}")
     filtered = filter_visual_css("\n\n".join(chunks))
     visual_css_stats: dict[str, Any] = {
         "visual_css_bytes": len(filtered.encode("utf-8")),

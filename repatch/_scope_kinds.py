@@ -67,10 +67,10 @@ _COLUMN_GOAL_RE = re.compile(
 
 def goal_requests_column_layout(user_goal: str) -> bool:
     """True when the user goal asks for a multi-column page layout."""
-    text = (user_goal or "").strip()
-    if not text:
+    goal_query = (user_goal or "").strip()
+    if not goal_query:
         return False
-    return bool(_COLUMN_GOAL_RE.search(text))
+    return bool(_COLUMN_GOAL_RE.search(goal_query))
 
 
 # Project kinds that must not receive full-page LLM regeneration when marks exist.
@@ -89,10 +89,10 @@ def ui_type_for_kind(kind: str, *, html_hint: str = "") -> str:
         return "dashboard"
     if k == "calculator":
         return "calculator"
-    text = re.sub(r"<script\b[^>]*>[\s\S]*?</script>", "", html_hint or "", flags=re.IGNORECASE).lower()
-    if "calc-body" in text or "btn-eq" in text:
+    markup_hint = re.sub(r"<script\b[^>]*>[\s\S]*?</script>", "", html_hint or "", flags=re.IGNORECASE).lower()
+    if "calc-body" in markup_hint or "btn-eq" in markup_hint:
         return "calculator"
-    if "app-shell" in text or "kpi-card" in text or "kpi-grid" in text:
+    if "app-shell" in markup_hint or "kpi-card" in markup_hint or "kpi-grid" in markup_hint:
         return "dashboard"
     return "web"
 

@@ -208,9 +208,9 @@ def _matches_target(open_tag: str, element_content: str, wanted: set[str]) -> bo
     for key in ("id", "data-nexu-target", "aria-label", "title"):
         if attr_map.get(key):
             target_keys |= _target_candidates(attr_map[key])
-    text = _strip_tags(element_content)
-    if text:
-        target_keys |= _target_candidates(text)
+    element_text = _strip_tags(element_content)
+    if element_text:
+        target_keys |= _target_candidates(element_text)
     return bool(wanted & target_keys)
 
 
@@ -266,10 +266,10 @@ def _patch_function_targets(html_text: str, delete_els: list[str], variant: str,
 
 
 def _default_prepare_html(html: str, *, ui_type: str = "web") -> tuple[str | None, bool, list[str]]:
-    text = str(html or "").strip()
-    if not text:
+    trimmed_html = str(html or "").strip()
+    if not trimmed_html:
         return None, False, ["empty HTML"]
-    return text, True, []
+    return trimmed_html, True, []
 
 
 def _default_finalize_html(html: str) -> str:

@@ -19,21 +19,21 @@ def _selector_is_runtime_only(selector: str) -> bool:
 
 def split_css_rules(css: str) -> list[str]:
     """Split CSS into top-level rule blocks (best-effort, no full parser)."""
-    text = str(css or "")
+    css_source = str(css or "")
     rules: list[str] = []
     depth = 0
     start = 0
-    for index, char in enumerate(text):
+    for index, char in enumerate(css_source):
         if char == "{":
             depth += 1
         elif char == "}":
             depth -= 1
             if depth == 0:
-                chunk = text[start : index + 1].strip()
+                chunk = css_source[start : index + 1].strip()
                 if chunk:
                     rules.append(chunk)
                 start = index + 1
-    tail = text[start:].strip()
+    tail = css_source[start:].strip()
     if tail and depth == 0:
         rules.append(tail)
     return rules
@@ -42,13 +42,15 @@ def split_css_rules(css: str) -> list[str]:
 def validate_css_safety(css: str, *, source: str = "css") -> tuple[bool, list[str]]:
     """Reject CSS patterns that commonly break HTML/CSS patch previews."""
     violations: list[str] = []
-    text = _strip_css_comments(css)
-    if not text.strip():
+    comment_free_css = _strip_css_comments(css)
+    if not comment_free_css.strip():
         return True, []
-    if re.search(r"@import\b|url\s*\(|expression\s*\(|javascript\s*:", text, re.I):
+    if re.search(
+        r"@import\b|url\s*\(|expression\s*\(|javascript\s*:", comment_free_css, re.I
+    ):
         violations.append(f"{source}: external or executable CSS is not allowed")
 
-    for match in _RULE_RE.finditer(text):
+    for match in _RULE_RE.finditer(comment_free_css):
         selectors = " ".join(match.group("selectors").split())
         rule_body = match.group("body")
         if _selector_is_runtime_only(selectors):
