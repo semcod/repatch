@@ -73,6 +73,16 @@ def goal_requests_column_layout(user_goal: str) -> bool:
     return bool(_COLUMN_GOAL_RE.search(goal_query))
 
 
+def normalize_scope_variant(variant: str, *, default: str = "b") -> str:
+    """Single owner of offline A-C variant-letter normalization.
+
+    Every scope-CSS builder routes its ``variant`` through this helper
+    instead of re-deriving the a/b/c letter locally (calculator previews
+    default to "a", everything else to "b").
+    """
+    return variant if variant in ("a", "b", "c") else default
+
+
 # Project kinds that must not receive full-page LLM regeneration when marks exist.
 MARKED_PATCH_KINDS = frozenset(
     IMPORTED_KINDS

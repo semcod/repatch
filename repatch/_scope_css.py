@@ -8,6 +8,7 @@ from ._scope_kinds import (
     DASHBOARD_KINDS,
     IMPORTED_KINDS,
     goal_requests_column_layout,
+    normalize_scope_variant,
 )
 
 SCOPE_STYLE_ID = "nexu-scope-variant"
@@ -39,7 +40,7 @@ def strip_scope_style(html: str) -> str:
 
 def _scope_css(scope: str, variant: str) -> str:
     """Dashboard/web-safe CSS patches for offline scope previews."""
-    v = variant if variant in ("a", "b", "c") else "b"
+    panel_letter = normalize_scope_variant(variant)
     if scope == "colors":
         palettes = {
             "a": (
@@ -58,7 +59,7 @@ def _scope_css(scope: str, variant: str) -> str:
                 ".brand{color:#e879f9!important;}"
             ),
         }
-        return palettes[v]
+        return palettes[panel_letter]
     if scope == "shapes":
         radii = {
             "a": (
@@ -74,7 +75,7 @@ def _scope_css(scope: str, variant: str) -> str:
                 "{border-radius:999px!important;}"
             ),
         }
-        return radii[v]
+        return radii[panel_letter]
     if scope == "display":
         scales = {
             "a": ".kpi-card strong{font-size:1rem!important;}.chart-card h2{font-size:0.8rem!important;}",
@@ -84,20 +85,20 @@ def _scope_css(scope: str, variant: str) -> str:
                 ".chart-card h2{font-size:1rem!important;}.bar-chart{height:180px!important;}"
             ),
         }
-        return scales[v]
+        return scales[panel_letter]
     if scope == "orientation":
         layouts = {
             "a": ".content-grid{grid-template-columns:1fr!important;}",
             "b": ".content-grid{grid-template-columns:minmax(0,1.6fr) minmax(200px,0.7fr)!important;}",
             "c": ".app-shell{grid-template-columns:140px 1fr!important;}.kpi-grid{grid-template-columns:repeat(2,1fr)!important;}",
         }
-        return layouts[v]
+        return layouts[panel_letter]
     return ""
 
 
 def _calc_scope_css(scope: str, variant: str) -> str:
     """Palette / layout overrides for calculator HTML (.calc-body, .screen, .btn-*)."""
-    v = variant if variant in ("a", "b", "c") else "a"
+    calc_letter = normalize_scope_variant(variant, default="a")
     if scope == "colors":
         palettes = {
             "a": (
@@ -137,35 +138,35 @@ def _calc_scope_css(scope: str, variant: str) -> str:
                 "[style*='2ecc71']{background:#a3e635!important;color:#14532d!important;}"
             ),
         }
-        return palettes[v]
+        return palettes[calc_letter]
     if scope == "shapes":
         radii = {
             "a": ".calc-body{border-radius:8px!important;}.btn,.btn-sci,.btn-chem{border-radius:4px!important;}",
             "b": ".calc-body{border-radius:12px!important;}.btn,.btn-sci,.btn-chem{border-radius:8px!important;}",
             "c": ".calc-body{border-radius:20px!important;}.btn,.btn-sci,.btn-chem{border-radius:50%!important;}",
         }
-        return radii[v]
+        return radii[calc_letter]
     if scope == "display":
         sizes = {
             "a": ".screen{font-size:calc(6px + 1.2vh)!important;min-height:1.8em!important;}",
             "b": ".screen{font-size:calc(7px + 1.6vh)!important;min-height:2.2em!important;}",
             "c": ".screen{font-size:calc(9px + 2vh)!important;min-height:2.8em!important;font-weight:700!important;}",
         }
-        return sizes[v]
+        return sizes[calc_letter]
     if scope == "orientation":
         layouts = {
             "a": ".calc-body{aspect-ratio:3/5!important;max-width:70vh!important;}",
             "b": ".calc-body{aspect-ratio:4/5!important;max-width:75vh!important;}",
             "c": ".calc-body{aspect-ratio:5/4!important;max-width:95vw!important;max-height:80vh!important;}",
         }
-        return layouts[v]
+        return layouts[calc_letter]
     if scope == "keypad":
         gaps = {
             "a": ".grid{gap:4px!important;grid-template-columns:repeat(3,1fr)!important;}",
             "b": ".grid{gap:6px!important;grid-template-columns:repeat(4,1fr)!important;}",
             "c": ".grid{gap:8px!important;grid-template-columns:repeat(5,1fr)!important;}",
         }
-        return gaps[v]
+        return gaps[calc_letter]
     return ""
 
 
@@ -183,7 +184,7 @@ def _uses_web_scope_css(inferred: str, html: str) -> bool:
 
 def _web_display_scope_css(variant: str) -> str:
     """Typography on content regions for imported web HTML (not mark-narrowed)."""
-    v = variant if variant in ("a", "b", "c") else "b"
+    display_letter = normalize_scope_variant(variant)
     heads = ", ".join([*(f"{base} h1" for base in _CONTENT_LAYOUT_SELECTORS), "main h1", "h1"])
     h2s = ", ".join([*(f"{base} h2" for base in _CONTENT_LAYOUT_SELECTORS), "main h2", "h2"])
     ps = ", ".join([*(f"{base} p" for base in _CONTENT_LAYOUT_SELECTORS), "main p", "p"])
@@ -203,12 +204,12 @@ def _web_display_scope_css(variant: str) -> str:
             f"{h2s}{{font-size:1.25rem!important;}}"
         ),
     }
-    return scales[v]
+    return scales[display_letter]
 
 
 def _web_shapes_scope_css(variant: str) -> str:
     """Corner radii on content wrappers and controls for imported web HTML."""
-    v = variant if variant in ("a", "b", "c") else "b"
+    radius_letter = normalize_scope_variant(variant)
     wrapped_parts: list[str] = []
     for base in _CONTENT_LAYOUT_SELECTORS:
         wrapped_parts.extend(
@@ -229,22 +230,22 @@ def _web_shapes_scope_css(variant: str) -> str:
         "b": f"{wrapped},{global_targets}{{border-radius:10px!important;}}",
         "c": f"{wrapped},{global_targets}{{border-radius:999px!important;}}",
     }
-    return radii[v]
+    return radii[radius_letter]
 
 
 def _web_orientation_scope_css(variant: str, *, user_goal: str = "") -> str:
     """WordPress/Kadence-aware layout patches for imported web HTML."""
-    v = variant if variant in ("a", "b", "c") else "b"
+    orientation_letter = normalize_scope_variant(variant)
     content = ", ".join(_CONTENT_LAYOUT_SELECTORS)
     column_goal = goal_requests_column_layout(user_goal)
-    if v == "a":
+    if orientation_letter == "a":
         return (
             f"{content}{{display:flex!important;flex-direction:column!important;"
             f"gap:12px!important;}}"
             "body{display:flex!important;flex-direction:column!important;"
             "gap:12px!important;}"
         )
-    if v == "b":
+    if orientation_letter == "b":
         cols = "1fr 1fr" if column_goal else "minmax(0,1fr) minmax(0,1fr)"
         return (
             f"{content}{{display:grid!important;grid-template-columns:{cols}!important;"
@@ -271,7 +272,7 @@ def _web_orientation_scope_css(variant: str, *, user_goal: str = "") -> str:
 
 def _web_scope_css(scope: str, variant: str, *, user_goal: str = "") -> str:
     """Generic palette / layout patches for imported or arbitrary web HTML."""
-    v = variant if variant in ("a", "b", "c") else "b"
+    web_letter = normalize_scope_variant(variant)
     if scope == "colors":
         palettes = {
             "a": (
@@ -290,11 +291,11 @@ def _web_scope_css(scope: str, variant: str, *, user_goal: str = "") -> str:
                 "h1,h2,h3,header{color:#f9a8d4!important;}"
             ),
         }
-        return palettes[v]
+        return palettes[web_letter]
     if scope == "shapes":
-        return _web_shapes_scope_css(v)
+        return _web_shapes_scope_css(variant)
     if scope == "display":
-        return _web_display_scope_css(v)
+        return _web_display_scope_css(variant)
     if scope == "orientation":
-        return _web_orientation_scope_css(v, user_goal=user_goal)
+        return _web_orientation_scope_css(variant, user_goal=user_goal)
     return ""

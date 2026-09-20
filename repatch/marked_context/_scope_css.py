@@ -7,6 +7,8 @@ functions of the selector list and variant.
 
 from __future__ import annotations
 
+from .._scope_kinds import normalize_scope_variant
+
 _MARKED_COLOR_DECL: dict[str, str] = {
     "a": (
         "background-color:#38bdf8!important;color:#0f172a!important;"
@@ -35,13 +37,9 @@ def _clean_selectors(selectors: list[str]) -> list[str]:
     return [str(sel).strip() for sel in (selectors or []) if str(sel).strip()]
 
 
-def _variant_letter(variant: str) -> str:
-    return variant if variant in ("a", "b", "c") else "b"
-
-
 def marked_scope_colors_css(selectors: list[str], variant: str) -> str:
     """Per-variant recolor declarations for DELETE marks in #colors scope."""
-    decl = _MARKED_COLOR_DECL.get(_variant_letter(variant), "")
+    decl = _MARKED_COLOR_DECL.get(normalize_scope_variant(variant), "")
     clean = _clean_selectors(selectors)
     if not clean or not decl:
         return ""
@@ -70,7 +68,7 @@ def marked_scope_display_css(selectors: list[str], variant: str) -> str:
         "a": "font-size:1.1rem!important;line-height:1.35!important;",
         "b": "font-size:1.2rem!important;line-height:1.4!important;",
         "c": "font-size:1.35rem!important;font-weight:600!important;line-height:1.45!important;",
-    }[_variant_letter(variant)]
+    }[normalize_scope_variant(variant)]
     return f"{', '.join(clean[:8])} {{{decl}}}"
 
 
@@ -83,7 +81,7 @@ def marked_scope_shapes_css(selectors: list[str], variant: str) -> str:
         "a": "border-radius:4px!important;",
         "b": "border-radius:12px!important;",
         "c": "border-radius:999px!important;",
-    }[_variant_letter(variant)]
+    }[normalize_scope_variant(variant)]
     return f"{', '.join(clean[:8])} {{{decl}}}"
 
 
@@ -97,7 +95,7 @@ def marked_scope_orientation_css(selectors: list[str], variant: str) -> str:
     clean_selectors = _clean_selectors(selectors)
     if not clean_selectors:
         return ""
-    v = _variant_letter(variant)
+    marked_layout_letter = normalize_scope_variant(variant)
     layouts = {
         "a": "grid-template-columns:minmax(0,1fr)!important;max-width:980px!important;",
         "b": (
@@ -132,12 +130,12 @@ def marked_scope_orientation_css(selectors: list[str], variant: str) -> str:
     return (
         f"{parent_prefix} "
         "{display:grid!important;"
-        f"{layouts[v]}"
+        f"{layouts[marked_layout_letter]}"
         "gap:clamp(16px,3vw,32px)!important;"
         "align-items:start!important;margin-left:auto!important;margin-right:auto!important;}"
         f"\n{body_prefix} "
         "{display:grid!important;"
-        f"{layouts[v]}"
+        f"{layouts[marked_layout_letter]}"
         "gap:clamp(16px,3vw,32px)!important;align-items:start!important;}"
         f"\n{target_prefix} "
         "{box-sizing:border-box!important;max-width:100%!important;width:auto!important;"
