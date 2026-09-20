@@ -35,32 +35,32 @@ def test_extract_visual_css_keeps_patch_relevant_rules(tmp_path: Path) -> None:
         ".card{background:#fff;padding:12px}.print{page-break-after:always}",
         encoding="utf-8",
     )
-    visual_css, meta = extract_visual_css(SAMPLE_HTML, ["assets/theme.css"], tmp_path)
+    visual_css, css_stats = extract_visual_css(SAMPLE_HTML, ["assets/theme.css"], tmp_path)
 
     assert ".hero" in visual_css
     assert ".card" in visual_css
     assert "@font-face" not in visual_css
-    assert meta["visual_css_bytes"] > 0
+    assert css_stats["visual_css_bytes"] > 0
 
 
 def test_build_html_outline_strips_scripts_and_text() -> None:
-    outline, meta = build_html_outline(SAMPLE_HTML)
+    outline, outline_stats = build_html_outline(SAMPLE_HTML)
 
     assert "<script" not in outline.lower()
     assert "Welcome" not in outline
     assert 'data-nexu-target="root"' in outline
-    assert meta["outline_node_count"] >= 4
+    assert outline_stats["outline_node_count"] >= 4
 
 
 def test_prepare_http_preview_html_blocks_cross_origin_runtime() -> None:
-    cleaned, meta = sanitize_http_preview_html(
+    cleaned, preview_stats = sanitize_http_preview_html(
         '<html><head></head><body><script src="https://example.com/a.js"></script></body></html>'
     )
-    assert meta["preview_scripts_removed"] == 1
+    assert preview_stats["preview_scripts_removed"] == 1
     assert "example.com" not in cleaned
 
-    prepared, meta = prepare_http_preview_html(SAMPLE_HTML)
-    assert meta["preview_shim_injected"] is True
+    prepared, preview_stats = prepare_http_preview_html(SAMPLE_HTML)
+    assert preview_stats["preview_shim_injected"] is True
     assert "nexu preview: block cross-origin fetch" in prepared
 
 

@@ -97,21 +97,21 @@ def test_filter_visual_css_keeps_only_patch_relevant_rules() -> None:
 def test_extract_visual_css_truncates_over_limit(tmp_path: Path) -> None:
     big = ".big{background:#" + "a" * (MAX_VISUAL_CSS_BYTES * 2) + ";}"
     html = f"<style>{big}</style>"
-    visual_css, meta = extract_visual_css(html, None, tmp_path)
+    visual_css, css_stats = extract_visual_css(html, None, tmp_path)
 
-    assert meta["visual_css_truncated"] is True
+    assert css_stats["visual_css_truncated"] is True
     assert "truncated at 64KB" in visual_css
     assert len(visual_css.encode("utf-8")) < len(big.encode("utf-8"))
 
 
 def test_outline_parser_skips_scripts_and_places_placeholders() -> None:
     html = "<body><script>let x = 1;</script><h1>Hello</h1></body>"
-    outline, meta = build_html_outline(html)
+    outline, outline_stats = build_html_outline(html)
 
     assert "<script" not in outline.lower()
     assert "Hello" not in outline
     assert "…" in outline
-    assert meta["outline_node_count"] >= 2
+    assert outline_stats["outline_node_count"] >= 2
     assert outline.startswith("<!DOCTYPE html>")
 
 
@@ -145,9 +145,9 @@ def test_sanitize_http_preview_html_keeps_allowed_src() -> None:
         '<script src="https://x/a.js"></script>'
         '<script src="imported_projects/a.js"></script>'
     )
-    cleaned, meta = sanitize_http_preview_html(html)
+    cleaned, preview_stats = sanitize_http_preview_html(html)
 
-    assert meta["preview_scripts_removed"] == 1
+    assert preview_stats["preview_scripts_removed"] == 1
     assert "https://x/a.js" not in cleaned
     assert "imported_projects/a.js" in cleaned
 
@@ -162,8 +162,8 @@ def test_inject_http_preview_shim_is_idempotent_and_falls_back() -> None:
 
 
 def test_prepare_http_preview_html_sets_shim_flag() -> None:
-    out, meta = prepare_http_preview_html("<html><head></head><body></body></html>")
-    assert meta["preview_shim_injected"] is True
+    out, preview_stats = prepare_http_preview_html("<html><head></head><body></body></html>")
+    assert preview_stats["preview_shim_injected"] is True
     assert "nexu preview: block cross-origin fetch" in out
 
 

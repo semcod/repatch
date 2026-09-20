@@ -89,7 +89,7 @@ def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
     When ``base_dir`` is set, writes ``nexu-extracted.css`` / ``nexu-extracted.js`` beside index.
     """
     source = str(html or "")
-    meta: dict[str, Any] = {
+    organize_stats: dict[str, Any] = {
         "styles_extracted": False,
         "styles_inline_blocks": 0,
         "scripts_removed": 0,
@@ -98,27 +98,27 @@ def organize_html(html: str, *, base_dir: Path | None = None) -> OrganizeResult:
         "targets_added": 0,
     }
     if not source.strip():
-        return OrganizeResult(html=source, meta=meta)
+        return OrganizeResult(html=source, meta=organize_stats)
 
-    organized_html = _extract_styles(source, meta, base_dir)
-    organized_html = _extract_scripts(organized_html, meta, base_dir)
+    organized_html = _extract_styles(source, organize_stats, base_dir)
+    organized_html = _extract_scripts(organized_html, organize_stats, base_dir)
 
     organized_html, lazy_removed = _strip_lazy_placeholder_imgs(organized_html)
-    meta["lazy_imgs_removed"] = lazy_removed
+    organize_stats["lazy_imgs_removed"] = lazy_removed
 
     organized_html, targets_added = _add_markable_targets(organized_html)
-    meta["targets_added"] = targets_added
+    organize_stats["targets_added"] = targets_added
 
-    meta["organized"] = any(
+    organize_stats["organized"] = any(
         (
-            meta.get("styles_extracted"),
-            meta.get("scripts_extracted"),
-            meta.get("scripts_removed"),
+            organize_stats.get("styles_extracted"),
+            organize_stats.get("scripts_extracted"),
+            organize_stats.get("scripts_removed"),
             lazy_removed,
             targets_added,
         )
     )
-    return OrganizeResult(html=organized_html, meta=meta)
+    return OrganizeResult(html=organized_html, meta=organize_stats)
 
 
 def organize_html_project_dir(source_dir: Path) -> OrganizeResult | None:

@@ -19,13 +19,13 @@ HTML = """
 
 
 def test_build_function_option_patches_returns_valid_abc() -> None:
-    files, labels, meta = build_function_option_patches(
+    files, labels, patch_status = build_function_option_patches(
         HTML,
         user_goal="klienci social media 18-33",
         project_kind="imported",
     )
 
-    assert meta["status"] == "ok"
+    assert patch_status["status"] == "ok"
     assert labels == [
         "Option A (functions: quick path)",
         "Option B (functions: workflow)",
@@ -42,14 +42,14 @@ def test_build_function_option_patches_xpatches_delete_marks() -> None:
         "</header>",
         '<a class="btn" id="btn-old" href="#old">Old</a></header>',
     )
-    files, labels, meta = build_function_option_patches(
+    files, labels, patch_status = build_function_option_patches(
         html_with_control,
         user_goal="audience",
         project_kind="imported",
         delete_els=["old"],
     )
 
-    assert meta["status"] == "ok"
+    assert patch_status["status"] == "ok"
     assert labels
     assert "btn-old" in files["alt_a.html"].lower()
     assert 'data-nexu-function-xpatch="a"' in files["alt_a.html"]
