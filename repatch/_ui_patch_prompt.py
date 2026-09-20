@@ -39,7 +39,7 @@ def _patch_scope_rules(
     keep_els: list[str] | None = None,
     delete_els: list[str] | None = None,
 ) -> list[str]:
-    keep = list(keep_els or [])
+    keep_ids = list(keep_els or [])
     delete_ids = list(delete_els or [])
     rules = [
         f"Focus only on #{scope}.",
@@ -73,8 +73,8 @@ def _patch_scope_rules(
                 "DELETE elements are the primary redesign targets.",
             ]
         )
-    if keep:
-        rules.append(f"KEEP ids: {', '.join(keep[:16])}.")
+    if keep_ids:
+        rules.append(f"KEEP ids: {', '.join(keep_ids[:16])}.")
     if delete_ids:
         rules.append(f"DELETE ids: {', '.join(delete_ids[:16])}.")
     return rules

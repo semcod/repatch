@@ -81,7 +81,7 @@ def _get_relevant_css(html: str, subtrees: dict[str, str], ui_profile: dict[str,
 
 
 def _format_context_body(
-    keep: list[str],
+    keep_ids: list[str],
     delete_ids: list[str],
     marked_ids: list[str],
     subtrees: dict[str, str],
@@ -96,7 +96,7 @@ def _format_context_body(
     body_blocks = [
         "MARKED ELEMENT CONTEXT (send only marked fragments — not the full page).",
         f"Focus scope: #{scope}",
-        f"KEEP: {keep or ['none']}",
+        f"KEEP: {keep_ids or ['none']}",
         f"DELETE: {delete_ids or ['none']}",
         "Scope semantics:",
         *[f"- {line}" for line in _scope_semantics(scope)],
@@ -112,7 +112,7 @@ def _format_context_body(
         if not fragment:
             body_blocks.append(f"- #{element_id}: (not found in current HTML)")
             continue
-        role = "KEEP" if element_id in keep else "DELETE"
+        role = "KEEP" if element_id in keep_ids else "DELETE"
         body_blocks.append(f"- #{element_id} [{role}]:\n```html\n{fragment}\n```")
     if css:
         body_blocks.append("Relevant CSS for marked elements:\n```css\n" + css + "\n```")

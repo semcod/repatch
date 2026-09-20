@@ -66,7 +66,7 @@ def _resolve_patch_css(
     filename: str,
     scope: str,
     delete_ids: list[str],
-    keep: list[str],
+    keep_ids: list[str],
     base: str,
 ) -> str:
     """Resolve the CSS payload for one variant, honoring marked scopes."""
@@ -80,7 +80,7 @@ def _resolve_patch_css(
                 variant_key,
             )
         variant_css = restricted or variant_css
-    elif scope in VISUAL_REDESIGN_SCOPES and keep and not delete_ids:
+    elif scope in VISUAL_REDESIGN_SCOPES and keep_ids and not delete_ids:
         variant_css = ""
     if not variant_css.strip():
         variant_css = "/* xpatch noop: only KEEP marks were provided */"
@@ -105,14 +105,14 @@ def apply_ui_patch_options(
     base = strip_scope_style(str(html or ""))
     scope = normalize_focus_scope(focus_scope, project_kind) if focus_scope else ""
     delete_ids = [str(x).strip() for x in (delete_els or []) if str(x).strip()]
-    keep = [str(x).strip() for x in (keep_els or []) if str(x).strip()]
+    keep_ids = [str(x).strip() for x in (keep_els or []) if str(x).strip()]
     files: dict[str, str] = {}
     labels: list[str] = []
     for filename in _ALT_FILES:
         item = variants.get(filename)
         if item is None:
             raise ValueError(f"missing {filename} in LLM patch response")
-        variant_css = _resolve_patch_css(item, filename, scope, delete_ids, keep, base)
+        variant_css = _resolve_patch_css(item, filename, scope, delete_ids, keep_ids, base)
         label = _label_for(filename, item, fallback_labels)
         payload = f"/* llm patch: {label} */\n{variant_css}"
         files[filename] = inject_css_block(base, payload)
