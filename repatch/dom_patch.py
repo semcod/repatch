@@ -298,12 +298,12 @@ def build_function_option_patches(
     files: dict[str, str] = {}
     labels: list[str] = []
     for filename, variant, label in _FUNCTION_VARIANTS:
-        doc, ok, errors = _build_variant_doc(
+        doc, ok, variant_errors = _build_variant_doc(
             base, effective_delete, variant, user_goal, ir,
             prepare, finalize, ui_type,
         )
         if not ok or not doc:
-            return {}, [], {"status": "invalid", "errors": errors}
+            return {}, [], {"status": "invalid", "errors": variant_errors}
         files[filename] = doc
         labels.append(label)
     return files, labels, {"status": "ok", "ir": ir}
@@ -330,7 +330,7 @@ def _build_variant_doc(
     variant_doc = _patch_function_targets(base, effective_delete, variant, user_goal)
     variant_doc = _inject_into_head(variant_doc, _patch_style())
     variant_doc = _inject_into_body(variant_doc, _variant_section(variant, user_goal, ir))
-    doc, ok, errors = prepare(variant_doc, ui_type=ui_type)
+    doc, ok, prepare_errors = prepare(variant_doc, ui_type=ui_type)
     if ok and doc and effective_delete:
         doc = finalize(doc)
-    return doc, ok, errors
+    return doc, ok, prepare_errors

@@ -267,7 +267,7 @@ def _replace_attr(tag: str, pattern: re.Pattern[str], value: str) -> str:
 
 
 class _AssetMirror:
-    """Own mirrored-asset bookkeeping: dedup, attempt cap, naming, errors."""
+    """Own mirrored-asset bookkeeping: dedup, attempt cap, naming, asset errors."""
 
     def __init__(self, *, assets_dir: Path, max_assets: int) -> None:
         self._assets_dir = assets_dir
@@ -275,7 +275,7 @@ class _AssetMirror:
         self._seen: dict[str, WebAsset] = {}
         self._attempts = 0
         self.assets: list[WebAsset] = []
-        self.errors: list[str] = []
+        self.asset_errors: list[str] = []
 
     def mirror(self, *, absolute: str, original: str, kind: str) -> str | None:
         """Return the local URL for one asset, or None to keep the original."""
@@ -292,7 +292,7 @@ class _AssetMirror:
         )
         self._attempts += 1
         if err:
-            self.errors.append(err)
+            self.asset_errors.append(err)
             return None
         if not asset:
             return None
@@ -325,7 +325,7 @@ def _mirror_stylesheets(
             return tag
         return _replace_attr(tag, _HREF_ATTR_RE, local)
 
-    return _LINK_TAG_RE.sub(replace_link, html), mirror.assets, mirror.errors
+    return _LINK_TAG_RE.sub(replace_link, html), mirror.assets, mirror.asset_errors
 
 
 def _parse_srcset(value: str) -> list[tuple[str, str]]:
@@ -385,7 +385,7 @@ def _mirror_images(
             tag = _replace_attr(tag, pattern, _format_srcset(mirrored))
         return tag
 
-    return _IMG_TAG_RE.sub(replace_img, html), mirror.assets, mirror.errors
+    return _IMG_TAG_RE.sub(replace_img, html), mirror.assets, mirror.asset_errors
 
 
 def _fetch_page_source(url: str, render_js: bool) -> _PageSource:

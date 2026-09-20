@@ -41,9 +41,9 @@ def _safe_css(css: object) -> str:
             raise ValueError(f"unsafe CSS token: {token}")
     if "{" not in text or "}" not in text:
         raise ValueError("CSS patch must contain CSS rules")
-    ok, errors = validate_css_safety(text, source="LLM CSS patch")
+    ok, violations = validate_css_safety(text, source="LLM CSS patch")
     if not ok:
-        raise ValueError("; ".join(errors[:4]))
+        raise ValueError("; ".join(violations[:4]))
     return text
 
 
