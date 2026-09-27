@@ -102,8 +102,8 @@ def _id_candidates(element_id: str) -> set[str]:
     mark_id = str(element_id or "").strip()
     if not mark_id:
         return set()
-    normalized_label = _normalize_label_text(mark_id)
-    aliases = {mark_id, mark_id.lower(), normalized_label, normalized_label.lower()}
+    mark_label = _normalize_label_text(mark_id)
+    aliases = {mark_id, mark_id.lower(), mark_label, mark_label.lower()}
     if mark_id.startswith("btn-"):
         aliases.add(mark_id[4:])
         aliases.add(mark_id[4:].lower())

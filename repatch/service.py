@@ -26,7 +26,7 @@ class RepatchService:
         scopes: Iterable[str],
         temperature: float = 0.6,
     ) -> List[PatchSuggestion]:
-        normalized_scopes = self._normalize_scopes(scopes)
+        validated_scopes = self._normalize_scopes(scopes)
         completion_fn = self._completion_fn or self._default_completion
 
         response = completion_fn(
@@ -45,7 +45,7 @@ class RepatchService:
                 },
                 {
                     "role": "user",
-                    "content": self._build_user_prompt(fragment, normalized_scopes),
+                    "content": self._build_user_prompt(fragment, validated_scopes),
                 },
             ],
         )
