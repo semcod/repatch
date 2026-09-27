@@ -38,7 +38,7 @@ def _add_markable_targets(html: str) -> tuple[str, int]:
         slug_source = attr_map.get("class") or attr_map.get("role") or tag
         counter += 1
         added += 1
-        target = f"nexu-{_slug_piece(slug_source)}-{counter}"
-        return f'<{tag}{open_attr_text} data-nexu-target="{target}">'
+        nexu_value = f"nexu-{_slug_piece(slug_source)}-{counter}"
+        return f'<{tag}{open_attr_text} data-nexu-target="{nexu_value}">'
 
     return _MARKABLE_OPEN_RE.sub(_replace, html), added

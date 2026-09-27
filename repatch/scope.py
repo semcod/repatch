@@ -98,14 +98,14 @@ _SKIP_TAGS = ("html", "head", "body", "style", "script", "link", "meta")
 def _element_candidates(tag: str, attrs: dict[str, str]) -> tuple[set[str], str, str]:
     """Collect candidate ids from id, data-nexu-target and logical id."""
     raw_id = str(attrs.get("id") or "").strip()
-    target = str(attrs.get("data-nexu-target") or "").strip()
+    nexu_attr = str(attrs.get("data-nexu-target") or "").strip()
     id_keys = _id_candidates(raw_id) if raw_id else set()
-    if target:
-        id_keys |= _id_candidates(target)
+    if nexu_attr:
+        id_keys |= _id_candidates(nexu_attr)
     logical = _logical_id(tag, attrs)
     if logical:
         id_keys |= _id_candidates(logical)
-    return id_keys, raw_id, target
+    return id_keys, raw_id, nexu_attr
 
 
 def _label_probe_hit(
@@ -176,9 +176,9 @@ def _annotation_target(
     attrs_text = match.group(2)
     attr_map = _parse_attrs(attrs_text)
 
-    element_keys, raw_id, target = _element_candidates(tag, attr_map)
+    element_keys, raw_id, nexu_attr = _element_candidates(tag, attr_map)
     hit = wanted & element_keys
-    if not hit and not raw_id and not target:
+    if not hit and not raw_id and not nexu_attr:
         hit = _label_probe_hit(text, match, tag, attr_map, wanted)
     if not hit:
         return None

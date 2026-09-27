@@ -88,9 +88,9 @@ def _logical_id(tag: str, attrs: dict[str, str], *, text: str = "") -> str | Non
     raw_id = str(attrs.get("id") or "").strip()
     if raw_id:
         return raw_id[4:] if raw_id.startswith("btn-") else raw_id
-    target = str(attrs.get("data-nexu-target") or "").strip()
-    if target:
-        return target
+    nexu_id = str(attrs.get("data-nexu-target") or "").strip()
+    if nexu_id:
+        return nexu_id
     if tag.lower() in _TEXT_LABEL_TAGS:
         text_label = _normalize_label_text(text)
         if text_label:

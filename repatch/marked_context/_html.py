@@ -88,9 +88,9 @@ def _extract_balanced_html(html: str, start: int) -> tuple[str, int] | None:
 def _collect_match_candidates(tag: str, attrs: dict[str, str]) -> set[str]:
     raw_id = str(attrs.get("id") or "").strip()
     id_keys = _id_candidates(raw_id) if raw_id else set()
-    target = str(attrs.get("data-nexu-target") or "").strip()
-    if target:
-        id_keys |= _id_candidates(target)
+    nexu_attr_value = str(attrs.get("data-nexu-target") or "").strip()
+    if nexu_attr_value:
+        id_keys |= _id_candidates(nexu_attr_value)
     logical = _logical_id(tag, attrs)
     if logical:
         id_keys |= _id_candidates(logical)

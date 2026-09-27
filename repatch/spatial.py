@@ -76,10 +76,10 @@ def _element_delete_candidates(attrs: str, inner_text: str) -> set[str]:
     id_match = re.search(r'\bid="([^"]*)"', attrs, re.IGNORECASE)
     el_id = id_match.group(1) if id_match else ""
     target_match = re.search(r'data-nexu-target="([^"]*)"', attrs, re.IGNORECASE)
-    target = target_match.group(1) if target_match else ""
+    nexu_signal = target_match.group(1) if target_match else ""
     plain_text = re.sub(r"<[^>]+>", "", inner_text or "").strip()
     match_keys: set[str] = set()
-    for signal in (el_id, target, plain_text):
+    for signal in (el_id, nexu_signal, plain_text):
         if signal:
             match_keys |= _delete_match_keys(signal)
     return match_keys
