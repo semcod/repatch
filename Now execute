@@ -1,0 +1,5 @@
+git add repatch/spatial.py
+git commit -m "fix(spatial): remove leftover restore artifact marker"
+pytest --collect-only tests/test_dom_patch.py
+pytest tests/test_dom_patch.py --tb=short
+planfile ticket done PLF-201
