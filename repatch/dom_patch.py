@@ -7,7 +7,13 @@ import re
 from collections.abc import Callable
 from typing import Any
 
-from .marked_context import effective_delete_ids
+try:
+    from .marked_context import effective_delete_ids
+except ImportError:
+    def effective_delete_ids(delete_ids: list[str], keep_ids: list[str]) -> list[str]:  # type: ignore[misc]
+        keep_set = set(keep_ids)
+        return [x for x in delete_ids if x not in keep_set]
+
 from .project_ir import build_project_ir, summarize_project_ir
 
 _ALT_FILES = ("alt_a.html", "alt_b.html", "alt_c.html")
