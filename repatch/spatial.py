@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 import re
 
 _BTN_DIV_RE = re.compile(
@@ -66,7 +67,7 @@ def _selectable_block_attrs(attrs: str) -> bool:
             return True
     if re.search(r'\bid="btn-', lower):
         return True
-    # A .btn element with nested markup (e.g. a <span> label) never matches
+    # A .btn element with nested markup (e.g. a span label) never matches
     # _BTN_DIV_RE (which requires no nested tags), so without this it silently
     # falls through with no delete candidate at all.
     return bool(re.search(r'\bclass="[^"]*\bbtn\b', lower))
@@ -116,6 +117,40 @@ def apply_spatial_deletes_to_html(html: str, delete_ids: list[str]) -> tuple[str
     return patched, deleted_labels
 
 
+def _next_block(html: str, search_from: int) -> tuple[int, int, int, int, str] | None:
+    """Find the next balanced block at or after `search_from`.
+
+    Returns (open_start, content_start, close_start, close_end, attrs) or None.
+    """
+    pos = search_from
+    while True:
+        match = _BLOCK_OPEN_TAG_RE.search(html, pos)
+        if not match:
+            return None
+        close = _find_matching_close(html, match.group(1), match.end())
+        if close is not None:
+            return match.start(), match.end(), close[0], close[1], match.group(2)
+        pos = match.end()
+
+
+def _iter_block_deletions(
+    html: str, delete_keys: set[str]
+) -> Iterator[tuple[int, int, str]]:
+    """Yield (start, end, label) for each deletable block in the HTML."""
+    pos = 0
+    while True:
+        block = _next_block(html, pos)
+        if block is None:
+            break
+        start, content_start, close_start, end, attrs = block
+        content = html[content_start:close_start]
+        if _is_deletable_block(attrs, content, delete_keys):
+            yield start, end, _block_label(attrs, content)
+            pos = end
+        else:
+            pos = content_start
+
+
 def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[str]) -> str:
     """Remove selectable section/div/aside/nav blocks matched by id, target, or
     label — using nesting-depth tracking so a block containing a same-named
@@ -123,29 +158,10 @@ def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[
     matched to its true closing tag instead of the first inner one."""
     kept_segments: list[str] = []
     emitted_to = 0
-    search_from = 0
-    while True:
-        open_match = _BLOCK_OPEN_TAG_RE.search(html, search_from)
-        if not open_match:
-            break
-        tag_name, block_attr_text = open_match.group(1), open_match.group(2)
-        close = _find_matching_close(html, tag_name, open_match.end())
-        if close is None:
-            # Unbalanced/malformed markup for this tag — leave it alone and
-            # keep scanning after the opening tag rather than risk mis-parsing.
-            search_from = open_match.end()
-            continue
-        close_start, close_end = close
-        block_content = html[open_match.end() : close_start]
-        if _is_deletable_block(block_attr_text, block_content, delete_keys):
-            kept_segments.append(html[emitted_to : open_match.start()])
-            deleted_labels.append(_block_label(block_attr_text, block_content))
-            emitted_to = close_end
-            search_from = close_end
-        else:
-            # Not deleted: keep scanning *inside* this block too, so a
-            # deletable element nested inside a kept block is still found.
-            search_from = open_match.end()
+    for start, end, label in _iter_block_deletions(html, delete_keys):
+        kept_segments.append(html[emitted_to:start])
+        deleted_labels.append(label)
+        emitted_to = end
     kept_segments.append(html[emitted_to:])
     return "".join(kept_segments)
 
