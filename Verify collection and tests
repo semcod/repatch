@@ -1,0 +1,2 @@
+pytest --collect-only tests/test_dom_patch.py
+pytest tests/test_dom_patch.py --tb=short

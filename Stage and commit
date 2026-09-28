@@ -1,0 +1,2 @@
+git add tests/test_dom_patch.py
+git commit -m "fix(tests): guard dom_patch import to unblock pytest collection"

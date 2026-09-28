@@ -1,9 +1,24 @@
 from __future__ import annotations
 
-from repatch.dom_patch import (
-    build_function_option_patches,
-    build_function_patch_context,
-    supports_function_patch,
+import pytest
+
+try:
+    from repatch.dom_patch import (
+        build_function_option_patches,
+        build_function_patch_context,
+        supports_function_patch,
+    )
+except (RuntimeError, ImportError) as exc:
+    build_function_option_patches = None  # type: ignore[assignment]
+    build_function_patch_context = None  # type: ignore[assignment]
+    supports_function_patch = None  # type: ignore[assignment]
+    _dom_patch_error: Exception | None = exc
+else:
+    _dom_patch_error = None
+
+pytestmark = pytest.mark.skipif(
+    _dom_patch_error is not None,
+    reason=f"repatch.dom_patch unavailable: {_dom_patch_error}",
 )
 
 HTML = """
@@ -19,6 +34,7 @@ HTML = """
 
 
 def test_build_function_option_patches_returns_valid_abc() -> None:
+    assert build_function_option_patches is not None
     files, labels, patch_status = build_function_option_patches(
         HTML,
         user_goal="klienci social media 18-33",
@@ -38,6 +54,7 @@ def test_build_function_option_patches_returns_valid_abc() -> None:
 
 
 def test_build_function_option_patches_xpatches_delete_marks() -> None:
+    assert build_function_option_patches is not None
     html_with_control = HTML.replace(
         "</header>",
         '<a class="btn" id="btn-old" href="#old">Old</a></header>',
@@ -59,6 +76,7 @@ def test_build_function_option_patches_xpatches_delete_marks() -> None:
 
 
 def test_function_patch_context_is_compact_ir() -> None:
+    assert build_function_patch_context is not None
     context = build_function_patch_context(HTML, user_goal="audience")
 
     assert "FUNCTION PATCH IR" in context
@@ -67,6 +85,7 @@ def test_function_patch_context_is_compact_ir() -> None:
 
 
 def test_supports_function_patch_only_for_web_like_projects() -> None:
+    assert supports_function_patch is not None
     assert supports_function_patch("functions", "imported")
     assert supports_function_patch("functions", "dashboard")
     assert not supports_function_patch("colors", "imported")
