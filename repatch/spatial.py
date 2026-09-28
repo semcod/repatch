@@ -1,1 +1,1 @@
-planfile ticket done PLF-181
+planfile ticket input PLF-181 --prompt "Please provide the full contents of repatch/spatial.py containing the _apply_block_deletes function." --note "repatch/spatial.py currently contains only 'planfile ticket done PLF-181' without the actual source code."
