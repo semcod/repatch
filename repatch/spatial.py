@@ -151,19 +151,30 @@ def _iter_block_deletions(
             pos = content_start
 
 
-def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[str]) -> str:
-    """Remove selectable section/div/aside/nav blocks matched by id, target, or
-    label — using nesting-depth tracking so a block containing a same-named
-    nested tag (e.g. a plain ``<div>`` wrapper inside a ``kpi-card`` div) is
-    matched to its true closing tag instead of the first inner one."""
+def _assemble_segments(
+    html: str,
+    deletions: Iterator[tuple[int, int, str]],
+    deleted_labels: list[str],
+) -> str:
+    """Assemble remaining HTML segments around deleted block intervals."""
     kept_segments: list[str] = []
     emitted_to = 0
-    for start, end, label in _iter_block_deletions(html, delete_keys):
+    for start, end, label in deletions:
         kept_segments.append(html[emitted_to:start])
         deleted_labels.append(label)
         emitted_to = end
     kept_segments.append(html[emitted_to:])
     return "".join(kept_segments)
+
+
+def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[str]) -> str:
+    """Remove selectable section/div/aside/nav blocks matched by id, target, or
+    label — using nesting-depth tracking so a block containing a same-named
+    nested tag (e.g. a plain ``<div>`` wrapper inside a ``kpi-card`` div) is
+    matched to its true closing tag instead of the first inner one."""
+    return _assemble_segments(
+        html, _iter_block_deletions(html, delete_keys), deleted_labels
+    )
 
 
 def _is_deletable_block(attrs: str, block_content: str, delete_keys: set[str]) -> bool:
