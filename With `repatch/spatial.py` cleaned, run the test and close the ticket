@@ -1,0 +1,2 @@
+pytest tests/test_dom_patch.py --tb=short
+planfile ticket done PLF-201
