@@ -36,7 +36,7 @@ def supports_function_patch(scope: str, project_kind: str) -> bool:
     }
 
 
-def build_function_patch_context(html_text: str, *, user_goal: str = "") -> str:
+def build_function_patch_context(html_text: str, user_goal: str = "") -> str:
     ir = build_project_ir(html_text)
     goal = user_goal.strip() or "(none)"
     return "FUNCTION PATCH IR\n" + summarize_project_ir(ir) + "\nuser_goal: " + goal
@@ -318,6 +318,7 @@ def build_function_option_patches(
     delete_els: list[str] | None = None,
     prepare_html: PrepareHtmlFn | None = None,
     finalize_html: FinalizeHtmlFn | None = None,
+    **kwargs: Any,
 ) -> tuple[dict[str, str], list[str], dict[str, Any]]:
     """Create A-C function variants by patching the current HTML locally."""
     if not supports_function_patch("functions", project_kind):
@@ -340,3 +341,10 @@ def build_function_option_patches(
         files[filename] = doc
         labels.append(option_label)
     return files, labels, {"status": "ok", "ir": ir}
+
+
+__all__ = [
+    "build_function_option_patches",
+    "build_function_patch_context",
+    "supports_function_patch",
+]
