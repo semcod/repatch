@@ -1,0 +1,1 @@
+python -c "import tests.test_dom_patch"
