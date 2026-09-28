@@ -9,7 +9,7 @@ from typing import Any
 
 try:
     from .marked_context import effective_delete_ids
-except ImportError:
+except (ImportError, Exception):
     def effective_delete_ids(delete_ids: list[str], keep_ids: list[str]) -> list[str]:  # type: ignore[misc]
         keep_set = set(keep_ids)
         return [x for x in delete_ids if x not in keep_set]
