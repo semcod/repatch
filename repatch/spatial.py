@@ -1,373 +1,184 @@
-import ast
-from pathlib import Path
-import subprocess
-import sys
+"""Spatial DELETE patches: remove marked controls/blocks from HTML."""
+
+from __future__ import annotations
+
+from collections.abc import Iterator
+import re
+
+_BTN_DIV_RE = re.compile(
+    r'<div\b([^>]*\bclass="[^"]*\bbtn[^"]*"[^>]*)>([^<]*)</div>',
+    re.IGNORECASE,
+)
+_BLOCK_OPEN_TAG_RE = re.compile(r"<(section|div|aside|nav)\b([^>]*)>", re.IGNORECASE)
+_ANY_TAG_RE = re.compile(r"<(/?)(section|div|aside|nav)\b[^>]*>", re.IGNORECASE)
 
 
-def _recover_original():
-    candidates = []
-
-    # 1. Search git history for commits touching _apply_block_deletes
-    try:
-        out = subprocess.check_output(
-            ["git", "log", "-S", "_apply_block_deletes", "--format=%H", "-n", "10"],
-            text=True,
-            stderr=subprocess.DEVNULL,
-        ).splitlines()
-        for h in out:
-            candidates.append(h)
-    except Exception:
-        pass
-
-    # 2. Search git log for repatch/spatial.py
-    try:
-        log_hashes = subprocess.check_output(
-            ["git", "log", "--format=%H", "-n", "30", "--", "repatch/spatial.py"],
-            text=True,
-            stderr=subprocess.DEVNULL,
-        ).splitlines()
-        for h in log_hashes:
-            if not any(h.startswith(p) for p in ("8646899", "fc96c94")):
-                candidates.append(h)
-    except Exception:
-        pass
-
-    # 3. Known commit refs
-    for ref in ["8646899~1", "HEAD~1", "HEAD~2", "HEAD~3", "HEAD~4"]:
-        if ref not in candidates:
-            candidates.append(ref)
-
-    # 4. Git rev-list
-    try:
-        revs = subprocess.check_output(
-            ["git", "rev-list", "--all", "-n", "30"],
-            text=True,
-            stderr=subprocess.DEVNULL,
-        ).splitlines()
-        for h in revs:
-            if h not in candidates:
-                candidates.append(h)
-    except Exception:
-        pass
-
-    for ref in candidates:
-        try:
-            content = subprocess.check_output(
-                ["git", "show", f"{ref}:repatch/spatial.py"],
-                text=True,
-                stderr=subprocess.DEVNULL,
-            )
-            if (
-                "def _apply_block_deletes" in content
-                and "_recover_original" not in content
-                and "candidates =" not in content
-            ):
-                return content
-        except Exception:
+def _find_matching_close(html: str, tag_name: str, content_start: int) -> tuple[int, int] | None:
+    """Find the ``(start, end)`` span of the closing tag that matches an
+    opening ``<tag_name ...>`` whose content begins at ``content_start``,
+    tracking nesting depth so a same-named tag nested inside (e.g. a plain
+    ``<div>`` wrapper inside a ``<div class="kpi-card">``) doesn't fool a
+    naive non-greedy ``.*?</tag>`` match into stopping at the *inner*
+    closing tag. Returns ``None`` if the tags are unbalanced.
+    """
+    depth = 1
+    tag_lower = tag_name.lower()
+    for match in _ANY_TAG_RE.finditer(html, content_start):
+        if match.group(2).lower() != tag_lower:
             continue
+        if match.group(1):  # closing tag: "</...>"
+            depth -= 1
+            if depth == 0:
+                return match.start(), match.end()
+        else:
+            depth += 1
     return None
 
 
-def _refactor(content: str) -> str:
-    tree = ast.parse(content)
-
-    target = None
-    is_method = False
-    for node in tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name == "_apply_block_deletes":
-            target = node
-            break
-        elif isinstance(node, ast.ClassDef):
-            for m in node.body:
-                if isinstance(m, ast.FunctionDef) and m.name == "_apply_block_deletes":
-                    target = m
-                    is_method = True
-                    break
-            if target:
-                break
-
-    if target is None:
-        return content
-
-    lines = content.splitlines(keepends=True)
-    start_line = target.lineno - 1
-    if target.decorator_list:
-        start_line = min(start_line, min(d.lineno - 1 for d in target.decorator_list))
-    end_line = target.end_lineno
-
-    first_line = lines[start_line]
-    indent = first_line[: len(first_line) - len(first_line.lstrip())]
-
-    body = target.body
-    doc_node = None
-    stmts = body
-    if body and isinstance(body[0], ast.Expr) and isinstance(body[0].value, (ast.Constant, ast.Str)):
-        doc_node = body[0]
-        stmts = body[1:]
-
-    arg_names = [a.arg for a in target.args.posonlyargs + target.args.args]
-    if target.args.vararg:
-        arg_names.append(target.args.vararg.arg)
-    arg_names += [a.arg for a in target.args.kwonlyargs]
-    if target.args.kwarg:
-        arg_names.append(target.args.kwarg.arg)
-
-    is_instance_method = is_method and bool(target.args.args and target.args.args[0].arg == "self")
-
-    # Find loop if present
-    for_node = None
-    for_idx = -1
-    for i, s in enumerate(stmts):
-        if isinstance(s, ast.For):
-            for_node = s
-            for_idx = i
-            break
-
-    has_break = False
-    if for_node is not None:
-        has_break = any(isinstance(n, ast.Break) for s in for_node.body for n in ast.walk(s))
-
-    def indent_text(text: str, ind: str) -> str:
-        return "\n".join(ind + line if line.strip() else "" for line in text.splitlines())
-
-    if for_node is not None and not has_break:
-        assigned_before = set()
-        for s in stmts[:for_idx]:
-            for n in ast.walk(s):
-                if isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del)):
-                    assigned_before.add(n.id)
-
-        loaded_in_loop = set()
-        for s in for_node.body:
-            for n in ast.walk(s):
-                if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load):
-                    loaded_in_loop.add(n.id)
-
-        assigned_in_loop = set()
-        for s in for_node.body:
-            for n in ast.walk(s):
-                if isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del)):
-                    assigned_in_loop.add(n.id)
-
-        loaded_after = set()
-        for s in stmts[for_idx + 1:]:
-            for n in ast.walk(s):
-                if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load):
-                    loaded_after.add(n.id)
-
-        loop_target_names = [n.id for n in ast.walk(for_node.target) if isinstance(n, ast.Name)]
-
-        inputs = []
-        if is_instance_method and "self" in arg_names and "self" in loaded_in_loop:
-            inputs.append("self")
-        for t in loop_target_names:
-            if t in loaded_in_loop and t not in inputs:
-                inputs.append(t)
-        for a in arg_names:
-            if a in loaded_in_loop and a not in inputs:
-                inputs.append(a)
-        for v in sorted(assigned_before):
-            if v in loaded_in_loop and v not in inputs:
-                inputs.append(v)
-
-        outer_vars = set(arg_names) | assigned_before
-        returns = []
-        for v in sorted(assigned_in_loop):
-            if v not in loop_target_names:
-                if v in loaded_after or (v in outer_vars and v in loaded_in_loop):
-                    if v not in returns:
-                        returns.append(v)
-
-        class ContinueReplacer(ast.NodeTransformer):
-            def visit_Continue(self, node):
-                if returns:
-                    ret_val = (
-                        ast.Tuple(elts=[ast.Name(id=r, ctx=ast.Load()) for r in returns], ctx=ast.Load())
-                        if len(returns) > 1
-                        else ast.Name(id=returns[0], ctx=ast.Load())
-                    )
-                    return ast.Return(value=ret_val)
-                return ast.Return(value=None)
-
-            def visit_For(self, node):
-                return node
-
-            def visit_While(self, node):
-                return node
-
-        new_helper_body = [ContinueReplacer().visit(s) for s in for_node.body]
-        if returns:
-            ret_val = (
-                ast.Tuple(elts=[ast.Name(id=r, ctx=ast.Load()) for r in returns], ctx=ast.Load())
-                if len(returns) > 1
-                else ast.Name(id=returns[0], ctx=ast.Load())
-            )
-            new_helper_body.append(ast.Return(value=ret_val))
-
-        helper_args = ast.arguments(
-            posonlyargs=[],
-            args=[ast.arg(arg=inp) for inp in inputs],
-            vararg=None,
-            kwonlyargs=[],
-            kw_defaults=[],
-            kwarg=None,
-            defaults=[],
-        )
-        helper_def = ast.FunctionDef(
-            name="_apply_single_block_delete",
-            args=helper_args,
-            body=new_helper_body,
-            decorator_list=[],
-        )
-
-        call_args = [
-            ast.Name(id=inp, ctx=ast.Load())
-            for inp in (inputs[1:] if is_instance_method and inputs and inputs[0] == "self" else inputs)
-        ]
-        if is_instance_method:
-            call_func = ast.Attribute(
-                value=ast.Name(id="self", ctx=ast.Load()),
-                attr="_apply_single_block_delete",
-                ctx=ast.Load(),
-            )
-        else:
-            call_func = ast.Name(id="_apply_single_block_delete", ctx=ast.Load())
-
-        helper_call = ast.Call(func=call_func, args=call_args, keywords=[])
-
-        if returns:
-            if len(returns) > 1:
-                target_assign = ast.Tuple(
-                    elts=[ast.Name(id=r, ctx=ast.Store()) for r in returns],
-                    ctx=ast.Store(),
-                )
-            else:
-                target_assign = ast.Name(id=returns[0], ctx=ast.Store())
-            new_loop_stmt = ast.Assign(targets=[target_assign], value=helper_call)
-        else:
-            new_loop_stmt = ast.Expr(value=helper_call)
-
-        for_node.body = [new_loop_stmt]
-
-        helper_code = ast.unparse(helper_def)
-        target_code = ast.unparse(target)
-
-        indented_helper = indent_text(helper_code, indent)
-        indented_target = indent_text(target_code, indent)
-        replacement = indented_helper + "\n\n" + indented_target + "\n"
-
+def _delete_match_keys(element_id: str) -> set[str]:
+    delete_id = (element_id or "").strip()
+    if not delete_id:
+        return set()
+    keys = {delete_id, delete_id.lower()}
+    if delete_id.lower().startswith("btn-"):
+        keys.add(delete_id[4:])
+        keys.add(delete_id[4:].lower())
     else:
-        mid = max(1, len(stmts) // 2)
-        part1 = stmts[:mid]
-        part2 = stmts[mid:]
+        keys.add(f"btn-{delete_id}")
+        keys.add(f"btn-{delete_id.lower()}")
+    return keys
 
-        assigned_part1 = set()
-        for s in part1:
-            for n in ast.walk(s):
-                if isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del)):
-                    assigned_part1.add(n.id)
 
-        loaded_part2 = set()
-        for s in part2:
-            for n in ast.walk(s):
-                if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load):
-                    loaded_part2.add(n.id)
+def _selectable_block_attrs(attrs: str) -> bool:
+    lower = attrs.lower()
+    if "nexu-selectable" in lower:
+        return True
+    for token in (
+        "kpi-card",
+        "chart-card",
+        "table-card",
+        "workflow-panel",
+        "detail-panel",
+        "nav-item",
+        "service-card",
+        "project-card",
+    ):
+        if token in lower:
+            return True
+    if re.search(r'\bid="btn-', lower):
+        return True
+    # A .btn element with nested markup (e.g. a span label) never matches
+    # _BTN_DIV_RE (which requires no nested tags), so without this it silently
+    # falls through with no delete candidate at all.
+    return bool(re.search(r'\bclass="[^"]*\bbtn\b', lower))
 
-        needed_returns = [v for v in sorted(assigned_part1) if v in loaded_part2]
 
-        loaded_part1 = set()
-        for s in part1:
-            for n in ast.walk(s):
-                if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load):
-                    loaded_part1.add(n.id)
+def _element_delete_candidates(attrs: str, inner_text: str) -> set[str]:
+    id_match = re.search(r'\bid="([^"]*)"', attrs, re.IGNORECASE)
+    el_id = id_match.group(1) if id_match else ""
+    target_match = re.search(r'data-nexu-target="([^"]*)"', attrs, re.IGNORECASE)
+    nexu_signal = target_match.group(1) if target_match else ""
+    plain_text = re.sub(r"<[^>]+>", "", inner_text or "").strip()
+    match_keys: set[str] = set()
+    for signal in (el_id, nexu_signal, plain_text):
+        if signal:
+            match_keys |= _delete_match_keys(signal)
+    return match_keys
 
-        needed_inputs = []
-        if is_instance_method and "self" in arg_names and "self" in loaded_part1:
-            needed_inputs.append("self")
-        for a in arg_names:
-            if a in loaded_part1 and a not in needed_inputs:
-                needed_inputs.append(a)
 
-        helper_body = list(part1)
-        if needed_returns:
-            ret_val = (
-                ast.Tuple(elts=[ast.Name(id=r, ctx=ast.Load()) for r in needed_returns], ctx=ast.Load())
-                if len(needed_returns) > 1
-                else ast.Name(id=needed_returns[0], ctx=ast.Load())
-            )
-            helper_body.append(ast.Return(value=ret_val))
+def apply_spatial_deletes_to_html(html: str, delete_ids: list[str]) -> tuple[str, list[str]]:
+    """
+    Remove only annotated DELETE controls from calculator/dashboard HTML (no LLM rewrite).
 
-        helper_def = ast.FunctionDef(
-            name="_apply_block_deletes_phase1",
-            args=ast.arguments(
-                posonlyargs=[],
-                args=[ast.arg(arg=inp) for inp in needed_inputs],
-                vararg=None,
-                kwonlyargs=[],
-                kw_defaults=[],
-                kwarg=None,
-                defaults=[],
-            ),
-            body=helper_body,
-            decorator_list=[],
-        )
+    Matches calculator .btn rows and dashboard .kpi-card / chart / nav targets by id,
+    data-nexu-target, or visible label.
+    """
+    if not html or not delete_ids:
+        return html, []
 
-        call_args = [
-            ast.Name(id=inp, ctx=ast.Load())
-            for inp in (needed_inputs[1:] if is_instance_method and needed_inputs and needed_inputs[0] == "self" else needed_inputs)
-        ]
-        call_func = (
-            ast.Attribute(
-                value=ast.Name(id="self", ctx=ast.Load()),
-                attr="_apply_block_deletes_phase1",
-                ctx=ast.Load(),
-            )
-            if is_instance_method
-            else ast.Name(id="_apply_block_deletes_phase1", ctx=ast.Load())
-        )
-        call_stmt = ast.Call(func=call_func, args=call_args, keywords=[])
+    delete_keys: set[str] = set()
+    for element_id in delete_ids:
+        delete_keys |= _delete_match_keys(str(element_id))
 
-        if needed_returns:
-            if len(needed_returns) > 1:
-                targ = ast.Tuple(elts=[ast.Name(id=r, ctx=ast.Store()) for r in needed_returns], ctx=ast.Store())
-            else:
-                targ = ast.Name(id=needed_returns[0], ctx=ast.Store())
-            invoke_stmt = ast.Assign(targets=[targ], value=call_stmt)
+    deleted_labels: list[str] = []
+
+    def _btn_replacer(match: re.Match[str]) -> str:
+        btn_attr_text, btn_text = match.group(1), match.group(2).strip()
+        element_keys = _element_delete_candidates(btn_attr_text, btn_text)
+        if delete_keys.intersection(element_keys):
+            id_match = re.search(r'\bid="([^"]*)"', btn_attr_text, re.IGNORECASE)
+            el_id = id_match.group(1) if id_match else ""
+            deleted_labels.append(btn_text or el_id or "unknown")
+            return ""
+        return match.group(0)
+
+    patched = _BTN_DIV_RE.sub(_btn_replacer, html)
+    patched = _apply_block_deletes(patched, delete_keys, deleted_labels)
+    return patched, deleted_labels
+
+
+def _next_block(html: str, search_from: int) -> tuple[int, int, int, int, str] | None:
+    """Find the next balanced block at or after `search_from`.
+
+    Returns (open_start, content_start, close_start, close_end, attrs) or None.
+    """
+    pos = search_from
+    while True:
+        match = _BLOCK_OPEN_TAG_RE.search(html, pos)
+        if not match:
+            return None
+        close = _find_matching_close(html, match.group(1), match.end())
+        if close is not None:
+            return match.start(), match.end(), close[0], close[1], match.group(2)
+        pos = match.end()
+
+
+def _iter_block_deletions(
+    html: str, delete_keys: set[str]
+) -> Iterator[tuple[int, int, str]]:
+    """Yield (start, end, label) for each deletable block in the HTML."""
+    pos = 0
+    while True:
+        block = _next_block(html, pos)
+        if block is None:
+            break
+        start, content_start, close_start, end, attrs = block
+        content = html[content_start:close_start]
+        if _is_deletable_block(attrs, content, delete_keys):
+            yield start, end, _block_label(attrs, content)
+            pos = end
         else:
-            invoke_stmt = ast.Expr(value=call_stmt)
-
-        new_target_body = ([doc_node] if doc_node else []) + [invoke_stmt] + part2
-        target.body = new_target_body
-
-        helper_code = ast.unparse(helper_def)
-        target_code = ast.unparse(target)
-
-        indented_helper = indent_text(helper_code, indent)
-        indented_target = indent_text(target_code, indent)
-        replacement = indented_helper + "\n\n" + indented_target + "\n"
-
-    new_lines = lines[:start_line] + [replacement] + lines[end_line:]
-    new_content = "".join(new_lines)
-    compile(new_content, "<string>", "exec")
-    return new_content
+            pos = content_start
 
 
-def _bootstrap():
-    orig = _recover_original()
-    if not orig:
-        raise RuntimeError("Could not find original repatch/spatial.py in git history")
-    try:
-        refactored = _refactor(orig)
-    except Exception:
-        refactored = orig
-    target_path = Path(__file__).resolve()
-    target_path.write_text(refactored, encoding="utf-8")
-    code = compile(refactored, str(target_path), "exec")
-    exec(code, globals())
+def _apply_block_deletes(html: str, delete_keys: set[str], deleted_labels: list[str]) -> str:
+    """Remove selectable section/div/aside/nav blocks matched by id, target, or
+    label — using nesting-depth tracking so a block containing a same-named
+    nested tag (e.g. a plain ``<div>`` wrapper inside a ``kpi-card`` div) is
+    matched to its true closing tag instead of the first inner one."""
+    kept_segments: list[str] = []
+    emitted_to = 0
+    for start, end, label in _iter_block_deletions(html, delete_keys):
+        kept_segments.append(html[emitted_to:start])
+        deleted_labels.append(label)
+        emitted_to = end
+    kept_segments.append(html[emitted_to:])
+    return "".join(kept_segments)
 
 
-_bootstrap()
+def _is_deletable_block(attrs: str, block_content: str, delete_keys: set[str]) -> bool:
+    return _selectable_block_attrs(attrs) and bool(
+        delete_keys.intersection(_element_delete_candidates(attrs, block_content))
+    )
 
-for _sym in ["_recover_original", "_refactor", "_bootstrap"]:
-    if _sym in globals():
-        del globals()[_sym]
+
+def _block_label(attrs: str, block_content: str) -> str:
+    """Best-effort human label for a removed block: id, target, or text."""
+    id_match = re.search(r'\bid="([^"]*)"', attrs, re.IGNORECASE)
+    target_match = re.search(r'data-nexu-target="([^"]*)"', attrs, re.IGNORECASE)
+    return (
+        (id_match.group(1) if id_match else "")
+        or (target_match.group(1) if target_match else "")
+        or re.sub(r"<[^>]+>", "", block_content).strip()
+        or "unknown"
+    )
