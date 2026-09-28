@@ -180,6 +180,24 @@ def _find_matched_id(
     return list(hit)[0]
 
 
+def _claim_annotation_target(
+    text: str,
+    match: "re.Match[str]",
+    tag: str,
+    attr_map: dict[str, str],
+    wanted: set[str],
+    seen_elements: set,
+) -> str | None:
+    """Resolve and claim an unused target id for the element."""
+    matched_id = _find_matched_id(text, match, tag, attr_map, wanted)
+    if not matched_id or matched_id in seen_elements:
+        return None
+    seen_elements.add(matched_id)
+    if "data-nexu-target" in attr_map:
+        return None
+    return matched_id
+
+
 def _annotation_target(
     text: str,
     match: "re.Match[str]",
@@ -193,15 +211,11 @@ def _annotation_target(
     attrs_text = match.group(2)
     attr_map = _parse_attrs(attrs_text)
 
-    matched_id = _find_matched_id(text, match, tag, attr_map, wanted)
-    if not matched_id or matched_id in seen_elements:
-        return None
-    seen_elements.add(matched_id)
-
-    if "data-nexu-target" in attr_map:
+    matched_id = _claim_annotation_target(text, match, tag, attr_map, wanted, seen_elements)
+    if not matched_id:
         return None
 
-    new_tag = f"<{tag} data-nexu-target=\"{matched_id}\" {attrs_text}>"
+    new_tag = f'<{tag} data-nexu-target="{matched_id}" {attrs_text}>'
     return (match.start(), match.end(), new_tag)
 
 
