@@ -163,6 +163,23 @@ def _bind_annotations_to_html(
     return _splice_replacements(binding_html, matched_ranges)
 
 
+def _find_matched_id(
+    text: str,
+    match: "re.Match[str]",
+    tag: str,
+    attr_map: dict[str, str],
+    wanted: set[str],
+) -> str | None:
+    """Find the target id matching the element among wanted ids."""
+    element_keys, raw_id, nexu_attr = _element_candidates(tag, attr_map)
+    hit = wanted & element_keys
+    if not hit and not raw_id and not nexu_attr:
+        hit = _label_probe_hit(text, match, tag, attr_map, wanted)
+    if not hit:
+        return None
+    return list(hit)[0]
+
+
 def _annotation_target(
     text: str,
     match: "re.Match[str]",
@@ -176,15 +193,8 @@ def _annotation_target(
     attrs_text = match.group(2)
     attr_map = _parse_attrs(attrs_text)
 
-    element_keys, raw_id, nexu_attr = _element_candidates(tag, attr_map)
-    hit = wanted & element_keys
-    if not hit and not raw_id and not nexu_attr:
-        hit = _label_probe_hit(text, match, tag, attr_map, wanted)
-    if not hit:
-        return None
-
-    matched_id = list(hit)[0]
-    if matched_id in seen_elements:
+    matched_id = _find_matched_id(text, match, tag, attr_map, wanted)
+    if not matched_id or matched_id in seen_elements:
         return None
     seen_elements.add(matched_id)
 
