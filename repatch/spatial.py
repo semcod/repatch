@@ -1,1 +1,1 @@
-planfile ticket done PLF-181
+planfile ticket input PLF-181 --prompt "Please restore repatch/spatial.py via 'git checkout 009a532~1 -- repatch/spatial.py' and add its contents to the chat." --note "repatch/spatial.py was overwritten with the handoff command text in commit 009a532, destroying the original source file and causing a SyntaxError."
