@@ -151,7 +151,7 @@ def _bind_annotations_to_html(
     binding_html = str(html or "")
 
     matched_ranges: list[tuple[int, int, str]] = []
-    seen_elements = set()
+    seen_elements: set[str] = set()
 
     for match in _TAG_OPEN_RE.finditer(binding_html):
         target_range = _annotation_target(binding_html, match, wanted, seen_elements)
@@ -186,7 +186,7 @@ def _claim_annotation_target(
     tag: str,
     attr_map: dict[str, str],
     wanted: set[str],
-    seen_elements: set,
+    seen_elements: set[str],
 ) -> str | None:
     """Resolve and claim an unused target id for the element."""
     matched_id = _find_matched_id(text, match, tag, attr_map, wanted)
@@ -208,7 +208,7 @@ def _resolve_annotation_target_id(
     text: str,
     match: "re.Match[str]",
     wanted: set[str],
-    seen_elements: set,
+    seen_elements: set[str],
 ) -> str | None:
     tag = match.group(1).lower()
     if tag in _SKIP_TAGS:
@@ -221,7 +221,7 @@ def _annotation_target(
     text: str,
     match: "re.Match[str]",
     wanted: set[str],
-    seen_elements: set,
+    seen_elements: set[str],
 ) -> tuple[int, int, str] | None:
     """Return the replacement range for a matched element, or None to skip."""
     matched_id = _resolve_annotation_target_id(text, match, wanted, seen_elements)
@@ -265,7 +265,6 @@ def inject_css_block(html: str, css: str) -> str:
 
 
 _inject_css_block = inject_css_block
-
 
 
 def _marked_scope_css(
