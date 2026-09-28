@@ -276,6 +276,33 @@ def _default_finalize_html(html: str) -> str:
     return html
 
 
+_FUNCTION_VARIANTS = (
+    ("alt_a.html", "a", "Option A (functions: quick path)"),
+    ("alt_b.html", "b", "Option B (functions: workflow)"),
+    ("alt_c.html", "c", "Option C (functions: funnel)"),
+)
+
+
+def _build_variant_doc(
+    base: str,
+    effective_delete: list[str],
+    variant: str,
+    user_goal: str,
+    ir: Any,
+    prepare: PrepareHtmlFn,
+    finalize: FinalizeHtmlFn,
+    ui_type: str,
+) -> tuple[str, bool, list[str]]:
+    """Patch one function variant document (targets, style, section, finalize)."""
+    variant_doc = _patch_function_targets(base, effective_delete, variant, user_goal)
+    variant_doc = _inject_into_head(variant_doc, _patch_style())
+    variant_doc = _inject_into_body(variant_doc, _variant_section(variant, user_goal, ir))
+    doc, ok, prepare_errors = prepare(variant_doc, ui_type=ui_type)
+    if ok and doc and effective_delete:
+        doc = finalize(doc)
+    return doc, ok, prepare_errors
+
+
 def build_function_option_patches(
     html_text: str,
     *,
@@ -307,30 +334,3 @@ def build_function_option_patches(
         files[filename] = doc
         labels.append(option_label)
     return files, labels, {"status": "ok", "ir": ir}
-
-
-_FUNCTION_VARIANTS = (
-    ("alt_a.html", "a", "Option A (functions: quick path)"),
-    ("alt_b.html", "b", "Option B (functions: workflow)"),
-    ("alt_c.html", "c", "Option C (functions: funnel)"),
-)
-
-
-def _build_variant_doc(
-    base: str,
-    effective_delete: list[str],
-    variant: str,
-    user_goal: str,
-    ir: Any,
-    prepare: "PrepareHtmlFn",
-    finalize: "FinalizeHtmlFn",
-    ui_type: str,
-) -> tuple[str, bool, list[str]]:
-    """Patch one function variant document (targets, style, section, finalize)."""
-    variant_doc = _patch_function_targets(base, effective_delete, variant, user_goal)
-    variant_doc = _inject_into_head(variant_doc, _patch_style())
-    variant_doc = _inject_into_body(variant_doc, _variant_section(variant, user_goal, ir))
-    doc, ok, prepare_errors = prepare(variant_doc, ui_type=ui_type)
-    if ok and doc and effective_delete:
-        doc = finalize(doc)
-    return doc, ok, prepare_errors
