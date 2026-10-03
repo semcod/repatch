@@ -394,7 +394,15 @@ def _fetch_page_source(url: str, render_js: bool) -> _PageSource:
     if render_js:
         try:
             rendered = _render_with_playwright(url.strip())
-            if rendered and rendered.html:
+            if isinstance(rendered, tuple):
+                return _PageSource(
+                    html=str(rendered[0]),
+                    content_type="text/html; charset=utf-8",
+                    final_url=str(rendered[1]) if len(rendered) > 1 else url.strip(),
+                    charset="utf-8",
+                    method="playwright",
+                )
+            if rendered and getattr(rendered, "html", None):
                 return rendered
         except Exception as exc:
             render_error = str(exc)[:500]
