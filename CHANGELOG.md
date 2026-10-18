@@ -43,6 +43,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `option_files`, and rejection of loopback/private/link-local/metadata URLs plus
   a redirect-to-private-address attempt.
 
+## [0.2.21] - 2026-10-18
+
+### Other
+- Update uv.lock
+
 ## [0.2.20] - 2026-07-06
 
 ### Docs
