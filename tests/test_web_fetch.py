@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import socket
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from unittest.mock import patch
@@ -8,6 +9,20 @@ import pytest
 
 from repatch import fetch_complete_web_page
 from repatch.web_fetch import _PageSource
+
+_REAL_GETADDRINFO = socket.getaddrinfo
+
+
+@pytest.fixture(autouse=True)
+def _hermetic_dns_resolution(monkeypatch):
+    def _fake_getaddrinfo(host, port, *args, **kwargs):
+        if host in {"example.com", "cdn.example.net"}:
+            return [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", port or 0))]
+        if host == "localhost":
+            return [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", port or 0))]
+        return _REAL_GETADDRINFO(host, port, *args, **kwargs)
+
+    monkeypatch.setattr("repatch.web_fetch.socket.getaddrinfo", _fake_getaddrinfo)
 
 
 class FakeResp:
