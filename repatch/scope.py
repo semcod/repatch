@@ -185,34 +185,32 @@ def _bind_annotations_to_html(
     return _splice_replacements(binding_html, matched_ranges)
 
 
-def _find_matched_id(
-    ctx: _AnnotationContext,
-    match: "re.Match[str]",
-    tag: str,
-    attr_map: dict[str, str],
-) -> str | None:
+@dataclass
+class _TagProbe:
+    ctx: _AnnotationContext
+    match: "re.Match[str]"
+    tag: str
+    attr_map: dict[str, str]
+
+
+def _find_matched_id(probe: _TagProbe) -> str | None:
     """Find the target id matching the element among wanted ids."""
-    element_keys, raw_id, nexu_attr = _element_candidates(tag, attr_map)
-    hit = ctx.wanted & element_keys
+    element_keys, raw_id, nexu_attr = _element_candidates(probe.tag, probe.attr_map)
+    hit = probe.ctx.wanted & element_keys
     if not hit and not raw_id and not nexu_attr:
-        hit = _label_probe_hit(ctx.text, match, tag, attr_map, ctx.wanted)
+        hit = _label_probe_hit(probe.ctx.text, probe.match, probe.tag, probe.attr_map, probe.ctx.wanted)
     if not hit:
         return None
     return list(hit)[0]
 
 
-def _claim_annotation_target(
-    ctx: _AnnotationContext,
-    match: "re.Match[str]",
-    tag: str,
-    attr_map: dict[str, str],
-) -> str | None:
+def _claim_annotation_target(probe: _TagProbe) -> str | None:
     """Resolve and claim an unused target id for the element."""
-    matched_id = _find_matched_id(ctx, match, tag, attr_map)
-    if not matched_id or matched_id in ctx.seen_elements:
+    matched_id = _find_matched_id(probe)
+    if not matched_id or matched_id in probe.ctx.seen_elements:
         return None
-    ctx.seen_elements.add(matched_id)
-    if "data-nexu-target" in attr_map:
+    probe.ctx.seen_elements.add(matched_id)
+    if "data-nexu-target" in probe.attr_map:
         return None
     return matched_id
 
@@ -232,7 +230,7 @@ def _annotation_target(
     if tag in _SKIP_TAGS:
         return None
     attr_map = _parse_attrs(match.group(2))
-    matched_id = _claim_annotation_target(ctx, match, tag, attr_map)
+    matched_id = _claim_annotation_target(_TagProbe(ctx, match, tag, attr_map))
     if not matched_id:
         return None
     return _format_annotated_tag(match, matched_id)
