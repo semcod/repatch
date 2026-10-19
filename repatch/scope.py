@@ -257,7 +257,6 @@ def inject_css_block(html: str, css: str) -> str:
 
 _inject_css_block = inject_css_block
 
-
 def _marked_scope_css(
     scope: str,
     variant: str,
