@@ -204,19 +204,6 @@ def _format_annotated_tag(match: "re.Match[str]", matched_id: str) -> tuple[int,
     return (match.start(), match.end(), f'<{tag} data-nexu-target="{matched_id}" {attrs_text}>')
 
 
-def _resolve_annotation_target_id(
-    text: str,
-    match: "re.Match[str]",
-    wanted: set[str],
-    seen_elements: set[str],
-) -> str | None:
-    tag = match.group(1).lower()
-    if tag in _SKIP_TAGS:
-        return None
-    attr_map = _parse_attrs(match.group(2))
-    return _claim_annotation_target(text, match, tag, attr_map, wanted, seen_elements)
-
-
 def _annotation_target(
     text: str,
     match: "re.Match[str]",
@@ -224,7 +211,11 @@ def _annotation_target(
     seen_elements: set[str],
 ) -> tuple[int, int, str] | None:
     """Return the replacement range for a matched element, or None to skip."""
-    matched_id = _resolve_annotation_target_id(text, match, wanted, seen_elements)
+    tag = match.group(1).lower()
+    if tag in _SKIP_TAGS:
+        return None
+    attr_map = _parse_attrs(match.group(2))
+    matched_id = _claim_annotation_target(text, match, tag, attr_map, wanted, seen_elements)
     if not matched_id:
         return None
     return _format_annotated_tag(match, matched_id)
