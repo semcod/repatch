@@ -144,26 +144,41 @@ class _AnnotationContext:
     seen_elements: set[str] = field(default_factory=set)
 
 
+def _collect_marked_ids(
+    keep_ids: list[str] | None,
+    delete_ids: list[str] | None,
+) -> list[str]:
+    """Normalize keep/delete marks into one ordered, de-duplicated list."""
+    marked_keep_ids = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
+    marked_delete_ids = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
+    return marked_keep_ids + [x for x in marked_delete_ids if x not in marked_keep_ids]
+
+
+def _scan_annotation_targets(
+    binding_html: str,
+    wanted: set[str],
+) -> list[tuple[int, int, str]]:
+    """Scan tag opens and collect annotated replacement ranges."""
+    ctx = _AnnotationContext(text=binding_html, wanted=wanted)
+    matched_ranges: list[tuple[int, int, str]] = []
+    for match in _TAG_OPEN_RE.finditer(binding_html):
+        target_range = _annotation_target(ctx, match)
+        if target_range:
+            matched_ranges.append(target_range)
+    return matched_ranges
+
+
 def _bind_annotations_to_html(
     html: str,
     keep_ids: list[str] | None,
     delete_ids: list[str] | None,
 ) -> str:
-    marked_keep_ids = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
-    marked_delete_ids = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
-    marked_ids = marked_keep_ids + [x for x in marked_delete_ids if x not in marked_keep_ids]
+    marked_ids = _collect_marked_ids(keep_ids, delete_ids)
     if not marked_ids:
         return html
 
     binding_html = str(html or "")
-    ctx = _AnnotationContext(text=binding_html, wanted=set(marked_ids))
-
-    matched_ranges: list[tuple[int, int, str]] = []
-
-    for match in _TAG_OPEN_RE.finditer(binding_html):
-        target_range = _annotation_target(ctx, match)
-        if target_range:
-            matched_ranges.append(target_range)
+    matched_ranges = _scan_annotation_targets(binding_html, set(marked_ids))
 
     if not matched_ranges:
         return html
