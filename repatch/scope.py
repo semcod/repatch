@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 import re
 
 from ._scope_css import (
@@ -136,64 +137,80 @@ def _splice_replacements(text: str, matched_ranges: list[tuple[int, int, str]]) 
     return "".join(spliced_segments)
 
 
+@dataclass
+class _AnnotationContext:
+    text: str
+    wanted: set[str]
+    seen_elements: set[str] = field(default_factory=set)
+
+
+def _collect_marked_ids(
+    keep_ids: list[str] | None,
+    delete_ids: list[str] | None,
+) -> list[str]:
+    """Normalize keep/delete marks into one ordered, de-duplicated list."""
+    marked_keep_ids = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
+    marked_delete_ids = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
+    return marked_keep_ids + [x for x in marked_delete_ids if x not in marked_keep_ids]
+
+
+def _scan_annotation_targets(
+    binding_html: str,
+    wanted: set[str],
+) -> list[tuple[int, int, str]]:
+    """Scan tag opens and collect annotated replacement ranges."""
+    ctx = _AnnotationContext(text=binding_html, wanted=wanted)
+    matched_ranges: list[tuple[int, int, str]] = []
+    for match in _TAG_OPEN_RE.finditer(binding_html):
+        target_range = _annotation_target(ctx, match)
+        if target_range:
+            matched_ranges.append(target_range)
+    return matched_ranges
+
+
 def _bind_annotations_to_html(
     html: str,
     keep_ids: list[str] | None,
     delete_ids: list[str] | None,
 ) -> str:
-    marked_keep_ids = [str(x).strip() for x in (keep_ids or []) if str(x).strip()]
-    marked_delete_ids = [str(x).strip() for x in (delete_ids or []) if str(x).strip()]
-    marked_ids = marked_keep_ids + [x for x in marked_delete_ids if x not in marked_keep_ids]
+    marked_ids = _collect_marked_ids(keep_ids, delete_ids)
     if not marked_ids:
         return html
 
-    wanted = set(marked_ids)
     binding_html = str(html or "")
-
-    matched_ranges: list[tuple[int, int, str]] = []
-    seen_elements: set[str] = set()
-
-    for match in _TAG_OPEN_RE.finditer(binding_html):
-        target_range = _annotation_target(binding_html, match, wanted, seen_elements)
-        if target_range:
-            matched_ranges.append(target_range)
+    matched_ranges = _scan_annotation_targets(binding_html, set(marked_ids))
 
     if not matched_ranges:
         return html
     return _splice_replacements(binding_html, matched_ranges)
 
 
-def _find_matched_id(
-    text: str,
-    match: "re.Match[str]",
-    tag: str,
-    attr_map: dict[str, str],
-    wanted: set[str],
-) -> str | None:
+@dataclass
+class _TagProbe:
+    ctx: _AnnotationContext
+    match: "re.Match[str]"
+    tag: str
+    attr_map: dict[str, str]
+
+
+def _find_matched_id(probe: _TagProbe) -> str | None:
     """Find the target id matching the element among wanted ids."""
-    element_keys, raw_id, nexu_attr = _element_candidates(tag, attr_map)
-    hit = wanted & element_keys
+    element_keys, raw_id, nexu_attr = _element_candidates(probe.tag, probe.attr_map)
+    hit = probe.ctx.wanted & element_keys
     if not hit and not raw_id and not nexu_attr:
-        hit = _label_probe_hit(text, match, tag, attr_map, wanted)
+        hit = _label_probe_hit(probe.ctx.text, probe.match, probe.tag, probe.attr_map, probe.ctx.wanted)
     if not hit:
         return None
     return list(hit)[0]
 
 
-def _claim_annotation_target(
-    text: str,
-    match: "re.Match[str]",
-    tag: str,
-    attr_map: dict[str, str],
-    wanted: set[str],
-    seen_elements: set[str],
-) -> str | None:
+def _claim_annotation_target(probe: _TagProbe) -> str | None:
     """Resolve and claim an unused target id for the element."""
-    matched_id = _find_matched_id(text, match, tag, attr_map, wanted)
-    if not matched_id or matched_id in seen_elements:
+    matched_id = _find_matched_id(probe)
+    if not matched_id or matched_id in probe.ctx.seen_elements:
         return None
-    seen_elements.add(matched_id)
-    if "data-nexu-target" in attr_map:
+    probe.ctx.seen_elements.add(matched_id)
+    if "data-nexu-target" in probe.attr_map:
         return None
     return matched_id
 
@@ -205,17 +222,15 @@ def _format_annotated_tag(match: "re.Match[str]", matched_id: str) -> tuple[int,
 
 
 def _annotation_target(
-    text: str,
+    ctx: _AnnotationContext,
     match: "re.Match[str]",
-    wanted: set[str],
-    seen_elements: set[str],
 ) -> tuple[int, int, str] | None:
     """Return the replacement range for a matched element, or None to skip."""
     tag = match.group(1).lower()
     if tag in _SKIP_TAGS:
         return None
     attr_map = _parse_attrs(match.group(2))
-    matched_id = _claim_annotation_target(text, match, tag, attr_map, wanted, seen_elements)
+    matched_id = _claim_annotation_target(_TagProbe(ctx, match, tag, attr_map))
     if not matched_id:
         return None
     return _format_annotated_tag(match, matched_id)
